@@ -16,15 +16,14 @@ class Userheader extends Component {
           placeholder="주소, 구장명을 입력하세요"
           className="w-200 h-70 px-4 py-2 border border-gray-300 rounded mr-4 text-gray-700"
         />
-        <button className="bg-blue-500 text-white px-4 py-2 rounded">
-          검색
-        </button>
+
       </div>
 
       {/* 마이페이지 버튼 */}
       <button className="bg-blue-500 text-white px-4 py-2 rounded ml-auto">
         마이페이지
       </button>
+      
     </header>
     );
   }

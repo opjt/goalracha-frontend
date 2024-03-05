@@ -1,28 +1,44 @@
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { getKakaoLoginLink } from "../api/kakaoAPI";
+import useCustomLogin from "hooks/useCustomLogin";
 import BasicLayout from "../layouts/BasicLayout";
+import { useEffect } from "react";
 
 
 
 const MainPage = () => {
-    const loginState = useSelector(state => state.loginSlice);
-    console.log(loginState);
+    const { isLogin, loginState,moveToPath} = useCustomLogin();
+    useEffect(() => {
+        if(isLogin) {
+            if(loginState.email === loginState.nickname) {
+               moveToPath("/user/join")
+            }
+       }
+    })
+
+    const link = getKakaoLoginLink()
     return (
         <BasicLayout>
 
         <div className="max-w-screen-xl mx-auto text-xl" style={{height:'400px'}}>
             <div className="">
                 {!loginState.email ?
-                    <Link to={'/member/login'}>Login</Link>
+                    <div>
+                    <Link to={'/user/login'}>Login</Link> <br />
+                    <Link to={link}>카카오 로그인</Link>
+                    </div>
+                    
                     :
                     <div>
                         <div> {loginState.email} </div>
-                        <Link to={'/member/logout'}>Logout</Link>
+                        <Link to={'/user/logout'}>Logout</Link>
                     </div>
                     
                 }
             </div>
-            메인 페이지 입니다
+            <br />
+            메인 페이지 입니다<br></br>
+            <Link to={'/owner/join'}>사장님 회원가입</Link>
         </div>
             
     

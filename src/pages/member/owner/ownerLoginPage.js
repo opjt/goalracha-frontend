@@ -1,9 +1,9 @@
-import LogoutComponent from "../../components/member/LogoutComponent";
+import LoginComponent from "components/member/owner/LoginComponent";
 const UserLoginPage = () => {
     return (
         <>
 
-            <LogoutComponent />
+            <LoginComponent />
 
         </>
     );

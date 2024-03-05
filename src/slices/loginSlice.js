@@ -22,17 +22,24 @@ const loginSlice = createSlice({
     name: 'LoginSlice',
     initialState: loadMemberCookie() || initState,
     reducers: {
-        // login: (state, action) => {
-        //     console.log("로그인.....")
-        //     const payload = action.payload
-        //     setCookie("member", JSON.stringify(payload), 1) //1 일
-        //     return payload
-        // },
+        login: (state, action) => {
+            console.log("로그인.....")
+            const payload = action.payload
+            setCookie("member", JSON.stringify(payload), 1) //1 일
+            return payload
+        },
         logout: (state, action) => {
             console.log("로그아웃....")
             removeCookie("member")
             return { ...initState }
+        },
+        update: (state, action) => { 
+            const payload = action.payload
+            console.log(payload.nickname) 
+            setCookie("member", JSON.stringify(payload), 1) //1 일
+            return payload
         }
+        
     },
     extraReducers: (builder) => {
         builder.addCase(loginPostAsync.fulfilled, (state, action) => {
@@ -54,5 +61,5 @@ const loginSlice = createSlice({
     }
 
 })
-export const { login, logout } = loginSlice.actions
+export const { login, logout,update } = loginSlice.actions
 export default loginSlice.reducer

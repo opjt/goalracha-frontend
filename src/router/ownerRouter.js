@@ -1,7 +1,7 @@
 import { Suspense, lazy } from "react";
 const Loading = <div>Loading....</div>
-const Login = lazy(() => import("../pages/member/UserLoginPage"))
-const Logout = lazy(() => import("../pages/member/UserLogoutPage"))
+const Login = lazy(() => import("../pages/member/owner/ownerLoginPage"))
+const Join = lazy(() => import("../pages/member/user/JoinPage"))
 
 const memberRouter = () => {
     return [
@@ -10,9 +10,9 @@ const memberRouter = () => {
             element: <Suspense fallback={Loading}><Login /></Suspense>
         },
         {
-            path: "logout",
-            element: <Suspense fallback={Loading}><Logout /></Suspense>
-        }
+            path: "join",
+            element: <Suspense fallback={Loading}><Join /></Suspense>
+        },
 
     ]
 }

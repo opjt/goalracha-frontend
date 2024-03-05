@@ -1,4 +1,4 @@
-import LoginComponent from "../../components/member/LoginComponent";
+import LoginComponent from "../../../components/member/owner/LoginComponent";
 const UserLoginPage = () => {
     return (
         <>

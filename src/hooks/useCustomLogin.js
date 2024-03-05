@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux"
 import { Navigate, createSearchParams, useNavigate } from "react-router-dom"
 
-import { loginPostAsync, logout } from "../slices/loginSlice"
+import { loginPostAsync, logout, update } from "../slices/loginSlice"
 const useCustomLogin = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
@@ -14,14 +14,17 @@ const useCustomLogin = () => {
     const doLogout = () => { //---------------로그아웃 함수
         dispatch(logout())
     }
+    const doUpdate =(loginParam) => { //정보 업데이트
+        dispatch(update(loginParam)) 
+    }
     const moveToPath = (path) => { //----------------페이지 이동
         navigate({ pathname: path }, { replace: true })
     }
     const moveToLogin = () => { //----------------------로그인 페이지로 이동
-        navigate({ pathname: '/member/login' }, { replace: true })
+        navigate({ pathname: '/user/login' }, { replace: true })
     }
     const moveToLoginReturn = () => { //--------------------로그인 페이지로 이동 컴포넌트
-        return <Navigate replace to="/member/login" />
+        return <Navigate replace to="/user/login" />
     }
     const exceptionHandle = (ex) => {
         console.log("Exception------------------------")
@@ -30,17 +33,17 @@ const useCustomLogin = () => {
         const errorStr = createSearchParams({ error: errorMsg }).toString()
         if (errorMsg === 'REQUIRE_LOGIN') {
             alert("로그인 해야만 합니다.")
-            navigate({ pathname: '/member/login', search: errorStr })
+            navigate({ pathname: '/user/login', search: errorStr })
             return
         }
         if (ex.response.data.error === 'ERROR_ACCESSDENIED') {
             alert("해당 메뉴를 사용할 수 있는 권한이 없습니다.")
-            navigate({ pathname: '/member/login', search: errorStr })
+            navigate({ pathname: '/user/login', search: errorStr })
             return
         }
     }
     return {
-        loginState, isLogin, doLogin, doLogout, moveToPath, moveToLogin,
+        loginState, isLogin, doLogin, doLogout, doUpdate,moveToPath, moveToLogin,
         moveToLoginReturn, exceptionHandle
     }
 }

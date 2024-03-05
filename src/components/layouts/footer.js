@@ -7,7 +7,7 @@ class Footer extends Component {
         <div className="max-w-screen-xl mx-auto p-8">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
             <div className="col-span-4 sm:col-span-1">
-              <a>
+              <a href=''>
                 <img src="/path/to/logo.png" alt="Logo" className="w-full" />
               </a>
               <div className="mt-4 text-gray-600">Copyright © 2024, goal-racha Co.,Ltd</div>
