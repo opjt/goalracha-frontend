@@ -1,7 +1,7 @@
 import { Suspense, lazy } from "react";
 const Loading = <div>Loading....</div>
-const Login = lazy(() => import("../pages/member/owner/ownerLoginPage"))
-const Join = lazy(() => import("../pages/member/user/JoinPage"))
+const Login = lazy(() => import("pages/member/owner/OwnerLoginPage"))
+const Join = lazy(() => import("pages/member/owner/OwnerJoinPage"))
 
 const memberRouter = () => {
     return [

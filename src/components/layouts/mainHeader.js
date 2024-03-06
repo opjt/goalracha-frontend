@@ -1,9 +1,14 @@
+import { Link, Navigate, createSearchParams, useNavigate } from "react-router-dom"
+
+
 const MainHeader = ({children}) => {
 
     return (
-      <div className="max-w-screen-xl mx-auto navbar bg-base-100 p-0 ">
+      <div className="max-w-screen-xl mx-auto navbar bg-base-100 p-2 ">
         <div className="flex-1">
-          <a className="btn btn-ghost text-xl p-0">골라차</a>
+          <Link to={"/"} className="btn btn-ghost text-xl p-0">
+            골라차
+          </Link>
         </div>
         <div className="flex-none gap-2">
           <div className="form-control">
@@ -13,7 +18,19 @@ const MainHeader = ({children}) => {
               className="input input-bordered w-24 md:w-auto"
             />
           </div>
-          <div className="dropdown dropdown-end">
+          <Link to={"/login"}>
+            <div
+              tabIndex={0}
+              role="button"
+              className="btn btn-ghost btn-circle avatar"
+            >
+              <div className="w-10 rounded-full">
+                <img alt="Tailwind CSS Navbar component" src="/img/user.png" />
+              </div>
+            </div>
+          </Link>
+
+          {/* <div className="dropdown dropdown-end"> 드롭다운버전
             <div
               tabIndex={0}
               role="button"
@@ -22,11 +39,9 @@ const MainHeader = ({children}) => {
               <div className="w-10 rounded-full">
                 <img
                   alt="Tailwind CSS Navbar component" 
-                  src="img/user.png"
+                  src="/img/user.png"
                 />
-                
-              </div>
-              
+              </div>              
             </div>
             <ul
               tabIndex={0}
@@ -45,9 +60,8 @@ const MainHeader = ({children}) => {
                 <a>Logout</a>
               </li>
             </ul>
-          </div>
+          </div> */}
         </div>
-        
       </div>
     );
   }

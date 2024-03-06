@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
+import { Link } from "react-router-dom"
 import useCustomLogin from "../../../hooks/useCustomLogin"
-
+import MainHeader from "components/layouts/mainHeader"
 const initState = {
     id: '',
     pw: ''
@@ -37,10 +38,12 @@ const LoginComponent = () => {
             })
     }
     return (
-        <div className="relative flex flex-col justify-center h-screen overflow-hidden">
+        <>
+        <MainHeader/>
+        <div className="relative flex flex-col justify-center p-14 overflow-hidden">
 
         <div className="w-full p-6 m-auto bg-white rounded-md shadow-md ring-2 ring-gray-800/50 lg:max-w-xl">
-            <h1 className="text-3xl font-semibold text-center text-gray-700">로그인</h1>
+            <h1 className="text-3xl font-semibold text-center text-gray-700">사업자로그인</h1>
             <form className="space-y-4">
    
                 <div>
@@ -54,8 +57,9 @@ const LoginComponent = () => {
                         <span className="text-base label-text">비밀번호</span>
                     </label>
                     <input className="w-full input input-bordered" value={loginParam.pw} onChange={handleChange} type={'password'} name="pw" placeholder="비밀번호를 입력하시오" />
+                    
                 </div>
-       
+                <Link to={'/owner/join'} className="text-sm text-gray-600 hover:underline hover:text-blue-600 grid justify-end">회원가입</Link>
     
                 <div>
                     <button type="button" className="btn btn-block" onClick={handleClickLogin}>로그인</button>
@@ -63,6 +67,7 @@ const LoginComponent = () => {
             </form>
         </div>
     </div>
+    </>
     );
 }
 export default LoginComponent;

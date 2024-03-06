@@ -20,3 +20,20 @@ export const modifyMember = async (member) => {
     const res = await jwtAxios.put(`${host}/${member.uNo}`, member)
     return res.data
 }
+//아이디 중복검사
+export const checkMemberId = async (member) => {
+    console.log(member)
+    const config = {
+        headers: {
+            'Content-Type': 'text/plain; charset=UTF-8'
+        }
+    };
+    const res = await axios.post(`${host}/checkid`, member, config)
+    return res.data
+}
+
+//사업자회원 회원가입
+export const joinOwner = async (member) => {
+    const res = await axios.post(`${host}/owner`, member)
+    return res.data
+}
