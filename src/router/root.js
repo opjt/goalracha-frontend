@@ -1,6 +1,7 @@
 import { Suspense, lazy } from "react";
 import memberRouter from "./userRouter.js";
-import ownerRouter from "./ownerRouter.js"
+import ownerRouter from "./ownerRouter.js";
+
 
 const { createBrowserRouter } = require("react-router-dom");
 
