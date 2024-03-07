@@ -36,6 +36,7 @@ const JoinComponent = () => {
         if(e.target.name == "id") {
             setIdcheck(false)
         }
+        console.log(member);
         setMember({ ...member })
     
     }
