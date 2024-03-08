@@ -1,4 +1,6 @@
 import useCustomLogin from "../../hooks/useCustomLogin";
+
+
 const LogoutComponent = () => {
     const { doLogout, moveToPath } = useCustomLogin()
     const handleClickLogout = () => {
@@ -7,6 +9,7 @@ const LogoutComponent = () => {
         moveToPath("/")
     }
 
+    
     return (
         <div className="border-2 border-red-200 mt-10 m-2 p-4">
             <div className="flex justify-center">

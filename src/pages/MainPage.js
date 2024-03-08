@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { getKakaoLoginLink } from "../api/kakaoAPI";
 import useCustomLogin from "hooks/useCustomLogin";
+import adminCustomLogin from "hooks/adminCustomLogin";
 import BasicLayout from "../layouts/BasicLayout";
 import { useEffect } from "react";
 
@@ -24,6 +25,7 @@ const MainPage = () => {
             <div className="">
                 {!loginState.email ?
                     <div>
+                    <Link to={'/admin/login'}>관리자 로그인</Link> <br />
                     <Link to={'/user/login'}>Login</Link> <br />
                     <Link to={link}>카카오 로그인</Link>
                     </div>
