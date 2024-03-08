@@ -1,5 +1,5 @@
 import { Calendar } from 'react-date-range'; // 얘가 캘린더 라이브러리
-
+import BasicLayout from 'layouts/BasicLayout';
 import ko from 'date-fns/locale/ko';	     // 날짜 포맷 라이브러리 (한국어 기능을 임포트)
 import moment from 'moment';
 import { useState, useCallback } from 'react';
@@ -86,7 +86,7 @@ const GroundListPage = () => {
     }
 
     return (
-      <>
+        <BasicLayout>
        <div className='mt-6 flex gap-3'>
             {/* Open the modal using document.getElementById('ID').showModal() method */}
             <button className={`btn btn-sm  gap-1 ${showFilter.date !== '' ? 'btn-neutral' : ''}`} onClick={()=> {document.getElementById('my_modal_1').showModal()}}>
@@ -180,7 +180,7 @@ const GroundListPage = () => {
             <button>close</button>
         </form>
         </dialog>
-      </>
+      </BasicLayout>
     );
 }
 export default GroundListPage;

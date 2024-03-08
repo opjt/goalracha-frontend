@@ -38,7 +38,7 @@ const MainPage = () => {
             </div>
             <br />
             메인 페이지 입니다<br></br>
-            <Link to={'/ground/list'}>구장예약목록</Link>
+            <Link to={'/reserve'}>구장예약목록</Link>
         </div>
             
     
