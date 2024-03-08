@@ -28,8 +28,6 @@ const GroundReadPage = () => {
 
     return (
         <div className="font-extrabold w-full bg-white mt-6">
-            구장조회 {gno}
-
             <div className="text-2xl">
                 <GroundReadComponent gno={gno}></GroundReadComponent>
 

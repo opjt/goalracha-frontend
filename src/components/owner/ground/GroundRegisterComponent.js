@@ -3,6 +3,10 @@ import { postGroundRegister } from "../../../api/groundApi";
 
 const GroundRegisterComponent = () => {
   const initState = {
+    groundInfoList: [],
+    rulesList: [],
+    checkBoxList: [],
+    StateList: [],
     name: "",
     addr: "",
     inAndOut: "",
@@ -27,6 +31,13 @@ const GroundRegisterComponent = () => {
     state: 0,
     uno: 0,
   };
+
+  const [formData, setFormData] = useState({
+    groundInfoList: [],
+    rulesList: [],
+    checkBoxList: [],
+    stateList: [],
+  });
 
   const [ground, setGround] = useState({ ...initState });
 
@@ -55,10 +66,11 @@ const GroundRegisterComponent = () => {
   };
 
   return (
-    <div className="flex justify-center h-100% bg-gray-100">
+    <div className=" flex-wrap flex-direction justify-center max-w-screen-lg h-100% bg-gray-100">
+      <div className="max-w-screen-lg flex mb-4" >
       <form
         onSubmit={handleRegister}
-        className="bg-white p-8 rounded shadow-md w-96 h-100%"
+        className="bg-white mb-4 w-3/6 p-8"
       >
         <div className="mb-10">
           <h2 className="text-2xl font-bold mb-4">구장 등록</h2>
@@ -232,7 +244,16 @@ const GroundRegisterComponent = () => {
               className="mt-1 p-2 border rounded-md w-full"
             />
           </div>
+          </div>
+</form>
 
+<form className="w-6/12 mb-4 bg-white p-8 " ><h2 className="text-2xl font-bold mb-4">사진 등록</h2></form>
+</div>
+
+<div
+        onSubmit={handleRegister}
+        className="flex- bg-white p-8 w- h-100%"
+      > 
           <div className="mb-4">
             <label
               htmlFor="userGuide"
@@ -246,7 +267,7 @@ const GroundRegisterComponent = () => {
               name="userGuide"
               value={ground.userGuide}
               onChange={handleChange}
-              className="mt-1 p-2 border rounded-md w-full"
+              className="mt-1 p-2 border rounded-md w-full h-40"
             />
           </div>
 
@@ -263,7 +284,7 @@ const GroundRegisterComponent = () => {
               name="userRules"
               value={ground.userRules}
               onChange={handleChange}
-              className="mt-1 p-2 border rounded-md w-full"
+              className="mt-1 p-2 border rounded-md w-full h-40"
             />
           </div>
 
@@ -280,7 +301,7 @@ const GroundRegisterComponent = () => {
               name="refundRules"
               value={ground.refundRules}
               onChange={handleChange}
-              className="mt-1 p-2 border rounded-md w-full"
+              className="mt-1 p-2 border rounded-md w-full h-40"
             />
           </div>
 
@@ -297,21 +318,29 @@ const GroundRegisterComponent = () => {
               name="changeRules"
               value={ground.changeRules}
               onChange={handleChange}
-              className="mt-1 p-2 border rounded-md w-full"
+              className="mt-1 p-2 border rounded-md w-full h-40"
             />
           </div>
+</div>
 
-          <div className="mb-4">
+<form
+        onSubmit={handleRegister}
+        className="flex-wrap bg-white p-8 w-full "
+      >
+        <h2 className="flex-auto text-2xl font-bold mb-4">부대시설</h2>
+        <div className="flex justify-center">
+          <div className="mb-4 justify-center">
             <label
               htmlFor="vestIsYn"
-              className="block text-sm font-medium text-gray-600"
+              className="block text-sm font-medium justify-center mr-3 ml-3 text-gray-600"
             >
-              조끼 대여 여부:
+              조끼
             </label>
             <input
               type="checkbox"
               id="vestIsYn"
               name="vestIsYn"
+              className="justify-center mr-3 ml-3"
               checked={ground.vestIsYn}
               onChange={handleChange}
             />
@@ -320,14 +349,15 @@ const GroundRegisterComponent = () => {
           <div className="mb-4">
             <label
               htmlFor="footwearIsYn"
-              className="block text-sm font-medium text-gray-600"
+              className="block text-sm font-medium justify-center mr-3 ml-3 text-gray-600" 
             >
-              풋살화 대여 여부:
+              풋살화
             </label>
             <input
               type="checkbox"
               id="footwearIsYn"
               name="footwearIsYn"
+              className="justify-center mr-3 ml-3"
               checked={ground.footwearIsYn}
               onChange={handleChange}
             />
@@ -336,14 +366,15 @@ const GroundRegisterComponent = () => {
           <div className="mb-4">
             <label
               htmlFor="showerIsYn"
-              className="block text-sm font-medium text-gray-600"
+              className="block text-sm font-medium justify-center mr-3 ml-3 text-gray-600"
             >
-              샤워실 여부:
+              샤워실
             </label>
             <input
               type="checkbox"
               id="showerIsYn"
               name="showerIsYn"
+              className="justify-center mr-3 ml-3"
               checked={ground.showerIsYn}
               onChange={handleChange}
             />
@@ -352,14 +383,15 @@ const GroundRegisterComponent = () => {
           <div className="mb-4">
             <label
               htmlFor="roopIsYn"
-              className="block text-sm font-medium text-gray-600"
-            >
-              지붕 여부:
+              className="block text-sm font-medium justify-center mr-3 ml-3 text-gray-600"
+            > 
+              지붕
             </label>
             <input
               type="checkbox"
               id="roopIsYn"
               name="roopIsYn"
+              className="justify-center mr-3 ml-3 "
               checked={ground.roopIsYn}
               onChange={handleChange}
             />
@@ -368,14 +400,15 @@ const GroundRegisterComponent = () => {
           <div className="mb-4">
             <label
               htmlFor="ballIsYn"
-              className="block text-sm font-medium text-gray-600"
+              className="block text-sm font-medium justify-center mr-3 ml-3 text-gray-600"
             >
-              공대여 여부:
+              공대여
             </label>
             <input
               type="checkbox"
               id="ballIsYn"
               name="ballIsYn"
+              className="justify-center mr-3 ml-3"
               checked={ground.ballIsYn}
               onChange={handleChange}
             />
@@ -384,14 +417,15 @@ const GroundRegisterComponent = () => {
           <div className="mb-4">
             <label
               htmlFor="airconIsYn"
-              className="block text-sm font-medium text-gray-600"
+              className="block text-sm font-medium justify-center mr-3 ml-3 text-gray-600"
             >
-              에어컨 여부:
+              에어컨
             </label>
             <input
               type="checkbox"
               id="airconIsYn"
               name="airconIsYn"
+              className="justify-center mr-3 ml-3"
               checked={ground.airconIsYn}
               onChange={handleChange}
             />
@@ -400,28 +434,33 @@ const GroundRegisterComponent = () => {
           <div className="mb-4">
             <label
               htmlFor="parkareaIsYn"
-              className="block text-sm font-medium text-gray-600"
+              className="block text-sm font-medium justify-center mr-3 ml-3 text-gray-600"
             >
-              주차장 여부:
+              주차장
             </label>
             <input
               type="checkbox"
               id="parkareaIsYn"
               name="parkareaIsYn"
+              className="justify-center mr-3 ml-3"
               checked={ground.parkareaIsYn}
               onChange={handleChange}
             />
           </div>
-        </div>
-
-        <div>
+          </div>
+        </form>
+<form
+        onSubmit={handleRegister}
+        className="flex-wrap bg-white p-8 w-full"
+      >
+        <h2 className="flex-auto text-2xl font-bold mb-4">구장 상태</h2>
+        <div className="justify-center">
           <label
             htmlFor="state"
             className="block text-sm font-medium text-gray-600 mb-2"
           >
-            구장 상태:
           </label>
-          <div className="flex space-x-4">
+          <div className="flex space-x-4 justify-center">
             <label>
               <input
                 type="radio"
@@ -460,7 +499,7 @@ const GroundRegisterComponent = () => {
         <div className="mt-8">
           <button
             type="submit"
-            className="w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-700"
+            className=" w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-700"
           >
             등록
           </button>
