@@ -37,6 +37,11 @@ const root = createBrowserRouter([
         path: "owner",
         children: ownerRouter()
     },
+    {
+      path : "board",
+      element : <Suspense fallback = {Loading}><BoardIndex/></Suspense>,
+      children : BoardRouter()
+    }
     
 
 ])
