@@ -2,6 +2,7 @@ import { Suspense, lazy } from "react";
 import memberRouter from "./userRouter.js";
 import ownerRouter from "./ownerRouter.js"
 import groundRouter from "./groundRouter.js"
+import BoardRouter from "./boardRouter.js";
 
 const { createBrowserRouter } = require("react-router-dom");
 
@@ -10,6 +11,7 @@ const Main = lazy(() => import("../pages/MainPage"))
 const Ground = lazy(() => import("../pages/ground/user/IndexPage"))
 const Login = lazy(() => import("../pages/member/user/LoginPage"))
 const GroundListPage = lazy(() => import("pages/ground/user/GroundListPage"))
+const BoardIndex = lazy(() => import("pages/board/IndexPage.js"))
 
 const root = createBrowserRouter([
     {
