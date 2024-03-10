@@ -4,8 +4,9 @@ import groundRouter from "./groundRouter.js";
 const Loading = <div>Loading....</div>
 const Login = lazy(() => import("pages/member/owner/OwnerLoginPage.js"))
 const Join = lazy(() => import("pages/member/owner/OwnerJoinPage.js"))
+const Ground = lazy(() => import("../pages/owner/ground/IndexPage.js"))
 
-const memberRouter = () => {
+const ownerRouter = () => {
     return [
         {
             path: "login",
@@ -17,9 +18,10 @@ const memberRouter = () => {
         },
         {
             path: "ground",
+            element: <Suspense fallback={Loading}><Ground /></Suspense>,
             children: groundRouter()
         },
 
     ]
 }
-export default memberRouter
+export default ownerRouter

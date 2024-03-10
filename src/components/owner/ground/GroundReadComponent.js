@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 import { getGround } from "../../../api/groundApi";
 
 const initState = {
+  groundInfoList: [],
+  checkBoxList: [],
+  StateList: [],
   gno: 0,
   name: '',
   addr: '',
