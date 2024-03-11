@@ -1,8 +1,11 @@
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
 
 const UserModifyModal = ({ closeModal }) => {
-  const [nickname, setNickname] = useState(""); // 닉네임 상태
-  const [tel, setTel] = useState(""); // 연락처 상태
+  const loginState = useSelector((state) => state.loginSlice);
+  const [nickname, setNickname] = useState(loginState.nickname); // 닉네임 상태
+  const [tel, setTel] = useState(loginState.tel); // 연락처 상태
+  const [email, setEmail] = useState(loginState.email); // 이메일 상태
 
   // 닉네임 입력 핸들러
   const handleNicknameChange = (event) => {
@@ -14,11 +17,17 @@ const UserModifyModal = ({ closeModal }) => {
     setTel(event.target.value);
   };
 
+  // 이메일 입력 핸들러
+  const handleEmailChange = (event) => {
+    setEmail(event.target.value);
+  };
+
   // 저장 버튼 클릭 핸들러
   const handleSave = () => {
-    // 수정된 닉네임과 연락처를 서버에 저장하는 로직을 추가할 수 있습니다.
+    // 수정된 닉네임, 연락처, 이메일을 서버에 저장하는 로직을 추가할 수 있습니다.
     console.log("수정된 닉네임:", nickname);
     console.log("수정된 연락처:", tel);
+    console.log("수정된 이메일:", email);
     closeModal(); // 모달 닫기
   };
 
@@ -100,6 +109,24 @@ const UserModifyModal = ({ closeModal }) => {
                     onChange={handleTelChange}
                   />
                 </div>
+                {/* 이메일 입력 폼 */}
+                <div className="mt-4">
+                  <label
+                    htmlFor="email"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    이메일
+                  </label>
+                  <input
+                    type="text"
+                    name="email"
+                    id="email"
+                    className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                    placeholder="이메일을 입력하세요."
+                    value={email}
+                    onChange={handleEmailChange}
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -123,7 +150,5 @@ const UserModifyModal = ({ closeModal }) => {
         </div>
       </div>
     </div>
-  );
-};
-
-export default UserModifyModal;
+</div >
+</div >

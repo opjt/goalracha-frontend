@@ -37,3 +37,8 @@ export const joinOwner = async (member) => {
     const res = await axios.post(`${host}/owner`, member)
     return res.data
 }
+
+export const putUserMididy = async(member) => {
+    const res = await axios.put(`${host}/modify/${member.uNo}`,member)
+    return res.data
+}

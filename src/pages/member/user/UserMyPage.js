@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import BasicLayout from "layouts/BasicLayout";
 import { useSelector } from "react-redux";
-import UserModifyModal from "components/member/common/UserModifyModal";
+import UserModifyModal from "components/member/user/UserModifyModal";
 import { Link } from "react-router-dom";
 
 const UserMyPage = () => {
@@ -66,7 +66,7 @@ const UserMyPage = () => {
       </div>
 
       {/* 모달 */}
-      {isModalOpen && <UserModifyModal closeModal={closeModal} />}
+      {isModalOpen && <UserModifyModal closeModal={closeModal} uNo={loginState.uNo}/>}
     </BasicLayout>
   );
 };
