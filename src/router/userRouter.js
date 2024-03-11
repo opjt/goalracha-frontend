@@ -1,6 +1,6 @@
 import { Suspense, lazy } from "react";
 const Loading = <div>Loading....</div>
-const Login = lazy(() => import("../pages/member/owner/UserLoginPage"))
+const Login = lazy(() => import("../pages/member/user/LoginPage"))
 const Logout = lazy(() => import("../pages/member/user/UserLogoutPage"))
 const KakaoRedirect = lazy(() => import("../pages/member/user/KakaoRedirectPage"))
 const Join = lazy(() => import("../pages/member/user/UserJoinPage"))

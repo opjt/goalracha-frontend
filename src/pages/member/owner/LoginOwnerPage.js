@@ -1,6 +1,6 @@
 import LoginComponent from "components/member/owner/LoginComponent";
 
-const UserLoginPage = () => {
+const OwnerLoginPage = () => {
     return (
         <>
 
@@ -9,4 +9,4 @@ const UserLoginPage = () => {
         </>
     );
 }
-export default UserLoginPage;
+export default OwnerLoginPage;

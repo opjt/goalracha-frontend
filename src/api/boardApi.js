@@ -4,7 +4,7 @@ import boardRouter from "../router/boardRouter";
 // 서버주소
 export const API_SERVER_HOST = "http://localhost:8080"
 
-const prefix = `${API_SERVER_HOST}/board`
+const prefix = `${API_SERVER_HOST}/api/board`
 
 export const getOne = async (bno) => {  //localhost:8080/board/1
   const res = await axios.get(`${prefix}/${bno}`)
