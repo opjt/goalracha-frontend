@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 import { getKakaoLoginLink } from "../api/kakaoAPI";
 import useCustomLogin from "hooks/useCustomLogin";
-import adminCustomLogin from "hooks/adminCustomLogin";
 import BasicLayout from "../layouts/BasicLayout";
 import { useEffect } from "react";
 
