@@ -7,13 +7,19 @@ const ListComponent = () => {
   const { page, size, refresh } = useCustomMove();
 
   const [serverData, setServerData] = useState([]);
-
   useEffect(() => {
     getList({ page, size }).then((data) => {
       console.log(data);
-      setServerData(data);
+      // 시분초를 제외하고 년-월-일 형식으로 변환
+      const modifiedData = data.map((item) => ({
+        ...item,
+        createDate: item.createDate.split("T")[0], // "YYYY-MM-DD" 형식으로 변환
+      }));
+      setServerData(modifiedData);
     });
   }, [page, size, refresh]);
+
+  
 
   return (
     <div className="border-2 border-blue-100 mt-10 mr-2 ml-2">

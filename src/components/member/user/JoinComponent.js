@@ -1,9 +1,9 @@
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
-
 import { useState } from "react";
 import { modifyMember } from "api/memberApi";
 import useCustomLogin from "hooks/useCustomLogin";
+
 const initState = {
     name: '',
     nickname: '',
