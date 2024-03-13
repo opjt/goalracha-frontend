@@ -20,7 +20,6 @@ const GroundRegisterComponent = () => {
     userGuide: "",
     userRules: "",
     refundRules: "",
-    changeRules: "",
     vestIsYn: false,
     footwearIsYn: false,
     showerIsYn: false,
@@ -29,7 +28,7 @@ const GroundRegisterComponent = () => {
     parkareaIsYn: false,
     roopIsYn: false,
     state: 0,
-    uno: 0,
+    uno: 2,
   };
 
   const [formData, setFormData] = useState({
@@ -300,23 +299,6 @@ const GroundRegisterComponent = () => {
               id="refundRules"
               name="refundRules"
               value={ground.refundRules}
-              onChange={handleChange}
-              className="mt-1 p-2 border rounded-md w-full h-40"
-            />
-          </div>
-
-          <div className="mb-4">
-            <label
-              htmlFor="changeRules"
-              className="block text-sm font-medium text-gray-600"
-            >
-              변경 규정:
-            </label>
-            <input
-              type="text"
-              id="changeRules"
-              name="changeRules"
-              value={ground.changeRules}
               onChange={handleChange}
               className="mt-1 p-2 border rounded-md w-full h-40"
             />
