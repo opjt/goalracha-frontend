@@ -22,7 +22,6 @@ const ModifyComponent = ({ bno }) => {
   const handleClickModify = () => {
     // 수정 버튼 클릭시
     putOne(board).then((data) => {
-      
       //console.log("modify result: " + data)
       setResult("수정완료");
     });
@@ -49,7 +48,6 @@ const ModifyComponent = ({ bno }) => {
 
   return (
     <div className="rounded border-2 border-100 mt-10 m-2 p-4">
-      
       {result ? (
         <ResultModal
           title={"처리결과"}
@@ -60,58 +58,36 @@ const ModifyComponent = ({ bno }) => {
         <></>
       )}
 
-      <div className="flex justify-center mt-10">
-        <div className="relative mb-4 flex w-full flex-wrap items-stretch">
-          <div className="w-1/5 p-6 text-right font-bold">BNO</div>
-          <div className="w-4/5 p-6 rounded-r border border-solid shadow-md bg-gray-100">
-            {board.bno}
-          </div>
-        </div>
-      </div>
-      <div className="flex justify-center">
-        <div className="relative mb-4 flex w-full flex-wrap items-stretch">
-          <div className="w-1/5 p-6 text-right font-bold">제목</div>
-          <input
-            className="w-4/5 p-6 rounded-r border border-solid border-neutral-300 shadow-md"
-            name="title"
-            type={"text"}
-            value={board.title}
-            onChange={handleChangeBoard}
-          ></input>
-        </div>
-      </div>
-      <div className="flex justify-center">
-        <div className="relative mb-4 flex w-full flex-wrap items-stretch">
-          <div className="w-1/5 p-6 text-right font-bold">내용</div>
-          <input
-            className="w-4/5 p-6 rounded-r border border-solid border-neutral-300 shadow-md"
-            name="content"
-            type="text"
-            defaultValue={board.content}
-            onChange={handleChangeBoard}
-          />
-        </div>
-      </div>
+      <input
+        type="text"
+        placeholder="제목을 입력해주세요."
+        className="input input-bordered w-full max-w-l mb-4 text-lg" // text-lg 클래스 추가: 폰트 크기를 크게 설정합니다.
+        name="title"
+        value={board.title}
+        onChange={handleChangeBoard}
+      />
+
+      <textarea
+        placeholder="내용을 입력해주세요."
+        className="textarea textarea-bordered w-full max-w-l mb-4 text-lg h-64" // h-48 클래스 추가: 높이를 48픽셀로 설정합니다.
+        name="content"
+        value={board.content}
+        onChange={handleChangeBoard}
+      />
+
       <div className="flex justify-end p-4">
-        <button
-          type="button"
-          className="inline-block rounded p-4 m-2 text-xl w-32 text-white bg-gray-500"
-          onClick={handleClickDelete}
-        >
-          삭제하기
-        </button>
-
-        
-
-
-
-        <button
-          type="button"
-          className="rounded p-4 m-2 text-xl w-32 text-white bg-gray-500"
-          onClick={handleClickModify}
-        >
-          수정하기
-        </button>
+        <div className="relative mb-4 flex p-4 flex-wrap items-stretch">
+          <button className="btn mr-2" onClick={handleClickDelete}>
+            {" "}
+            {/* 삭제하기 버튼 */}
+            삭제하기
+          </button>
+          <button className="btn" onClick={handleClickModify}>
+            {" "}
+            {/* 수정하기 버튼 */}
+            수정등록
+          </button>
+        </div>
       </div>
     </div>
   );
