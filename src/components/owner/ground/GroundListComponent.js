@@ -16,10 +16,6 @@ const initState = {
   current: 0,
 };
 
-
-
-
-
 const GroundList = ({ groundList }) => {
   const { page, size, moveToList, moveToRead } = useCustomMove();
 
