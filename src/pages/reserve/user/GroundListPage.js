@@ -219,7 +219,7 @@ const GroundListPage = () => {
             groundInfo.reserveTime = item[1]
             
             return (   
-                <GroundListItem key={groundNo} groundInfo={groundInfo}/>
+                <GroundListItem key={groundNo} groundInfo={groundInfo} date={showFilter.date}/>
             );
             })}
         </div>

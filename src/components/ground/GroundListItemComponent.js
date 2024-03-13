@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-const GroundListItem = ({ groundInfo, callbackFn }) => {
+const GroundListItem = ({ groundInfo, date, callbackFn }) => {
     var timeArray = {} // 6부터29까지 29는 5시 
     const navigate = useNavigate();
     var openTime = groundInfo.openTime
@@ -35,12 +35,12 @@ const GroundListItem = ({ groundInfo, callbackFn }) => {
         // console.log(groundInfo);
     }, [groundInfo])
     const clickGround = (gno) => {
-        navigate(`/ground/${gno}`, { state: { } });
+        navigate(`/ground/${gno}`, { state: {date:date} });
 
     }
     return (
         <>
-            <div className=" my-4 border-b-8 border-gray-50 pb-6" onClick={() => clickGround(groundInfo.gno)}>
+            <div className=" my-4 border-b-8 border-gray-50 pb-6 cursor-pointer" onClick={() => clickGround(groundInfo.gno)}>
 
                 <div className="text-lg font-bold">{groundInfo.name}</div>
                 <p className="text-sm text-gray-600">{groundInfo.addr}</p>
@@ -69,20 +69,25 @@ const GroundListItem = ({ groundInfo, callbackFn }) => {
                     <div className="w-1/4 text-sm text-gray-400">18시</div>
                     <div className="w-1/4 text-sm text-gray-400">00시</div>
                 </div>
-                <div className="flex justify-end mt-3 mr-3 text-xs">
-                    <div className="flex items-center">
-                        <span className="badge badge-success gap-2">
-                        
-                        </span>
-                        <p className="ml-1 text-gray-500">예약 가능</p>
-                        
+                <div className="flex justify-between">
+                    <div className="flex mt-3 mr-3 text-xs">
+                        <div className="flex items-center">
+                            <span className="badge badge-success gap-2">
+                            
+                            </span>
+                            <p className="ml-1 text-gray-500">예약 가능</p>
+                            
+                        </div>
+                        <div className="ml-3 flex items-center">
+                            <span className="badge badge-success gap-2 bg-gray-300">
+                            
+                            </span>
+                            <p className="ml-1 text-gray-500">예약 불가</p>
+                        </div>
                     </div>
-                    <div className="ml-3 flex items-center">
-                        <span className="badge badge-success gap-2 bg-gray-300">
-                        
-                        </span>
-                        <p className="ml-1 text-gray-500">예약 불가</p>
-                    </div>
+                    {/* <div className="flex justify-end">
+                        <button className="btn btn-md">예약하기</button>
+                    </div> */}
                 </div>
                   
             </div>

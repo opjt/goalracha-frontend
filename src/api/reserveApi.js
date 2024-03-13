@@ -9,3 +9,8 @@ export const getListbyFilter = async (req) => {
     const res = await axios.post(`${host}/v/date/`, req)
     return res.data
 }
+
+export const getInfoByGno = async (req) => {
+    const res = await axios.get(`${host}/v/ground/${req.gno}/${req.date}`)
+    return res.data
+}
