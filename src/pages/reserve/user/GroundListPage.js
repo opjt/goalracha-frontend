@@ -1,15 +1,25 @@
-import { Calendar } from 'react-date-range'; // 얘가 캘린더 라이브러리
+import { useState, useCallback ,useEffect} from 'react';
+import { useNavigate } from 'react-router-dom';
+import { update } from "slices/searchSlice"
+import { useSelector, useDispatch } from 'react-redux';
 import BasicLayout from 'layouts/BasicLayout';
+
+import { Calendar } from 'react-date-range'; // 얘가 캘린더 라이브러리
 import ko from 'date-fns/locale/ko';	     // 날짜 포맷 라이브러리 (한국어 기능을 임포트)
 import moment from 'moment';
-import { useState, useCallback } from 'react';
 import 'react-date-range/dist/styles.css'; // main style file
 import 'react-date-range/dist/theme/default.css'; // theme css file
+
+import { getListbyFilter } from 'api/reserveApi';
+import GroundListItem from 'components/ground/GroundListItemComponent';
 
 const initoption = {
     date:  moment().toDate(),
     time: new Array(12).fill(false),
     inout: {in: false, out:false}
+}
+const initResult = {
+    groundreservList: []
 }
 const timeRanges = [
     ['06~08시','06시'],
@@ -28,13 +38,97 @@ const timeRanges = [
 const GroundListPage = () => {
 
     const [option, setOption] = useState(initoption);   // 검색옵션
-    const [showFilter, setShowFilter] = useState({date:"", time:"", inout:""});
+    const [showFilter, setShowFilter] = useState({date:"", time:"", inout:"",search:""});
+    const [jsonResult, setJsonResult] = useState(initResult);
+    const searchState = useSelector((state) => state.searchSlice);
+    const dispatch = useDispatch()
+    useEffect(() => {
+        showFilter.search = searchState;
+        setShowFilter({...showFilter})
+    }, [searchState])
     const onChangeDate = useCallback((date) => { // date 변경값을 받아오는 함수
         if (!date) {return;} // 날짜값이 없을 때 예외처리
         option.date = date;
         setOption({...option})
     },[option]);
- 
+    
+    useEffect(() => {
+        getResultasync(showFilter).then((data) => {
+            setJsonResult(data)
+        });
+      }, [showFilter]);
+  
+    const initchange = (req) => {
+        let reqDate;
+        let reqTime;
+        let reqInout = [];
+        let reqSearch = null;
+        if(req.date === '') {
+            reqDate = moment().format("YYYY-MM-DD")
+        } else {
+            reqDate = req.date;
+        } 
+        // console.log(req.time)
+        //시간 기본값 지정
+        var hourArray = [];
+        if(req.time === '') {
+            reqTime = '6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29'
+        } else {
+            var timeArray = req.time.split(',').map(item => parseInt(item.replace('시', '').trim()));
+            timeArray.forEach((value,index) => {
+                var push = value;
+                if(0 <= push && push <= 4) {
+                    push = push +24;
+                }
+                hourArray.push(push)
+                hourArray.push(push+1)
+            })    
+            hourArray.sort((a,b)=> a-b);
+            reqTime = hourArray.join(',')
+        }
+        // console.log(hourArray);
+
+        //실내외 기본값 지정
+        if(req.inout === '') {
+            reqInout = ['실내','실외'];
+        } else {
+            reqInout = req.inout.split(",")
+        }
+
+        //검색값 지정
+        if(req.search !== '') {
+            reqSearch = req.search;
+        }
+        //req보낼값
+        var reqValue = {
+            date: reqDate,
+            time: reqTime,
+            inout: reqInout,
+            search: reqSearch
+        }
+        return reqValue;
+    }
+    // const getResult = (req) => {
+    //     var reqValue = initchange(req);
+    //     console.log(reqValue)
+    //     getListbyFilter(reqValue)
+    //     .then((result) => {
+    //         setJsonResult(result)
+    //     })
+    //     .catch((e) => {
+    //         console.error(e);
+    //     });
+    // }
+    const getResultasync = async (req) => {
+        try {
+            const reqValue = initchange(req);
+            const result = await getListbyFilter(reqValue);
+            return result;
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
     const handleChangeInOut = (e) => { //실내외 버튼클릭핸들러
         console.log(e.target.checked);
         option.inout[e.target.name] = e.target.checked
@@ -61,8 +155,13 @@ const GroundListPage = () => {
             option.inout = {in: false, out:false};
             showFilter.inout = ""
         }
+        if(e.target.name === "search") {
+            showFilter.search = ""
+            dispatch(update(""))
+        }
         setShowFilter({...showFilter})
         setOption({...option})
+      
     }
     const handleOption= (e) => { //적용버튼옵션핸들러
         if(e.target.name === "time") {
@@ -82,6 +181,7 @@ const GroundListPage = () => {
             showFilter.inout = Object.keys(values).filter(key => values[key] === true).join(',');
         }
         setShowFilter({...showFilter})
+        // console.log(showFilter)
 
     }
 
@@ -92,16 +192,40 @@ const GroundListPage = () => {
             <button className={`btn btn-sm  gap-1 ${showFilter.date !== '' ? 'btn-neutral' : ''}`} onClick={()=> {document.getElementById('my_modal_1').showModal()}}>
                 {showFilter.date !== '' ? showFilter.date : '날짜선택'}
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" ><path d="M6 9l6 6 6-6"/></svg></button>
-            <button className={`btn btn-sm  gap-1 ${showFilter.time != ''?  "btn-neutral" : ""}`}  onClick={()=> { document.getElementById('my_modal_2').showModal()}}>
-                {showFilter.time != '' ? showFilter.time : "시간"}
+            <button className={`btn btn-sm  gap-1 ${showFilter.time !== ''?  "btn-neutral" : ""}`}  onClick={()=> { document.getElementById('my_modal_2').showModal()}}>
+                {showFilter.time !== '' ? showFilter.time : "시간"}
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" ><path d="M6 9l6 6 6-6"/></svg></button>
-            <button className={`btn btn-sm  gap-1 ${showFilter.inout != ''?  "btn-neutral" : ""}`}  onClick={()=> { document.getElementById('my_modal_3').showModal()}}>
+            <button className={`btn btn-sm  gap-1 ${showFilter.inout !== ''?  "btn-neutral" : ""}`}  onClick={()=> { document.getElementById('my_modal_3').showModal()}}>
                 {showFilter.inout||"실내외"}
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" ><path d="M6 9l6 6 6-6"/></svg></button>
+            {showFilter.search !== '' && (
+                <button className={`btn btn-sm  gap-1 btn-neutral`} name="search" onClick={handleClickReset}>
+                {showFilter.search}
+                {/* <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" ><path d="M6 9l6 6 6-6"/></svg></button> */}
+                <svg xmlns="http://www.w3.org/2000/svg"   width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+                </button>
+            )}
+
         </div>
 
-        <div className="h-screen">
+        <div className="mt-5">
+        
+
+        {jsonResult["groundreservList"].map((item) => {
+            const groundNo = item[0]; // 구장 번호를 변수로 지정
+            const groundInfo = jsonResult.groundlist[groundNo]; // 구장 정보를 찾음
+            groundInfo.reserveTime = item[1]
+            
+            return (   
+                <GroundListItem key={groundNo} groundInfo={groundInfo}/>
+            );
+            })}
         </div>
+
+
+
 
         {/* 날짜 모달 */}
         <dialog id="my_modal_1" className="modal">
@@ -111,7 +235,7 @@ const GroundListPage = () => {
                 locale={ko} 	// 한국어 달력
                 months={1}  	// 1달치 달력만 디스플레이
                 minDate={moment().toDate()}
-                maxDate={moment().add(14, 'd').toDate()}
+                maxDate={moment().add(14, 'd').toDate()} //최대날짜
                 date={option.date}		// 날짜값
                 onChange={onChangeDate} 	     // onChange 함수
                 dateDisplayFormat="yyyy-mm.dd" // 날짜 포맷값

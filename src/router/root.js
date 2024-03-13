@@ -11,9 +11,10 @@ const { createBrowserRouter } = require("react-router-dom");
 
 const Loading = <div>Loading....</div>
 const Main = lazy(() => import("../pages/MainPage"))
-const Ground = lazy(() => import("../pages/ground/user/IndexPage"))
+const Ground = lazy(() => import("../pages/reserve/user/IndexPage.js"))
 const Login = lazy(() => import("../pages/member/user/LoginPage.js"))
-const GroundListPage = lazy(() => import("pages/ground/user/GroundListPage"))
+const GroundListPage = lazy(() => import("pages/reserve/user/GroundListPage.js"))
+const GroundInfoPage = lazy(() => import("pages/reserve/user/GroundInfoPage.js"))
 const BoardIndex = lazy(() => import("pages/board/IndexPage.js"))
 
 const root = createBrowserRouter([
@@ -30,9 +31,8 @@ const root = createBrowserRouter([
         element: <Suspense fallback={Loading}><GroundListPage /></Suspense>
     },
     {
-        path: "ground",
-        element: <Suspense fallback={Loading}><Ground /></Suspense>,
-        children: groundRouter()
+        path: "ground/:gno",
+        element: <Suspense fallback={Loading}><GroundInfoPage /></Suspense>,
     },
     { 
         path: "user",

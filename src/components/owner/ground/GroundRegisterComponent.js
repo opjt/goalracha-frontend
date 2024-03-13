@@ -29,7 +29,7 @@ const GroundRegisterComponent = () => {
     parkareaIsYn: false,
     roopIsYn: false,
     state: 0,
-    uno: 0,
+    uno: 21,
   };
 
   const [formData, setFormData] = useState({

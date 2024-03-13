@@ -1,7 +1,29 @@
-import { Link, Navigate, createSearchParams, useNavigate } from "react-router-dom"
-
-
+import { Link, useNavigate, createSearchParams, useLocation } from "react-router-dom"
+import { useState } from "react"
+import { update } from "slices/searchSlice"
+import { useDispatch } from "react-redux"
 const MainHeader = ({children}) => {
+    const [searchInput, setSearchInput] = useState(''); // 입력된 값의 상태
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+    const location = useLocation();
+
+    const handleInputChange = (e) => {
+      setSearchInput(e.target.value); // 입력된 값으로 상태를 업데이트
+      
+    };
+  
+    // 엔터 키를 누르면 호출되는 함수
+    const handleKeyPress = (e) => {
+      if (e.key === 'Enter') {
+        dispatch(update(searchInput)); // Redux 상태 업데이트
+        setSearchInput('')
+        console.log("Current Path:", location.pathname); // 현재 경로 출력
+        if(!location.pathname.startsWith("/reserve")) {
+          navigate({ pathname: '/reserve'})
+        }
+      }
+    };
 
     return (
       <div className="max-w-screen-xl mx-auto navbar bg-base-100 p-2 ">
@@ -13,10 +35,13 @@ const MainHeader = ({children}) => {
         <div className="flex-none gap-2">
           <div className="form-control">
             <input
-              type="text"
-              placeholder="지역, 구장명으로 찾기"
-              className="input input-bordered w-24 md:w-auto"
-            />
+            type="text"
+            placeholder="지역, 구장명으로 찾기"
+            className="input input-bordered w-24 md:w-auto"
+            value={searchInput} // 입력된 값 바인딩
+            onChange={handleInputChange} // 값이 변경될 때마다 호출
+            onKeyDown={handleKeyPress} // 키 눌릴 때 호출
+          />
           </div>
           <Link to={"/login"}>
             <div
