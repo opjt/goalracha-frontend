@@ -1,43 +1,34 @@
-const Result2Modal = ({ title, content, callbackFn }) => {
-    return (
-      <div
-        className={`fixed top-0 left-0 z-[1055] flex h-full w-full justify-center
-    bg-black bg-opacity-20`}
-        onClick={() => {
-          if (callbackFn) {
-            callbackFn();
-          }
-        }}
-      >
-        <div
-          className="absolute bg-white shadow dark:bg-gray-700 opacity-100 w-1/4
-    rounded mt-10 mb-10 px-6 min-w-[600px]"
-        >
-          <div
-            className="justify-center bg-warning-400 mt-6 mb-6 text-2xl border-
-    b-4 border-gray-500"
-          >
-            {title}
-          </div>
-          <div className="text-4xl border-orange-400 border-b-4 pt-4 pb-4">
-            {content}
-          </div>
-          <div className="justify-end flex ">
-            <button
-              className="rounded bg-blue-500 mt-4 mb-4 px-6 pt-4 pb-4 text-lg text-
-    white"
-              onClick={() => {
-                if (callbackFn) {
-                  callbackFn();
-                }
-              }}
-            >
-              Close Modal
-            </button>
-          </div>
-        </div>
-      </div>
-    );
+
+
+const ResultModal = ({ title, content, close, callbackFn }) => {
+  const handleCloseModal = (e) => {
+      // 모달 내부 요소를 클릭한 경우 무시
+      if (e.target.closest('.modal-box')) {
+          return;
+      }
+      // 모달 닫기 콜백 함수 호출
+      if (callbackFn) {
+          callbackFn();
+      }
   };
-  export default Result2Modal;
-  
+  return (
+      <dialog className="modal modal-open" onClick={handleCloseModal}>
+          <div className="modal-box pointer-events-auto">
+              <h3 className="font-bold text-lg">{title}</h3>
+              <p className="py-4">{content}</p>
+              <div className="modal-action">
+                  <form method="dialog">
+                      {/* if there is a button in form, it will close the modal */}
+                      <button className="btn" onClick={() => {
+                          if(callbackFn) {
+                              callbackFn();
+                          }
+                      }}>닫기{close}</button>
+                  </form>
+              </div>
+          </div>
+      </dialog>
+  );
+}
+
+export default ResultModal;

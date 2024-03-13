@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { postAdd } from "../../api/boardApi";
 import ResultModal from "../common/Result2Modal";
-import useCustomMove from "../../hooks/useCustomMove";
+import useCustomMove from "../../hooks/useCustomMoveboard";
 
 const initState = {
   title: "",
   content: "",
-  createDate: "",
+  createdate: null,
 };
 
 const AddComponent = () => {
@@ -49,11 +49,11 @@ const AddComponent = () => {
   };
 
   return (
-    <div className="border-2 border-sky-200 mt-10 m-2 p-4">
+    <div className="rounded border-2 border-100 mt-10 m-2 p-4">
       {result ? 
         <ResultModal
-          title={"Add Result"}
-          content={`New ${result} Added`}
+          title={"처리완료"}
+          content={"등록완료"}
           callbackFn={closeModal}
         /> : <></>}
 
@@ -84,26 +84,25 @@ const AddComponent = () => {
           ></input>
         </div>
       </div>
-
-      <div className="flex justify-center">
+     {/* <div className="flex justify-center">
         <div className="relative mb-4 flex w-full flex-wrap items-stretch">
           <div className="w-1/5 p-6 text-right font-bold">작성일시</div>
           <input
             className="w-4/5 p-6 rounded-r border border-solid border-
   neutral-500 shadow-md"
-            name="createDate"
+            name="createdate"
             type={"date"}
-            value={board.createDate}
+            value={board.createdate}
             onChange={handleChangeBoard}
           ></input>
         </div>
-      </div>
+      </div> */}
 
       <div className="flex justify-end">
         <div className="relative mb-4 flex p-4 flex-wrap items-stretch">
           <button
             type="button"
-            className="rounded p-4 w-36 bg-blue-500 text-xl text-white "
+            className="rounded p-4 w-36 bg-gray-500 text-xl text-white "
             onClick={handleClickAdd}
           >
             등록하기
