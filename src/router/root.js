@@ -82,7 +82,6 @@ const root = createBrowserRouter([
         element: <AdminLayout />, // AdminLayout이 기본 레이아웃으로 사용됩니다.
         children: [
         { path: "", element: <AdminPage /> }, // 기본 AdminPage 뷰
-        { path: "submenu1-url", element: <UnauthorizedStadiumPage /> },
         { path: "submenu2-url", element: <AdminGroundListPage /> },
         { path: "submenu3-url", element: <AdminReserveListPage /> },
         { path: "submenu4-url", element: <AdminOwnerManagePage /> },
