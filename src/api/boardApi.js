@@ -33,3 +33,4 @@ export const putOne = async (board) => {
   return res.data
 }
 
+
