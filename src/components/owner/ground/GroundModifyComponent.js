@@ -57,6 +57,53 @@ const GroundModifyComponent = ({gno, moveList, moveRead}) =>  {
         setGround({...ground})
     }
     
+
+    return
+    <h2 className="flex-auto text-2xl font-bold mb-4">구장 상태</h2>
+    <div className="justify-center">
+      <label
+        htmlFor="state"
+        className="block text-sm font-medium text-gray-600 mb-2"
+      >
+      </label>
+      <div className="flex space-x-4 justify-center">
+        <label>
+          <input
+            type="radio"
+            id="stateOpen"
+            name="state"
+            value={ground.state}
+            onChange={handleChange}
+          />
+          <span className="ml-2">오픈</span>
+        </label>
+
+        <label>
+          <input
+            type="radio"
+            id="stateClosed"
+            name="state"
+            value={ground.state}
+            onChange={handleChange}
+          />
+          <span className="ml-2">마감</span>
+        </label>
+
+        <label>
+          <input
+            type="radio"
+            id="statePreparing"
+            name="state"
+            value={ground.state}
+            onChange={handleChange}
+          />
+          <span className="ml-2">준비중</span>
+        </label>
+      </div>
+    </div>
 }
+
+
+
 
 export default GroundModifyComponent
