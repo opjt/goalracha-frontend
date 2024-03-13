@@ -56,7 +56,7 @@ const UserMyPage = () => {
             />
           </div>
           <div className="container text-center mt-2 font-bold">
-            {loginState.nickname}
+            {member.nickname}
           </div>
           <div className="flex justify-end ml-auto mt-4">
             <button

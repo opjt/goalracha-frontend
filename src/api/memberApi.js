@@ -51,3 +51,10 @@ export const putOwnerModify = async (member, uNo) => {
 
     return res.data;
 };
+
+// 사업자 비밀번호 수정 API 호출 함수
+export const putOwnerPwModify = async (member, uNo) => {
+    const res = await axios.put(`${host}/owner/pwmodify/${uNo}`, member);
+
+    return res.data;
+};

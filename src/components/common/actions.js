@@ -6,3 +6,5 @@ export const modifyUserInfo = (userInfo) => ({
   type: MODIFY_USER_INFO,
   payload: userInfo,
 });
+
+
