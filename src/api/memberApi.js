@@ -38,7 +38,16 @@ export const joinOwner = async (member) => {
     return res.data
 }
 
-export const putUserMididy = async(member) => {
-    const res = await axios.put(`${host}/modify/${member.uNo}`,member)
-    return res.data
-}
+// 사용자 정보 수정 API 호출 함수
+export const putUserModify = async (member, uNo) => {
+        const res = await axios.put(`${host}/user/modify/${uNo}`, member);
+
+        return res.data;
+};
+
+// 사업자 정보 수정 API 호출 함수
+export const putOwnerModify = async (member, uNo) => {
+    const res = await axios.put(`${host}/owner/modify/${uNo}`, member);
+
+    return res.data;
+};

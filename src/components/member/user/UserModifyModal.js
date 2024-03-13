@@ -1,34 +1,41 @@
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { putUserModify } from "api/memberApi";
+import { modifyUserInfo } from "components/common/actions";
 
-const UserModifyModal = ({ closeModal }) => {
-  const loginState = useSelector((state) => state.loginSlice);
-  const [nickname, setNickname] = useState(loginState.nickname); // 닉네임 상태
-  const [tel, setTel] = useState(loginState.tel); // 연락처 상태
-  const [email, setEmail] = useState(loginState.email); // 이메일 상태
+const UserModifyModal = ({ closeModal, uNo, nickname, tel, onModalClose }) => {
+  const dispatch = useDispatch();
+  const [newNickname, setNewNickname] = useState(nickname); // 새 닉네임 상태
+  const [newTel, setNewTel] = useState(tel); // 새 전화번호 상태
 
-  // 닉네임 입력 핸들러
   const handleNicknameChange = (event) => {
-    setNickname(event.target.value);
+    setNewNickname(event.target.value);
   };
 
-  // 연락처 입력 핸들러
   const handleTelChange = (event) => {
-    setTel(event.target.value);
+    setNewTel(event.target.value);
   };
 
-  // 이메일 입력 핸들러
-  const handleEmailChange = (event) => {
-    setEmail(event.target.value);
-  };
+  const handleSave = async () => {
+    const modifiedUserInfo = {
+      nickname: newNickname,
+      tel: newTel,
+    };
 
-  // 저장 버튼 클릭 핸들러
-  const handleSave = () => {
-    // 수정된 닉네임, 연락처, 이메일을 서버에 저장하는 로직을 추가할 수 있습니다.
-    console.log("수정된 닉네임:", nickname);
-    console.log("수정된 연락처:", tel);
-    console.log("수정된 이메일:", email);
-    closeModal(); // 모달 닫기
+    try {
+      const response = await putUserModify(modifiedUserInfo, uNo);
+      console.log("사용자 정보 수정 완료:", response);
+
+      // 수정된 정보를 Redux store에 반영
+      dispatch(modifyUserInfo(modifiedUserInfo));
+
+      // 모달 닫기 이벤트 호출
+      closeModal();
+      // 모달이 닫히면서 수정된 정보를 전달하여 로그인 상태를 업데이트
+      onModalClose(modifiedUserInfo);
+    } catch (error) {
+      console.error("사용자 정보 수정 오류:", error);
+    }
   };
 
   return (
@@ -49,7 +56,6 @@ const UserModifyModal = ({ closeModal }) => {
           <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
             <div className="sm:flex sm:items-start">
               <div className="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 sm:mx-0 sm:h-10 sm:w-10">
-                {/* 아이콘 */}
                 <svg
                   className="h-6 w-6 text-blue-600"
                   xmlns="http://www.w3.org/2000/svg"
@@ -87,7 +93,7 @@ const UserModifyModal = ({ closeModal }) => {
                     id="nickname"
                     className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                     placeholder="닉네임을 입력하세요."
-                    value={nickname}
+                    value={newNickname} // 수정: newNickname 상태 사용
                     onChange={handleNicknameChange}
                   />
                 </div>
@@ -105,26 +111,8 @@ const UserModifyModal = ({ closeModal }) => {
                     id="tel"
                     className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                     placeholder="연락처를 입력하세요."
-                    value={tel}
+                    value={newTel} // 수정: newTel 상태 사용
                     onChange={handleTelChange}
-                  />
-                </div>
-                {/* 이메일 입력 폼 */}
-                <div className="mt-4">
-                  <label
-                    htmlFor="email"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    이메일
-                  </label>
-                  <input
-                    type="text"
-                    name="email"
-                    id="email"
-                    className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                    placeholder="이메일을 입력하세요."
-                    value={email}
-                    onChange={handleEmailChange}
                   />
                 </div>
               </div>
@@ -133,14 +121,14 @@ const UserModifyModal = ({ closeModal }) => {
           {/* 모달 footer */}
           <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
             <button
-              onClick={handleSave}
+              onClick={handleSave} // 저장 버튼 클릭 시 handleSave 호출
               type="button"
               className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
             >
               저장
             </button>
             <button
-              onClick={closeModal}
+              onClick={closeModal} // 취소 버튼 클릭 시 closeModal 호출
               type="button"
               className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm"
             >
@@ -150,5 +138,7 @@ const UserModifyModal = ({ closeModal }) => {
         </div>
       </div>
     </div>
-</div >
-</div >
+  );
+};
+
+export default UserModifyModal;
