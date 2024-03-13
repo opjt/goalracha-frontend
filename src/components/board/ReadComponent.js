@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { getOne } from "../../api/boardApi";
-import useCustomMove from "../../hooks/useCustomMove";
+import useCustomMove from "../../hooks/useCustomMoveboard";
 
 const initState = {
   title: "", // 제목, 초기값으로 빈 문자열 또는 원하는 값 설정
   content: "", // 내용, 초기값으로 빈 문자열 또는 원하는 값 설정
-  createdate: null
+  createdate : null
 };
 
 const ReadComponent = ({ bno }) => {
@@ -20,21 +20,21 @@ const ReadComponent = ({ bno }) => {
   }, [bno]);
 
   return (
-    <div className="border-2 border-sky-200 mt-10 m-2 p-4 ">
+    <div className="rounded border-2 border-100 mt-10 m-2 p-4 ">
       {makeDiv("제목", board.title)}
       {makeDiv("글 내용", board.content)}
 
       <div className="flex justify-end p-4">
         <button
           type="button"
-          className="rounded p-4 m-2 text-xl w-32 text-white bg-blue-500"
+          className="rounded p-4 m-2 text-xl w-32 text-white bg-gray-500"
           onClick={() => moveToList()}
         >
           뒤로가기
         </button>
         <button
           type="button"
-          className="rounded p-4 m-2 text-xl w-32 text-white bg-red-500"
+          className="rounded p-4 m-2 text-xl w-32 text-white bg-gray-500"
           onClick={() => moveToModify(bno)}
         >
           글 수정

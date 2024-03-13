@@ -1,6 +1,6 @@
 import { getGroundList } from "api/groundApi";
 import PageComponent from "components/member/common/PageComponent";
-import useCustomMove from "hooks/useCustomMove";
+import useCustomMove from "hooks/useCustomMoveboard";
 import React, { useEffect, useState } from "react";
 
 const initState = {

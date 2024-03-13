@@ -32,3 +32,4 @@ export const putOne = async (board) => {
   const res = await axios.put(`${prefix}/${board.bno}`, board)
   return res.data
 }
+

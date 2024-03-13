@@ -1,10 +1,12 @@
+// boardRouter.js
 import { Suspense, lazy } from "react";
-import { Navigate } from "react-router-dom";
+
 const Loading = <div>Loading....</div>;
 const BoardList = lazy(() => import("../pages/board/ListPage"));
 const BoardRead = lazy(() => import("../pages/board/ReadPage"));
 const BoardAdd = lazy(() => import("../pages/board/AddPage"));
-const BoardModify = lazy(() => import("../pages/board/ModifyPage"))
+const BoardModify = lazy(() => import("../pages/board/ModifyPage"));
+const BoardPage = lazy(() => import("../pages/board/ListPage"));
 
 const boardRouter = () => {
   return [
@@ -17,16 +19,8 @@ const boardRouter = () => {
       ),
     },
     {
-      path: "",
-      element: <Navigate replace to="list" />,
-    },
-    {
       path: "read/:bno",
-      element: (
-        <Suspense fallback={Loading}>
-          <BoardRead />
-        </Suspense>
-      ),
+      element: <Suspense fallback={Loading}><BoardRead /></Suspense>
     },
     {
       path: "add",
@@ -38,8 +32,21 @@ const boardRouter = () => {
     },
     {
       path: "modify/:bno",
-      element: <Suspense fallback={Loading}><BoardModify/></Suspense>
-      }
+      element: (
+        <Suspense fallback={Loading}>
+          <BoardModify />
+        </Suspense>
+      ),
+    },
+    {
+      path: "board",
+      element: (
+        <Suspense fallback={Loading}>
+          <BoardPage />
+        </Suspense>
+      ),
+    },
   ];
 };
+
 export default boardRouter;
