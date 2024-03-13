@@ -14,7 +14,12 @@ const ListComponent = () => {
   useEffect(() => {
     getList({ page, size }).then((data) => {
       console.log(data);
-      setServerData(data);
+      // 시분초를 제외하고 년-월-일 형식으로 변환
+      const modifiedData = data.map((item) => ({
+        ...item,
+        createDate: item.createDate.split("T")[0], // "YYYY-MM-DD" 형식으로 변환
+      }));
+      setServerData(modifiedData);
     });
   }, [page, size, refresh]);
 
