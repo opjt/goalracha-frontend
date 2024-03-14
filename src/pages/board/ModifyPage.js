@@ -5,10 +5,13 @@ const ModifyPage = () => {
   const { bno } = useParams();
 
   return (
-    <div className="p-4 w-full bg-white">
-      <div className="text-3xl font-extrabold">공지사항을 수정해주세요.</div>
-      <ModifyComponent bno={bno} />
+    <div className="font-bold w-full bg-white mt-6 p-8 rounded-lg shadow-lg">
+      <div className="text-3xl mb-4 flex items-center">
+        <span className="mr-2">&nbsp;&nbsp;&nbsp;💌</span>&nbsp;&nbsp;공지사항 수정페이지
+      </div>
+      <ModifyComponent bno={bno}></ModifyComponent>
     </div>
   );
 };
+
 export default ModifyPage;

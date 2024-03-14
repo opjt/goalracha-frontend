@@ -28,11 +28,11 @@ const GroundListPage = lazy(() => import("pages/reserve/user/GroundListPage"));
 const BoardIndex = lazy(() => import("pages/board/IndexPage.js"));
 
 const AdminLayout = () => (
-  <>
+<>
     <MainHeader />
     <TopNavAdmin />
     <Outlet />
-  </>
+</>
 );
 
 const root = createBrowserRouter([

@@ -1,10 +1,12 @@
 // 페이지네이션
 
-import ListComponent from "../../components/board/ListComponent";
+import ListComponent from "../../components/board/ListComponent2";
 const ListPage = () => {
   return (
-    <div className="p-4 w-full bg-white">
-      <div className="text-3xl font-extrabold">(개인회원)골라차의<br />공지사항을 안내해드려요.</div>
+    <div className="font-extrabold w-full bg-white mt-6 p-8 rounded-lg shadow-lg">
+      <div className="text-3xl mb-4 flex items-center">
+        <span className="mr-2">&nbsp;&nbsp;&nbsp;⚽️</span>&nbsp;&nbsp;골라차의 공지사항을 안내해드려요
+      </div>
       <ListComponent />
     </div>
   );

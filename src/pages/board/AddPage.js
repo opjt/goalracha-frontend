@@ -4,8 +4,10 @@ import AddComponent from "../../components/board/AddComponent";
 
 const AddPage = () => {
   return (
-    <div className="p-4 w-full bg-white">
-      <div className="text-3xl font-extrabold">공지사항을 작성해주세요.</div>
+    <div className="font-extrabold w-full bg-white mt-6 p-8 rounded-lg shadow-lg">
+      <div className="text-3xl mb-4 flex items-center">
+        <span className="mr-2">&nbsp;&nbsp;&nbsp;📝</span>&nbsp;&nbsp;공지사항을 작성해주세요
+      </div>
       <AddComponent />
     </div>
   );

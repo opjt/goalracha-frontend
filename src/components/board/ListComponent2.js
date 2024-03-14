@@ -33,15 +33,15 @@ const ListComponent = () => {
               className="collapse-toggle"
             />
             <div
-              className="collapse-title text-xl font-medium"
+              className="collapse-title text-xl font-semibold"
               onClick={() => handleTitleClick(board.bno)}
             >
-              {board.title}
+              📌&nbsp;&nbsp;&nbsp;{board.title}
             </div>
             <div
               className={`collapse-content ${expandedBno === board.bno ? "collapse-content-active" : ""}`}
             >
-              <p>{board.content}</p>
+              <pre className="font-normal">{board.content}</pre> {/* <pre> 태그로 감싸기 */}
             </div>
           </div>
         </div>
