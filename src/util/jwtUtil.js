@@ -13,6 +13,7 @@ const refreshJWT = async (accessToken, refreshToken) => {
 //before request
 const beforeReq = (config) => {
     console.log("before request.............")
+    console.log(config)
     const memberInfo = getCookie("member")
     
     if (!memberInfo) {
@@ -30,6 +31,7 @@ const beforeReq = (config) => {
     const { accessToken } = memberInfo
     // Authorization 헤더 처리
     config.headers.Authorization = `Bearer ${accessToken}`
+    console.log(config)
     return config
 }
 

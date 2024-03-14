@@ -1,4 +1,5 @@
 import axios from "axios"
+import jwtAxios from "util/jwtUtil";
 
 export const API_SERVER_HOST = 'http://localhost:8080';  // 백엔드 서버주소
 
@@ -22,7 +23,7 @@ export const getGroundList = async ( pageParam ) => {
 export const postGroundRegister = async (groundInfo) => {
   const header = {headers: {"Content-Type": "multipart/form-data"}}
 
-  const res = await axios.post(`${prefix}/register`,groundInfo, header)
+  const res = await jwtAxios.post(`${prefix}/register`,groundInfo, header)
 
   return res.data
 };
