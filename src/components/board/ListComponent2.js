@@ -13,6 +13,13 @@ const ListComponent = () => {
 
   useEffect(() => {
     getList({ page, size }).then((data) => {
+      console.log(data);
+      // 시분초를 제외하고 년-월-일 형식으로 변환
+      const modifiedData = data.map((item) => ({
+        ...item,
+        createDate: item.createDate.split("T")[0], // "YYYY-MM-DD" 형식으로 변환
+      }));
+      setServerData(modifiedData);
       setServerData(data.map((board) => ({ ...board })));
       console.log(serverData)
     });
@@ -23,30 +30,24 @@ const ListComponent = () => {
   };
 
   return (
-    <div className="rounded border-0 border-100 mt-10 mr-2 ml-2">
+
+    <div className="rounded border-2 border-100 mt-10 mr-2 ml-2">
       {serverData.map((board) => (
-        <div key={board.bno}>
-          <div className="collapse bg-base-200 mb-4">
-            <input
-              type="checkbox"
-              id={`board-${board.bno}`}
-              className="collapse-toggle"
-            />
-            <div
-              className="collapse-title text-xl font-medium"
-              onClick={() => handleTitleClick(board.bno)}
-            >
-              {board.title}
-            </div>
-            <div
-              className={`collapse-content ${expandedBno === board.bno ? "collapse-content-active" : ""}`}
-            >
+        <div key={board.bno} className="collapse border border-base-300 bg-base-200">
+          <div className="collapse-title text-xl font-medium" onClick={() => handleTitleClick(board.bno)}>
+            {board.title}
+          </div>
+          {expandedBno === board.bno && (
+            <div className="collapse-content" style={{ display: "block" }}>
+              <h3 className="text-xl font-bold">{board.title}</h3>
               <p>{board.content}</p>
             </div>
-          </div>
+          )}
         </div>
       ))}
     </div>
+    
+
   );
 };
 

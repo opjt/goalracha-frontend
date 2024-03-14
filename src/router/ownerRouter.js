@@ -26,6 +26,7 @@ const ownerRouter = () => {
             path: "mypage",
             element: <Suspense fallback={Loading}><Mypage /></Suspense>
         },
+
     ]
 }
 export default ownerRouter

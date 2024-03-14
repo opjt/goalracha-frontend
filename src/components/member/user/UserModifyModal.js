@@ -26,13 +26,18 @@ const UserModifyModal = ({ closeModal, uNo, nickname, tel, onModalClose }) => {
       const response = await putUserModify(modifiedUserInfo, uNo);
       console.log("사용자 정보 수정 완료:", response);
 
+      // 수정된 정보를 로컬 스토리지에 저장
+      localStorage.setItem('modifiedUserInfo',JSON.stringify(modifiedUserInfo))
+
       // 수정된 정보를 Redux store에 반영
       dispatch(modifyUserInfo(modifiedUserInfo));
 
       // 모달 닫기 이벤트 호출
       closeModal();
+
       // 모달이 닫히면서 수정된 정보를 전달하여 로그인 상태를 업데이트
       onModalClose(modifiedUserInfo);
+      
     } catch (error) {
       console.error("사용자 정보 수정 오류:", error);
     }
