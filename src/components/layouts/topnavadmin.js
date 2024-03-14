@@ -65,8 +65,8 @@ const TopnavAdmin = () => {
           <button className="font-bold btn btn-ghost">통계관리</button>
           {showStatsSubMenu && (
             <div className="absolute left-0 w-full mt-px py-2 bg-white shadow-xl flex flex-col">
-              <button onClick={goToStatsSubmenu1} className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-200 hover:shadow-lg">월별 통계</button>
-              <button onClick={goToStatsSubmenu2} className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-200 hover:shadow-lg">년별 통계</button>
+              <button onClick={goToStatsSubmenu1} className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-200 hover:shadow-lg">예약 통계</button>
+              <button onClick={goToStatsSubmenu2} className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-200 hover:shadow-lg">회원 통계</button>
             </div>
           )}
         </div>
