@@ -1,11 +1,9 @@
 import { useState, useRef } from "react";
-import { postGroundRegister } from "../../../api/groundApi";
+import { postGroundRegister } from "api/groundApi";
+import ResultModal from "components/common/ResultModal";
+import useCustomMove from "hooks/useCustomMoveboard";
 
 const initState = {
-  groundInfoList: [],
-  rulesList: [],
-  checkBoxList: [],
-  StateList: [],
   name: "",
   addr: "",
   inAndOut: "",
@@ -27,55 +25,77 @@ const initState = {
   airconIsYn: false,
   parkareaIsYn: false,
   roopIsYn: false,
-  uno: 2,
+  state: 0,
+  uNo: 2,
+  filse: []
 };
 
 const GroundRegisterComponent = () => {
   
   const [ground, setGround] = useState({ ...initState });
   const uploadRef = useRef();
+  const [fetching, setFetching] = useState(false)
+  const [result, setResult] = useState(null)
+
+  const {moveToList} = useCustomMove;
 
   const handleChange = (e) => {
-    const { name, type, value, checked } = e.target;
-
-    // 체크박스인 경우, checked 값을 사용
-    const updatedValue = type === "checkbox" ? checked : value;
-
-    // 기존 객체를 직접 수정하지 않고, 새로운 객체를 생성하여 업데이트
-    setGround((prevGround) => ({
-      ...prevGround,
-      [name]: updatedValue,
-    }));
+    ground[e.target.name] = e.target.value
+    setGround({...ground})
   };
-
-  const handleRegister = () => {
-    postGroundRegister(ground)
-      .then((result) => {
-        console.log(result);
-        setGround({ ...initState });
-      })
-      .catch((e) => {
-        console.error(e);
-      });
-  };
-
+  
   const handleClickAdd = (e) => {
     const files = uploadRef.current.files;
+
     const formData = new FormData();
 
     for (let i = 0; i < files.length; i++) {
       formData.append("files", files[i])
     }
 
+    formData.append("name", ground.name)
+    formData.append("addr", ground.addr)
+    formData.append("inAndOut", ground.inAndOut)
+    formData.append("width", ground.width)
+    formData.append("grassInfo", ground.grassInfo)
+    formData.append("recommdMan", ground.recommdMan)
+    formData.append("usageTime", ground.usageTime)
+    formData.append("openTime", ground.openTime)
+    formData.append("closeTime", ground.closeTime)
+    formData.append("fare", ground.fare)
+    formData.append("userGuide", ground.userGuide)
+    formData.append("userRules", ground.userRules)
+    formData.append("refundRules", ground.refundRules)
+    formData.append("changeRules", ground.changeRules)
+    formData.append("vestIsYn", ground.vestIsYn)
+    formData.append("footwearIsYn", ground.footwearIsYn)
+    formData.append("showerIsYn", ground.showerIsYn)
+    formData.append("ballIsYn", ground.ballIsYn)
+    formData.append("airconIsYn", ground.airconIsYn)
+    formData.append("parkareaIsYn", ground.parkareaIsYn)
+    formData.append("roopIsYn", ground.roopIsYn)
+    formData.append("state", ground.state)
+
+    setFetching(true)
+    postGroundRegister(formData).then(data => {
+      setFetching(false)
+      setResult(data.result)
+    }).catch(error => console.error(error))
+
+  }
+  const closeModal = () => {
+    setResult(null)
+    moveToList({page:1})
   }
     return (
       <div className=" flex-wrap flex-direction justify-center max-w-screen-lg h-100% bg-gray-100">
+        {result ? <ResultModal title={'구장등록 결과'} content={`${ground.name} 등록 신청`} callbackFn={closeModal} />: <></>}
         <div className="max-w-screen-lg flex mb-4">
-          <form onSubmit={handleRegister} className="bg-white mb-4 w-3/6 p-8">
+          <form className="bg-white mb-4 w-3/6 p-8">
             <div className="mb-10">
               <h2 className="text-2xl font-bold mb-4">구장 등록</h2>
 
-              <div className="mb-4">
+              <div className="mb-4"> 
                 <label
                   htmlFor="name"
                   className="block text-sm font-medium text-gray-600"
@@ -83,8 +103,7 @@ const GroundRegisterComponent = () => {
                   구장 이름:
                 </label>
                 <input
-                  type="text"
-                  id="name"
+                  type={'text'}
                   name="name"
                   value={ground.name}
                   onChange={handleChange}
@@ -100,8 +119,7 @@ const GroundRegisterComponent = () => {
                   구장 주소:
                 </label>
                 <input
-                  type="text"
-                  id="addr"
+                  type={'text'}
                   name="addr"
                   value={ground.addr}
                   onChange={handleChange}
@@ -117,8 +135,7 @@ const GroundRegisterComponent = () => {
                   실내외:
                 </label>
                 <input
-                  type="text"
-                  id="inAndOut"
+                  type={'text'}
                   name="inAndOut"
                   value={ground.inAndOut}
                   onChange={handleChange}
@@ -134,8 +151,7 @@ const GroundRegisterComponent = () => {
                   구장 크기:
                 </label>
                 <input
-                  type="text"
-                  id="width"
+                  type={'text'}
                   name="width"
                   value={ground.width}
                   onChange={handleChange}
@@ -151,8 +167,7 @@ const GroundRegisterComponent = () => {
                   잔디 정보:
                 </label>
                 <input
-                  type="text"
-                  id="grassInfo"
+                  type={'text'}
                   name="grassInfo"
                   value={ground.grassInfo}
                   onChange={handleChange}
@@ -168,8 +183,7 @@ const GroundRegisterComponent = () => {
                   추천 인원:
                 </label>
                 <input
-                  type="text"
-                  id="recommdMan"
+                  type={'text'}
                   name="recommdMan"
                   value={ground.recommdMan}
                   onChange={handleChange}
@@ -185,8 +199,7 @@ const GroundRegisterComponent = () => {
                   기본 이용 시간:
                 </label>
                 <input
-                  type="text"
-                  id="usageTime"
+                  type={'text'}
                   name="usageTime"
                   value={ground.usageTime}
                   onChange={handleChange}
@@ -202,8 +215,7 @@ const GroundRegisterComponent = () => {
                   오픈 시간:
                 </label>
                 <input
-                  type="text"
-                  id="openTime"
+                  type={'text'}
                   name="openTime"
                   value={ground.openTime}
                   onChange={handleChange}
@@ -219,8 +231,7 @@ const GroundRegisterComponent = () => {
                   마감 시간:
                 </label>
                 <input
-                  type="text"
-                  id="closeTime"
+                  type={'text'}
                   name="closeTime"
                   value={ground.closeTime}
                   onChange={handleChange}
@@ -236,8 +247,7 @@ const GroundRegisterComponent = () => {
                   요금:
                 </label>
                 <input
-                  type="text"
-                  id="fare"
+                  type={'text'}
                   name="fare"
                   value={ground.fare}
                   onChange={handleChange}
@@ -258,7 +268,7 @@ const GroundRegisterComponent = () => {
           </form>
         </div>
 
-        <div onSubmit={handleRegister} className="flex- bg-white p-8 w- h-100%">
+        <form className="flex- bg-white p-8 w- h-100%">
           <div className="mb-4">
             <label
               htmlFor="userGuide"
@@ -267,8 +277,7 @@ const GroundRegisterComponent = () => {
               이용 안내:
             </label>
             <input
-              type="text"
-              id="userGuide"
+              type={'text'}
               name="userGuide"
               value={ground.userGuide}
               onChange={handleChange}
@@ -284,8 +293,7 @@ const GroundRegisterComponent = () => {
               이용 규칙:
             </label>
             <input
-              type="text"
-              id="userRules"
+              type={'text'}
               name="userRules"
               value={ground.userRules}
               onChange={handleChange}
@@ -301,18 +309,16 @@ const GroundRegisterComponent = () => {
               환불 규정:
             </label>
             <input
-              type="text"
-              id="refundRules"
+              type={'text'}
               name="refundRules"
               value={ground.refundRules}
               onChange={handleChange}
               className="mt-1 p-2 border rounded-md w-full h-40"
             />
           </div>
-        </div>
+        </form>
 
         <form
-          onSubmit={handleRegister}
           className="flex-wrap bg-white p-8 w-full "
         >
           <h2 className="flex-auto text-2xl font-bold mb-4">부대시설</h2>
@@ -325,11 +331,10 @@ const GroundRegisterComponent = () => {
                 조끼
               </label>
               <input
-                type="checkbox"
-                id="vestIsYn"
+                type={'checkbox'}
                 name="vestIsYn"
                 className="justify-center mr-3 ml-3"
-                checked={ground.vestIsYn}
+                value={ground.vestIsYn}
                 onChange={handleChange}
               />
             </div>
@@ -342,11 +347,10 @@ const GroundRegisterComponent = () => {
                 풋살화
               </label>
               <input
-                type="checkbox"
-                id="footwearIsYn"
+                type={'checkbox'}
                 name="footwearIsYn"
                 className="justify-center mr-3 ml-3"
-                checked={ground.footwearIsYn}
+                value={ground.footwearIsYn}
                 onChange={handleChange}
               />
             </div>
@@ -359,11 +363,10 @@ const GroundRegisterComponent = () => {
                 샤워실
               </label>
               <input
-                type="checkbox"
-                id="showerIsYn"
+                type={'checkbox'}
                 name="showerIsYn"
                 className="justify-center mr-3 ml-3"
-                checked={ground.showerIsYn}
+                value={ground.showerIsYn}
                 onChange={handleChange}
               />
             </div>
@@ -376,11 +379,10 @@ const GroundRegisterComponent = () => {
                 지붕
               </label>
               <input
-                type="checkbox"
-                id="roopIsYn"
+                type={'checkbox'}
                 name="roopIsYn"
                 className="justify-center mr-3 ml-3 "
-                checked={ground.roopIsYn}
+                value={ground.roopIsYn}
                 onChange={handleChange}
               />
             </div>
@@ -393,11 +395,10 @@ const GroundRegisterComponent = () => {
                 공대여
               </label>
               <input
-                type="checkbox"
-                id="ballIsYn"
+                type={'checkbox'}
                 name="ballIsYn"
                 className="justify-center mr-3 ml-3"
-                checked={ground.ballIsYn}
+                value={ground.ballIsYn}
                 onChange={handleChange}
               />
             </div>
@@ -410,11 +411,10 @@ const GroundRegisterComponent = () => {
                 에어컨
               </label>
               <input
-                type="checkbox"
-                id="airconIsYn"
+                type={'checkbox'}
                 name="airconIsYn"
                 className="justify-center mr-3 ml-3"
-                checked={ground.airconIsYn}
+                value={ground.airconIsYn}
                 onChange={handleChange}
               />
             </div>
@@ -427,11 +427,10 @@ const GroundRegisterComponent = () => {
                 주차장
               </label>
               <input
-                type="checkbox"
-                id="parkareaIsYn"
+                type={'checkbox'}
                 name="parkareaIsYn"
                 className="justify-center mr-3 ml-3"
-                checked={ground.parkareaIsYn}
+                value={ground.parkareaIsYn}
                 onChange={handleChange}
               />
             </div>
@@ -439,7 +438,7 @@ const GroundRegisterComponent = () => {
 
           <div className="mt-8">
             <button
-              type="submit"
+              type="button"
               className=" w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-700"
               onClick={handleClickAdd}
             >

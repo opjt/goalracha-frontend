@@ -92,11 +92,7 @@ const root = createBrowserRouter([
     },
     {
         path: "board",
-        element: (
-        <Suspense fallback={Loading}>
-            <BoardIndex />
-        </Suspense>
-        ),
+        element: <Suspense fallback={Loading}><BoardIndex /></Suspense>,
         children: BoardRouter(),
     },
 ]);
