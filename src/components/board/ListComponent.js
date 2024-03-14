@@ -10,47 +10,41 @@ const ListComponent = () => {
   const navigate = useNavigate();
   const { page, size, refresh } = useCustomMove();
   const [serverData, setServerData] = useState(initState);
-  const [expandedItems, setExpandedItems] = useState({}); // 상태 관리 추가
+  const [expandedBno, setExpandedBno] = useState(null);
 
   useEffect(() => {
     getList({ page, size }).then((data) => {
-      setServerData(data.map(board => ({ ...board })));
+      console.log(data);
+      // 시분초를 제외하고 년-월-일 형식으로 변환
+      const modifiedData = data.map((item) => ({
+        ...item,
+        createDate: item.createDate.split("T")[0], // "YYYY-MM-DD" 형식으로 변환
+      }));
+      setServerData(modifiedData);
     });
   }, [page, size, refresh]);
 
   const handleTitleClick = (bno) => {
-    setExpandedItems(prevExpanded => ({ 
-      ...prevExpanded, 
-      [bno]: !prevExpanded[bno] // 현재 상태를 토글
-    }));
-  };
-
-  const handleClickPlus = () => {
-    navigate(`/board/add`);
+    setExpandedBno((prevExpandedBno) => (prevExpandedBno === bno ? null : bno));
   };
 
   return (
     <div className="rounded border-2 border-100 mt-10 mr-2 ml-2">
-      <div className="flex flex-wrap mx-auto justify-center p-6">
-        {serverData.map((board) => (
-          <div
-            key={board.bno}
-            className="w-full min-w-[400px] p-2 m-2 rounded shadow-md"
-            onClick={() => handleTitleClick(board.bno)}
-          >
-            <div className="flex items-center">
-              <div className="text-1xl m-1 p-2 w-6/12 font-extrabold">{board.title}</div>
-            </div>
-            {expandedItems[board.bno] && ( // 조건부 렌더링
-                <div className="p-2"> 
-                  {board.content} 
-                </div>
-            )} 
+      {serverData.map((board) => (
+        <div key={board.bno} className="collapse border border-base-300 bg-base-200">
+          <div className="collapse-title text-xl font-medium" onClick={() => handleTitleClick(board.bno)}>
+            {board.title}
           </div>
-        ))}
-      </div>
-      {/* ... 생략 */}
+          {expandedBno === board.bno && (
+            <div className="collapse-content" style={{ display: "block" }}>
+              <h3 className="text-xl font-bold">{board.title}</h3>
+              <p>{board.content}</p>
+            </div>
+          )}
+        </div>
+      ))}
     </div>
+    
   );
 };
 

@@ -16,10 +16,6 @@ const initState = {
   current: 0,
 };
 
-
-
-
-
 const GroundList = ({ groundList }) => {
   const { page, size, moveToList, moveToRead } = useCustomMove();
 
@@ -33,34 +29,51 @@ const GroundList = ({ groundList }) => {
   }, [page, size]);
 
   return (
+
+  <div>
     <div className="p-4 w-full bg-white">
-        <div className="text-3xl font-extrabold">
-          {serverData.dtoList.map((ground) => (
-            <div
-              key={ground.gno}
-              className="w-full min-w-[400px] p-2 m-2 rounded shadow-md"
-            >
-              <div className="flex ">
-                <div className="font-extrabold text-2xl p-2 w-1/12">
-                  {ground.name}
-                </div>
-                <div className="text-1xl m-1 p-2 w-8/12 font-extrabold">
-                  {ground.addr}
-                </div>
-                <div className="text-1xl m-1 p-2 w-2/10 font-medium">
-                  {ground.width}
-                </div>
-                <div className="text-1xl m-1 p-2 w-2/10 font-medium">
-                  {ground.recommdMan}
-                </div>
-                <div className="text-1xl m-1 p-2 w-2/10 font-medium">
-                  {ground.state}
-                </div>
+    <div className="text-3xl font-extrabold font-sans">구장 목록</div>
+      <div className="text-3xl font-extrabold">
+        {serverData.dtoList.map((ground) => (
+          <div
+            key={ground.gno}
+            className="w-full min-w-[400px] p-2 m-2 rounded shadow-md"
+          >
+            <div className="flex ">
+              <div className="text-base p-2 w-2/12 font-sans">
+                {ground.name}
+              </div>
+              <div className="text-base m-1 p-2 w-8/12 font-sans">
+                {ground.addr}
+              </div>
+              <div className="text-base m-1 p-2 w-2/10 font-sans">
+                {ground.fare}
+              </div>
+              <div className="text-base m-1 p-2 w-2/10 font-sans">
+                {ground.state}
+              </div>
+              <div className="text-base m-1 p-2 w-2/10 font-sans">
+                {ground.recommdMan}
+              </div>
+              <div className="text-base m-1 p-2 w-2/10 font-sans">
+                {ground.width}
               </div>
             </div>
-          ))}
+          </div>
+        ))}
+      </div>
+      <div className="float-right right-5 mt-2">
+          <button className="btn btnn-active btn-primary">
+            등록
+          </button>
         </div>
-        <PageComponent serverData={serverData} movePage={moveToList}></PageComponent>
+      <div>
+        <PageComponent
+          serverData={serverData}
+          movePage={moveToList}
+        ></PageComponent>
+      </div>
+    </div>
     </div>
   );
 };

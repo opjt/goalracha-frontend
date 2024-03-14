@@ -19,6 +19,9 @@ const AdminGroundListPage = () => {
         return response.json();
       })
       .then(data => {
+        console.log("Loaded grounds data:", data.dtoList); // 로그 출력: 불러온 데이터
+        // 각 구장 객체의 gNo 값 존재 여부 확인을 위한 로그 출력
+        data.dtoList.forEach(ground => console.log(`gno: ${ground.gno}`));
         setGrounds(data.dtoList);
         setIsLoading(false);
       })
@@ -28,15 +31,16 @@ const AdminGroundListPage = () => {
       });
   };
 
-  const changeGroundState = (gNo, newState) => {
-    console.log(`구장 상태 변경: ${gNo} -> ${newState}`);
-    // 백엔드에 상태 변경 요청 보내기
-    fetch(`http://localhost:8080/goalracha/ground/changeState/${gNo}`, {
+
+  const changeGroundState = (gno, currentState) => {
+    console.log(`changeGroundState called with gno: ${gno}, currentState: ${currentState}`); // 여기에 로그 추가
+    const newState = currentState === 1 ? 2 : 1; // 현재 상태가 1(미승인)이면 2(승인)로, 2(승인)이면 1(미승인)로 변경
+    fetch(`http://localhost:8080/goalracha/ground/changeState/${gno}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ newState }),
+      body: JSON.stringify({ newState }), // newState 값 을 서버에 전송
     })
     .then(response => {
       if (!response.ok) {
@@ -46,8 +50,6 @@ const AdminGroundListPage = () => {
     })
     .then(() => {
       fetchGrounds(); // 상태 변경 후 목록 새로고침
-      // 필터 상태를 자동으로 조정하여 상태 변경에 따라 목록을 필터링
-      setFilter(newState.toString()); // '1' (미승인) 또는 '2' (승인)으로 필터 변경
     })
     .catch(error => console.error('Error:', error));
   };
@@ -56,7 +58,7 @@ const AdminGroundListPage = () => {
   const handleMouseEnter = (id) => {
     setGrounds(grounds =>
       grounds.map(ground =>
-        ground.gNo === id ? { ...ground, isMouseOver: true } : ground
+        ground.gno === id ? { ...ground, isMouseOver: true } : ground
       )
     );
   };
@@ -64,7 +66,7 @@ const AdminGroundListPage = () => {
   const handleMouseLeave = (id) => {
     setGrounds(grounds =>
       grounds.map(ground =>
-        ground.gNo === id ? { ...ground, isMouseOver: false } : ground
+        ground.gno === id ? { ...ground, isMouseOver: false } : ground
       )
     );
   };
@@ -84,7 +86,7 @@ const AdminGroundListPage = () => {
 
       {/* 필터 버튼 */}
       <div className="mb-4">
-        <button onClick={() => setFilter('all')} className="mr-2 px-4 py-2 bg-blue-400 text-white rounded">모든 구장</button>
+        <button onClick={() => setFilter('all')} className="mr-2 px-4 py-2 bg-gray-400 text-white rounded">모든 구장</button>
         <button onClick={() => setFilter('1')} className="mr-2 px-4 py-2 bg-red-400 text-white rounded">미승인 구장</button>
         <button onClick={() => setFilter('2')} className="px-4 py-2 bg-green-400 text-white rounded">승인 구장</button>
       </div>
@@ -100,6 +102,7 @@ const AdminGroundListPage = () => {
         </thead>
         <tbody className="text-sm">
           {filteredGrounds.map((ground, index) => (
+            
             <tr key={index} className={`${index % 2 === 0 ? 'bg-gray-100' : 'bg-white'}`}>
               <td className="border px-4 py-2">{ground.name}</td>
               <td className="border px-4 py-2">{ground.addr}</td>
@@ -124,10 +127,11 @@ const AdminGroundListPage = () => {
               <td className="border px-4 py-2">{ground.roopIsYn ? '예' : '아니오'}</td>
               {/* 구장 정보 */}
               <td className="border px-4 py-2">
+                {}
                 <button
-                  onMouseEnter={() => handleMouseEnter(ground.gNo)}
-                  onMouseLeave={() => handleMouseLeave(ground.gNo)}
-                  onClick={() => changeGroundState(ground.gNo, ground.state === 1 ? 2 : 1)}
+                  onMouseEnter={() => handleMouseEnter(ground.gno)}
+                  onMouseLeave={() => handleMouseLeave(ground.gno)}
+                  onClick={() =>  { console.log(ground.gno); changeGroundState(ground.gno, ground.state)}} // 버튼 클릭 시 상태 변경 함수 호출
                   className="px-4 py-2 text-white rounded"
                   style={{
                     backgroundColor: ground.isMouseOver

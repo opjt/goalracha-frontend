@@ -20,7 +20,9 @@ export const getGroundList = async ( pageParam ) => {
 }
 
 export const postGroundRegister = async (groundInfo) => {
-  const res = await axios.post(`${prefix}/register`,groundInfo)
+  const header = {headers: {"Content-Type": "multipart/form-data"}}
+
+  const res = await axios.post(`${prefix}/register`,groundInfo, header)
 
   return res.data
 };

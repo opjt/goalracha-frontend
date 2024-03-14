@@ -2,28 +2,62 @@ import { useEffect , useState} from "react";
 import { useParams,useLocation } from "react-router-dom";
 import BasicLayout from "layouts/BasicLayout";
 import { getInfoByGno } from 'api/reserveApi';
-
+import moment from "moment";
 
 const GroundInfoPage = () => {
     const { gno } = useParams();
     const { state } = useLocation();
+    var reqDate = moment().format("YYYY-MM-DD");
     
-    const [resultValue, setResultValue] = useState(null);   
+    if(state && state.date !== '') {
+        reqDate= state.date
+    }
+    const [timeArray, setTimeArray] = useState(null);   
+    const [timeArray2, setTimeArray2] = useState(null);   
     const [groundInfo, setGroundInfo] = useState(null);   
-    
+
     useEffect(() => {
-        console.log(gno)
-        console.log(state)
         var req = {
             gno: gno,
-            date: state.date || "2024-03-12"
+            date: reqDate
         }
         getInfoByGno(req).then((result) => {
             console.log(result)
             setGroundInfo(result.groundInfo)
+            var openTime = result.groundInfo.openTime;
+            var closeTime = result.groundInfo.closeTime;
+            if(closeTime <= openTime) {
+                closeTime +=24;
+            }
+            var newTimeArray = {};
+            var newTimeArray2 = {};
+            for(let i = 6; i <= 29; i++) {
+                newTimeArray[i] = openTime <= i && i <= closeTime;
+            }
+            for(let hour = openTime; hour<closeTime; hour+=result.groundInfo.usageTime) {
+                newTimeArray2[hour] = true;
+            }
             
+            
+            if(result.reservList != null) {
+                for(var e of result.reservList) {
+                    var etime = parseInt(e.time);
+                    newTimeArray2[etime] = false;
+                    newTimeArray[etime] = false;
+                    for(var i= 1; i<result.groundInfo.usageTime; i++) {
+                        etime = etime+i;
+                        newTimeArray[etime] = false;
+                    }
+                }
+            } 
+            console.log(newTimeArray2);
+            setTimeArray2(newTimeArray2)
+            setTimeArray(newTimeArray);
+   
         })
     }, [])
+ 
+
     return (
         <BasicLayout>
             {groundInfo != null && (
@@ -43,7 +77,7 @@ const GroundInfoPage = () => {
                 
                 </div>
 
-                 <div className="grid md:grid-flow-col mt-6 gap-y-5">
+                <div className="grid md:grid-flow-col mt-6 gap-y-5">
 
                     <div className="w-fit">
                         <div className="text-2xl font-medium">
@@ -75,7 +109,19 @@ const GroundInfoPage = () => {
                         </ul>
                     </div>
                   
+                </div>
+                <div className="mt-10">
+                    <div className="font-bold">시간 선택</div>
+                    <div className="flex mt-3 gap-2 max-w-3/4 overflow-x-scroll overflow-hidden p-2 pt-0">
+
+                        {Object.entries(timeArray2).map(([hour, available]) => (
+                        <div key={hour} className={`flex-shrink-0  btn btn-wide ${!available ? 'bg-gray-300 text-white' : 'bg-green-500 text-white'}`}>
+                            {hour}~{parseInt(hour)+parseInt(groundInfo.usageTime)}
+                        </div>
+                    ))}
+                    </div>
                 </div>   
+              
                 
 
             </div>

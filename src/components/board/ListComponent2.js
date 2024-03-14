@@ -20,6 +20,8 @@ const ListComponent = () => {
         createDate: item.createDate.split("T")[0], // "YYYY-MM-DD" 형식으로 변환
       }));
       setServerData(modifiedData);
+      setServerData(data.map((board) => ({ ...board })));
+      console.log(serverData)
     });
   }, [page, size, refresh]);
 
@@ -28,6 +30,7 @@ const ListComponent = () => {
   };
 
   return (
+<<<<<<< HEAD
 
     <div className="rounded border-2 border-100 mt-10 mr-2 ml-2">
       {serverData.map((board) => (
@@ -45,6 +48,32 @@ const ListComponent = () => {
       ))}
     </div>
     
+=======
+    <div className="rounded border-0 border-100 mt-10 mr-2 ml-2">
+      {serverData.map((board) => (
+        <div key={board.bno}>
+          <div className="collapse bg-base-200 mb-4">
+            <input
+              type="checkbox"
+              id={`board-${board.bno}`}
+              className="collapse-toggle"
+            />
+            <div
+              className="collapse-title text-xl font-medium"
+              onClick={() => handleTitleClick(board.bno)}
+            >
+              {board.title}
+            </div>
+            <div
+              className={`collapse-content ${expandedBno === board.bno ? "collapse-content-active" : ""}`}
+            >
+              <p>{board.content}</p>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+>>>>>>> 328711e9aac7da864edc0488a94fa0184a20be9f
   );
 };
 
