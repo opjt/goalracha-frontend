@@ -1,7 +1,8 @@
 import { getGroundList } from "api/groundApi";
-import PageComponent from "components/member/common/PageComponent";
-import useCustomMove from "hooks/useCustomMoveboard";
+import PageComponent from "../../common/pageComponent";
+import useCustomMove from "../../../hooks/groundCustomMove";
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const initState = {
   dtoList: [],
@@ -17,7 +18,10 @@ const initState = {
 };
 
 const GroundList = ({ groundList }) => {
-  const { page, size, moveToList, moveToRead } = useCustomMove();
+
+  const navigate = useNavigate();
+
+  const { page, size, moveToList, moveToRead, moveToRegister } = useCustomMove();
 
   const [serverData, setServerData] = useState(initState);
 
@@ -27,6 +31,10 @@ const GroundList = ({ groundList }) => {
       setServerData(data);
     });
   }, [page, size]);
+
+const handleClickRegister = () => {
+    navigate(`../ground/register`);
+  };
 
   return (
 
@@ -63,7 +71,7 @@ const GroundList = ({ groundList }) => {
         ))}
       </div>
       <div className="float-right right-5 mt-2">
-          <button className="btn btnn-active btn-primary">
+          <button className="btn btnn-active btn-primary" onClick={handleClickRegister}>
             등록
           </button>
         </div>
