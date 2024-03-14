@@ -44,7 +44,7 @@ const ListComponent = () => {
         </div>
       ))}
     </div>
-    
+
   );
 };
 

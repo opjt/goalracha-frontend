@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import BasicLayout from "layouts/BasicLayout"; // 기본 레이아웃 컴포넌트 import
 import { useSelector } from "react-redux"; // Redux에서 상태를 가져오기 위한 hook import
-import OwnerPwModifyModal from "components/member/owner/OwnerPwModifyModal";
+import OwnerPwModifyModal from "components/member/owner/OwnerPwModifyModal";    // 비밀번호 수정 모달
+import OwnerModifyModal from "components/member/owner/OwnerModifyModal";    // 담당자 수정 모달
 import { Link } from "react-router-dom"; // react-router의 Link 컴포넌트 import
 
 // 초기 상태 정의
@@ -21,6 +22,7 @@ const OwnerMyPage = () => {
     const loginInfo = useSelector((state) => state.loginSlice); // Redux 상태에서 로그인 정보 가져오기
     const [result, setResult] = useState(); // 결과 메시지 상태
     const [isPwModalOpen, setIsPwModalOpen] = useState(false); // 비밀번호 수정 모달 열림 상태
+    const [isModalOpen, setIsModalOpen] = useState(false);  // 담당자 수정 모달 열림 상태
 
     useEffect(() => {
         // 로그인 정보가 변경될 때마다 실행되는 부분
@@ -37,6 +39,18 @@ const OwnerMyPage = () => {
                 tel: loginInfo.tel,
             });
         }
+        // 로컬 스토리지에서 수정된 정보 가져오기
+        const storedModifiedInfo = localStorage.getItem('modifiedInfo');
+        if (storedModifiedInfo) {
+            const parsedModifiedInfo = JSON.parse(storedModifiedInfo);
+            setMember(prevMember => ({
+                ...prevMember,
+                pw: "******", // 비밀번호를 가립니다.
+                name: parsedModifiedInfo.name || prevMember.name, 
+                tel: parsedModifiedInfo.tel || prevMember.tel,
+                
+            }));
+        }
     }, [loginInfo]); // loginInfo가 변경될 때마다 실행
 
     // 비밀번호 모달 열기 함수
@@ -47,6 +61,14 @@ const OwnerMyPage = () => {
     // 비밀번호 모달 닫기 함수
     const closePwModifyModal = () => {
         setIsPwModalOpen(false); // 비밀번호 수정 모달 닫기
+    };
+
+    const openModifyModal = () => {
+        setIsModalOpen(true); // 담당자 수정 모달 열기
+    };
+
+    const closeModifyModal = () => {
+        setIsModalOpen(false);  // 담당자 수정 모달 닫기
     };
 
 
@@ -170,9 +192,12 @@ const OwnerMyPage = () => {
                             />
                         </div>
 
+
+
                         <div className="flex justify-end ml-auto mt-4">
                             {/* 담당자 수정 버튼 */}
-                            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded mr-5 mt-5">
+                            <button type="button" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded mr-5 mt-5"
+                                onClick={openModifyModal}>
                                 담당자 수정
                             </button>
 
@@ -182,7 +207,7 @@ const OwnerMyPage = () => {
                             </button>
 
                             {/* 로그아웃 버튼 */}
-                            <Link to="/userlogout">
+                            <Link to="/user/logout">
                                 <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded mr-5 mt-5">
                                     로그아웃
                                 </button>
@@ -202,12 +227,33 @@ const OwnerMyPage = () => {
                     onPwModalClose={(modifiedPwInfo) => {
                         setMember({
                             ...member,
-                            pw: modifiedPwInfo
+                            pw: modifiedPwInfo.pw
                         });
                     }}
                 />
             )}
-        </BasicLayout>
+
+            {/* 담당자 수정 모달 */}
+            {isModalOpen && (
+                <OwnerModifyModal
+                    closeModal={closeModifyModal}
+                    uNo={loginInfo.uNo}
+                    name={member.name}
+                    tel={member.tel}
+                    isOpen={isModalOpen} // isOpen prop 추가
+                    onModalClose={(modifiedInfo) => {
+                        setMember({
+                            ...member,
+                            name: modifiedInfo.name,
+                            tel: modifiedInfo.tel
+                        });
+                    }}
+                />
+
+
+            )}
+
+        </BasicLayout >
     );
 };
 
