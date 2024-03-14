@@ -15,7 +15,6 @@ const GroundListItem = ({ groundInfo, date, callbackFn }) => {
         } else {
             timeArray[i] = false;
         }
-        
     }
     if(groundInfo.reserveTime != null) {
         var split = groundInfo.reserveTime.split(',')
