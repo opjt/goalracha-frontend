@@ -14,3 +14,8 @@ export const getInfoByGno = async (req) => {
     const res = await axios.get(`${host}/v/ground/${req.gno}/${req.date}`)
     return res.data
 }
+
+export const addReserv = async (req) => {
+    const res = await jwtAxios.post(`${host}/v/p/`,req)
+    return res.data
+}

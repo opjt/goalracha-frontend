@@ -1,6 +1,6 @@
 import axios from "axios"
 import jwtAxios from "../util/jwtUtil"
-const host = `${process.env.REACT_APP_SERVER}/api/memberApi`
+const host = `${process.env.REACT_APP_SERVER}/api/member`
 
 
 export const loginPost = async (loginParam) => {

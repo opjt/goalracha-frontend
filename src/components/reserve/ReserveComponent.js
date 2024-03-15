@@ -1,7 +1,8 @@
 import useCustomLogin from "hooks/useCustomLogin";
-import { useEffect ,useState} from "react";
+import { useEffect ,useState, useRef} from "react";
+import { loadPaymentWidget } from "@tosspayments/payment-widget-sdk";
 import { login } from "slices/loginSlice";
-import axios from "axios";
+import { nanoid } from "nanoid";
 
 const text1 = `대관 서비스 개인정보 제3자 제공 방침
 
@@ -31,18 +32,30 @@ const text2 = `시설 이용 약관
 15. 본 시설은 애완동물 출입 및 바퀴달린 운동기구 이용이 금지되어 있습니다.
 16. 대관 신청자는 시설의 공지 사항, 환불규정, 이용규칙 등 모든 안내 내용을 숙지해야하며 해당 내용을 준수하는 것에 동의 합니다. 내용 미숙지로 인한 책임은 이용자 본인에게 있습니다.
 17. 본 내용에 대한 동의 서명은 생략하며, 서비스 내 동의 버튼으로 이를 대체합니다.`
+const selector = "#payment-widget";
+const clientKey = `${process.env.REACT_APP_TOSS_CK}`;
+const customerKey = "ANONYMOUS";
+
 const ReserveModal = ({ reservInfo ,groundInfo, callbackFn}) => {
     const { moveToPath, isLogin, loginState} = useCustomLogin()
-    console.log(loginState)
+    const paymentWidgetRef = useRef(null);
+    const paymentMethodsWidgetRef = useRef(null);
     const [times, setTimes ] = useState(null);
+    const [boxcheck, setBoxcheck] = useState({check1: false,check2:false})
     const customStyle = {
         cursor: 'initial',
         background: 'initial',
         color: 'black'
       };
+      const handleChange = (e) => {
+        boxcheck[e.target.name] = e.target.checked;
+        
+        console.log(boxcheck)
+        setBoxcheck({ ...boxcheck })
 
+    }
     useEffect(() => {
-        console.log(reservInfo.time)
+        
         var falseValues = Object.entries(reservInfo.time).filter(([key, value]) => value === false).map(([key, value]) => parseInt(key));
         console.log(falseValues[0])
         if(falseValues.length == 1) {
@@ -50,6 +63,18 @@ const ReserveModal = ({ reservInfo ,groundInfo, callbackFn}) => {
         } else {
             setTimes(`${falseValues[0]}:00 ~ ${falseValues[falseValues.length-1]}:00`)
         }
+        (async () => {
+            const paymentWidget = await loadPaymentWidget(clientKey, customerKey);
+      
+            const paymentMethodsWidget = paymentWidget.renderPaymentMethods(
+              selector,
+              { value: reservInfo.value },
+              { variantKey: "DEFAULT" }
+            );
+      
+            paymentWidgetRef.current = paymentWidget;
+            paymentMethodsWidgetRef.current = paymentMethodsWidget;
+          })();
     },[])
     const handleCloseModal = (e) => {
         // 모달 내부 요소를 클릭한 경우 무시
@@ -61,35 +86,25 @@ const ReserveModal = ({ reservInfo ,groundInfo, callbackFn}) => {
             callbackFn();
         }
     };
-    const handleClickReserve = () => {
-        const SECRET_KEY = 'DEV5E41046ABBE51811E76B05C21174EBCFE242F'; // 본인의 시크릿 키로 대체해주세요
+    const handleClickReserve = async () => {
+        console.log(boxcheck)
+        const paymentWidget = paymentWidgetRef.current;
 
-        const requestData = {
-            cid: "TC0ONETIME",
-            partner_order_id: "partner_order_id",
-            partner_user_id: "partner_user_id",
-            item_name: "초코파이",
-            quantity: "1",
-            total_amount: "2200",
-            vat_amount: "200",
-            tax_free_amount: "0",
-            approval_url: "http://localhost:3000",
-            fail_url: "http://localhost:3000",
-            cancel_url: "http://localhost:3000"
-        };
+        try {
+            var falseValues = Object.entries(reservInfo.time).filter(([key, value]) => value === false).map(([key, value]) => parseInt(key));
+            var timeArray = falseValues.join(",")
+            console.log(timeArray)
 
-        axios.post('https://open-api.kakaopay.com/online/v1/payment/ready', requestData, {
-            headers: {
-                Authorization: `SECRET_KEY ${SECRET_KEY}`,
-                'Content-Type': 'application/json'
-            }
-        })
-        .then(response => {
-            console.log('Response:', response.data);
-        })
-        .catch(error => {
-            console.error('Error:', error.response.data);
-        });
+          await paymentWidget?.requestPayment({
+            orderId: nanoid(),
+            // orderId: `${loginState.uNo}_${reservInfo.date}`,
+            orderName: `${groundInfo.gno} ${loginState.uNo} ${reservInfo.date} ${timeArray}`,
+            successUrl: `${window.location.origin}/reserve/success`,
+            failUrl: `${window.location.origin}/reserve/fail`
+          });
+        } catch (error) {
+          // handle error
+        }
     }
     return (
         <dialog id="payment" className="modal modal-open"onClick={handleCloseModal} >
@@ -104,14 +119,14 @@ const ReserveModal = ({ reservInfo ,groundInfo, callbackFn}) => {
                             <textarea disabled className="w-full h-28 input input-bordered overflow-auto bg-gray-200 text-sm" style={customStyle}  defaultValue={text1}/>
                     
                             <div className="flex items-center">
-                                <input type="checkbox" className="checkbox checkbox-sm" name="check1" id="check1" />
+                                <input type="checkbox" className="checkbox checkbox-sm" name="check1" id="check1" value={boxcheck[0]} onChange={handleChange}/>
                                 <label className="ml-1 text-sm" htmlFor="check1">위의 개인정보 취급방침에 동의합니다.</label>
                             </div>
                         </div>
                         <div className="mt-2">
                             <textarea disabled className="w-full h-28 input input-bordered overflow-auto bg-gray-200 text-sm" style={customStyle} defaultValue={text2}/>
                             <div className="flex items-center">
-                                <input type="checkbox" className="checkbox checkbox-sm" name="check2" id="check2"  />
+                                <input type="checkbox" className="checkbox checkbox-sm" name="check2" id="check2"  value={boxcheck[1]} onChange={handleChange}/>
                                 <label className="ml-1 text-sm" htmlFor="check2">위의 시설 이용 약관에 동의합니다.</label>
                             </div>
                         </div>
@@ -146,20 +161,23 @@ const ReserveModal = ({ reservInfo ,groundInfo, callbackFn}) => {
                                 <div className="w-2/5 inline-flex text-center font-semibold">연락처</div>
                                 <div className="w-fit inline-flex">{loginState.tel}</div>
                             </div>
-                            <div className="border-2 rounded-lg p-2 mt-1 flex">
+                            {/* <div className="border-2 rounded-lg p-2 mt-1 flex">
                                 <div className="w-2/5 inline-flex text-center font-semibold">결제방법</div>
                                 <div className="w-fit inline-flex ">
                                     <input type="radio" name="radio-1" className="radio" defaultChecked={true}/>
                                     <label className="ml-2"><img src="/img/kpay.png" className="h-6 bg-yellow-300 p-1 rounded-md"/></label>
                                 </div>
-                            </div>
+                            </div> */}
                         </div>
                     </div>
+                    
                 </div>
+                <div id="payment-widget" />
+
                 <div className="modal-action">
                     <form method="dialog">
                         {/* if there is a button in form, it will close the modal */}
-                        <button className="btn btn-wide" onClick={handleClickReserve}>예약</button>
+                        <button className={`btn btn-wide ${(boxcheck.check1 && boxcheck.check2)  ? '' : 'btn-disabled'}`} onClick={handleClickReserve}>결제</button>
                     </form>
                 </div>
             </div>

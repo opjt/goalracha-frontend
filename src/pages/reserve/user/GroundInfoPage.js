@@ -30,9 +30,11 @@ const GroundInfoPage = () => {
     const [calDate, setCalDate] = useState(moment().toDate());
     const [timeArray, setTimeArray] = useState(null);   
     const [groundInfo, setGroundInfo] = useState(null);   
+    const [imgslide, setImgslide] = useState(0);
     const [reservInfo, setReservInfo] = useState(initReserv);   
     const [modal, setModal] = useState(null);
     const { moveToPath, isLogin, moveToLogin} = useCustomLogin()
+    
 
     const onChangeDate = useCallback((date) => { // date 변경값을 받아오는 함수
         if (!date) {return;} // 날짜값이 없을 때 예외처리
@@ -42,6 +44,17 @@ const GroundInfoPage = () => {
     const handleClickDate = (e) => { //날짜버튼 클릭 핸들러
         reservInfo.date = moment(calDate).format("YYYY-MM-DD");
         setReservInfo({...reservInfo})
+        
+    }
+    const handleClickCarousel = (e) => { //날짜버튼 클릭 핸들러
+        let imgno = imgslide;
+        if(e.target.id == "left") {
+            imgno = (imgno == 0 ? groundInfo.uploadFileNames.length-1 : imgno-1)
+        } else if (e.target.id=="right") {
+            imgno = (imgno == groundInfo.uploadFileNames.length-1 ? 0 : imgno+1)
+        }
+        setImgslide(imgno)
+            
         
     }
     const handleClickTime = (e) => { //시간버튼 클릭 핸들러
@@ -124,16 +137,37 @@ const GroundInfoPage = () => {
 
             
             <div className="p-2">
+                
+            
                 <div className="carousel w-full h-80">
-                    <div id="slide1" className="carousel-item relative w-full  overflow-hidden">
-                        
-                            <img src="https://d31wz4d3hgve8q.cloudfront.net/media/IMG_4659.jpg" className="w-full h-full object-cover" />
-                        
-                        <div className="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
-                        <a href="#slide4" className="btn btn-circle">❮</a> 
-                        <a href="#slide2" className="btn btn-circle">❯</a>
+                
+                        <div id={`slide${imgslide}`} className="carousel-item relative w-full overflow-hidden " style={{ transition: 'transform 2s ease-in-out' }}>
+                            {(groundInfo.uploadFileNames &&  groundInfo.uploadFileNames.length !== 0 ) ? (
+                                <img src={`http://localhost:8080/goalracha/ground/view/${groundInfo.uploadFileNames[imgslide]}`} className="w-full h-full object-cover" /> 
+                            ) : 
+                              <div className="skeleton w-full h-full"></div>
+                            }
+                    
+                            {/* <img src={`http://localhost:8080/goalracha/ground/view/${groundInfo.uploadFileNames[imgslide]}`} className="w-full h-full object-cover" /> */}
+                            
+                            <div className="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
+                                <div id="left" className="btn btn-circle" onClick={handleClickCarousel}>❮</div> 
+                                <div id="right" className="btn btn-circle" onClick={handleClickCarousel}>❯</div> 
+                                
+                            </div>
                         </div>
-                    </div> 
+                
+                    {/* {groundInfo.uploadFileNames.map((imgFile, i) =>
+                        <div id={`slide${i}`} className="carousel-item relative w-full overflow-hidden">
+                            <img src={`http://localhost:8080/goalracha/ground/view/${imgFile}`} className="w-full h-full object-cover" />
+                            
+                            <div className="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
+                                <a href={`#slide${(i == 0 ? groundInfo.uploadFileNames.length-1 : i-1)}`} className="btn btn-circle">❮</a> 
+                                <a href={`#slide${i == groundInfo.uploadFileNames.length-1 ? 0 : i+1}`} className="btn btn-circle">❯</a>
+                            </div>
+                        </div>
+                    )} */}
+
                 
                 </div>
 
