@@ -14,3 +14,9 @@ export const getInfoByGno = async (req) => {
     const res = await axios.get(`${host}/v/ground/${req.gno}/${req.date}`)
     return res.data
 }
+
+export const reserveListUser = async (req) => {
+    const res = await axios.get(`${host}/v/ground/${req.gno}/${req.date}`)
+    return res.data
+}
+
