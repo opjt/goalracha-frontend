@@ -37,7 +37,7 @@ const useCustomMove = () => {
       queryStr = queryDefault;
     }
     navigate({
-      pathname: `../ground/`,
+      pathname: `../../ground/`,
       search: queryStr,
     });
     setRefresh(!refresh); //추가
@@ -76,7 +76,7 @@ const useCustomMove = () => {
   const moveToRead = (num) => {
     console.log(queryDefault);
     navigate({
-      pathname : `../read/${num}`,
+      pathname : `../ground/read/${num}`,
       search : queryDefault
     })
   };
@@ -84,7 +84,7 @@ const useCustomMove = () => {
   const moveToRegister = (num) => {
     console.log(queryDefault);
     navigate({
-      pathname : `../register/`,
+      pathname : `../ground/register/`,
       search : queryDefault
     })
   };

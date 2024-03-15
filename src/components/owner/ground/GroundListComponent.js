@@ -3,6 +3,7 @@ import PageComponent from "../../common/pageComponent";
 import useCustomMove from "../../../hooks/groundCustomMove";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import GroundReadComponent from "./GroundReadComponent";
 
 const initState = {
   dtoList: [],
@@ -30,11 +31,7 @@ const GroundList = ({ groundList }) => {
       console.log(data);
       setServerData(data);
     });
-  }, [page, size]);
-
-const handleClickRegister = () => {
-    navigate(`../ground/register`);
-  };
+  }, [page, size]); 
 
   return (
 
@@ -46,24 +43,25 @@ const handleClickRegister = () => {
           <div
             key={ground.gno}
             className="w-full min-w-[400px] p-2 m-2 rounded shadow-md"
+            onClick={()=>moveToRead(ground.gno)}
           >
             <div className="flex ">
-              <div className="text-base p-2 w-2/12 font-sans">
+              <div className="flex-nowrap text-base m-1 min-w-28 w-2/12 font-sans">
                 {ground.name}
               </div>
-              <div className="text-base m-1 p-2 w-8/12 font-sans">
+              <div className="text-base m-1 min-w-80 w-2/12 font-sans">
                 {ground.addr}
               </div>
-              <div className="text-base m-1 p-2 w-2/10 font-sans">
+              <div className="text-base m-1 min-w-14 w-2/12 font-sans">
                 {ground.fare}
               </div>
-              <div className="text-base m-1 p-2 w-2/10 font-sans">
+              <div className="text-base m-1 min-w-2 w-2/12 font-sans">
                 {ground.state}
               </div>
-              <div className="text-base m-1 p-2 w-2/10 font-sans">
+              <div className="text-base m-1 min-w-10 w-2/12 font-sans">
                 {ground.recommdMan}
               </div>
-              <div className="text-base m-1 p-2 w-2/10 font-sans">
+              <div className="text-base m-1 min-w-12 font-sans">
                 {ground.width}
               </div>
             </div>
@@ -71,7 +69,7 @@ const handleClickRegister = () => {
         ))}
       </div>
       <div className="float-right right-5 mt-2">
-          <button className="btn btnn-active btn-primary" onClick={handleClickRegister}>
+          <button className="btn btn-active " onClick={moveToRegister}>
             등록
           </button>
         </div>
