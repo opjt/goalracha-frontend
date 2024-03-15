@@ -1,7 +1,5 @@
 import axios from "axios"
 import jwtAxios from "../util/jwtUtil"
-
-
 const host = `${process.env.REACT_APP_SERVER}/api/member`
 
 
@@ -49,9 +47,9 @@ export const joinOwner = async (member) => {
 
 // 사용자 정보 수정 API 호출 함수
 export const putUserModify = async (member, uNo) => {
-        const res = await axios.put(`${host}/user/modify/${uNo}`, member);
+    const res = await axios.put(`${host}/user/modify/${uNo}`, member);
 
-        return res.data;
+    return res.data;
 };
 
 // 사업자 정보 수정 API 호출 함수
@@ -61,9 +59,11 @@ export const putOwnerModify = async (member, uNo) => {
     return res.data;
 };
 
-// 사업자 비밀번호 수정 API 호출 함수
 export const putOwnerPwModify = async (member, uNo) => {
-    const res = await axios.put(`${host}/owner/pwmodify/${uNo}`, member);
-
-    return res.data;
+    try {
+        const res = await axios.put(`${host}/owner/pwmodify/${uNo}`, member);
+        return res.data; // 정상적으로 처리되었을 경우 응답 데이터 반환
+    } catch (error) {
+        throw error; // 오류 발생 시 오류를 호출한 곳으로 반환
+    }
 };

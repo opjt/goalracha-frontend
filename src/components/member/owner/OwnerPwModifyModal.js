@@ -23,6 +23,11 @@ const OwnerPwModifyModal = ({ onPwModalClose, uNo, closeModal }) => {
     const handleSave = async () => {
         const { oldpw, newpw, newpwr } = pw;
 
+        if (newpw !== newpwr) {
+            setErrorMessage("새 비밀번호와 새 비밀번호 확인이 일치하지 않습니다.");
+            return;
+        }
+
         try {
             const response = await putOwnerPwModify({ oldpw, newpw, newpwr }, uNo);
             console.log("비밀번호 수정 완료", response);
@@ -34,12 +39,9 @@ const OwnerPwModifyModal = ({ onPwModalClose, uNo, closeModal }) => {
             onPwModalClose(modifiedPwInfo); // 모달 닫히면서 정보 전달 (로그인 상태 업데이트)
 
         } catch (error) {
-            if (error.message === "비밀번호가 일치하지 않습니다.") {
-                setErrorMessage("기존 비밀번호가 일치하지 않습니다.");
-            } else {
-                console.error(error);
-                setErrorMessage("오류가 발생했습니다. 잠시 후 다시 시도해 주세요.");
-            }
+            // 오류 메시지를 백엔드에서 반환했다면 그것을 사용하고, 그렇지 않으면 기본 오류 메시지를 사용합니다.
+            const errorMessageFromServer = error.response?.data?.message || "기존 비밀번호가 일치하지 않습니다.";
+            setErrorMessage(errorMessageFromServer);
         }
     };
 
