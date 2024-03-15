@@ -1,6 +1,8 @@
 import axios from "axios"
 import jwtAxios from "../util/jwtUtil"
-const host = `${process.env.REACT_APP_SERVER}/api/memberApi`
+
+
+const host = `${process.env.REACT_APP_SERVER}/api/member`
 
 
 export const loginPost = async (loginParam) => {
@@ -34,14 +36,10 @@ export const checkMemberId = async (member) => {
 
 // 닉네임 중복검사
 export const checkNickname = async (nickname) => {
-    const config = {
-        headers: {
-            'Content-Type': 'text/plain; charset=UTF-8'
-        }
-    };
-    const res = await axios.get(`${host}/checkNickname`, config);
-    return res.data
+    const res = await axios.get(`${host}/checkNickname/${nickname}`);
+    return res.data;
 };
+
 
 //사업자회원 회원가입
 export const joinOwner = async (member) => {
