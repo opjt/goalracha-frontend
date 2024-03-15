@@ -165,15 +165,17 @@ const AdminGroundListPage = () => {
       </table>
 
        {/* 모달 창 */}
-       {showModal && selectedGround && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full" onClick={closeModal}>
-        <div className="relative top-20 mx-auto p-5 border w-3/4 shadow-lg rounded-md bg-white" onClick={e => e.stopPropagation()}>
-        <div className="mt-3 text-center">
-        <h3 className="text-lg leading-6 font-medium text-gray-900">{selectedGround.name} - 상세 정보</h3>
-        {/* 모달 내용: 선택된 구장의 상세 정보 표시 */}
-        {/* 예: 사진이나 상세 설명 */}
-        <div className="mt-2">
-          {/* 여기에 구장 사진 또는 상세 설명을 표시 */}
+        {showModal && selectedGround && (
+          <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full" onClick={closeModal}>
+            <div className="relative top-20 mx-auto p-5 border w-3/4 shadow-lg rounded-md bg-white" onClick={e => e.stopPropagation()}>
+              <div className="mt-3 text-center">
+              <h3 className="text-lg leading-6 font-medium text-gray-900">{selectedGround.name} - 상세 정보</h3>
+              {/* 모달 내용: 선택된 구장의 상세 정보 표시 */}
+              <div className="mt-2">
+              {/* 구장 사진 표시 */}
+              {selectedGround.uploadFileNames && selectedGround.uploadFileNames.length > 0 && (
+              <img src={`http://localhost:8080/goalracha/ground/view/${selectedGround.uploadFileNames[0]}`} alt="Ground Image" className="max-w-full h-auto mx-auto"/>
+          )}
         </div>
         <div className="mt-4">
           <button onClick={() => setShowModal(false)} className="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-blue-500 border border-transparent rounded-md hover:bg-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500">
@@ -184,6 +186,7 @@ const AdminGroundListPage = () => {
     </div>
   </div>
 )}
+
     </div>
   );
 };

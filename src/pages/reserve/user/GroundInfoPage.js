@@ -1,9 +1,23 @@
-import { useEffect , useState} from "react";
+import { useEffect , useState, useCallback} from "react";
 import { useParams,useLocation } from "react-router-dom";
 import BasicLayout from "layouts/BasicLayout";
 import { getInfoByGno } from 'api/reserveApi';
-import moment from "moment";
 
+import { Calendar } from 'react-date-range'; // 얘가 캘린더 라이브러리
+import ko from 'date-fns/locale/ko';	     // 날짜 포맷 라이브러리 (한국어 기능을 임포트)
+import moment from 'moment';
+import 'react-date-range/dist/styles.css'; // main style file
+import 'react-date-range/dist/theme/default.css'; // theme css file
+import ResultModal from "components/common/ResultModal";
+import ReserveModal from "components/reserve/ReserveComponent";
+import useCustomLogin from "hooks/useCustomLogin";
+
+var initReserv = {
+    date: '',
+    time: {},
+    value: 0,
+    submit: false
+}
 const GroundInfoPage = () => {
     const { gno } = useParams();
     const { state } = useLocation();
@@ -12,14 +26,51 @@ const GroundInfoPage = () => {
     if(state && state.date !== '') {
         reqDate= state.date
     }
+    initReserv.date = reqDate;
+    const [calDate, setCalDate] = useState(moment().toDate());
     const [timeArray, setTimeArray] = useState(null);   
-    const [timeArray2, setTimeArray2] = useState(null);   
     const [groundInfo, setGroundInfo] = useState(null);   
+    const [reservInfo, setReservInfo] = useState(initReserv);   
+    const [modal, setModal] = useState(null);
+    const { moveToPath, isLogin, moveToLogin} = useCustomLogin()
+
+    const onChangeDate = useCallback((date) => { // date 변경값을 받아오는 함수
+        if (!date) {return;} // 날짜값이 없을 때 예외처리
+        setCalDate(date)
+    },[calDate]);
+
+    const handleClickDate = (e) => { //날짜버튼 클릭 핸들러
+        reservInfo.date = moment(calDate).format("YYYY-MM-DD");
+        setReservInfo({...reservInfo})
+        
+    }
+    const handleClickTime = (e) => { //시간버튼 클릭 핸들러
+        
+        var selectId = e.target.id;
+        var falseValues = Object.entries(reservInfo.time).filter(([key, value]) => value === false).map(([key, value]) => parseInt(key));
+        if(falseValues.length !== 0) {
+            if(!(falseValues.includes(parseInt(selectId)+groundInfo.usageTime) || falseValues.includes(parseInt(selectId)-groundInfo.usageTime) ||falseValues.includes(parseInt(selectId)))) {
+                setModal('연속된 시간으로만 예약하실 수 있습니다')
+                return
+            }
+            if((falseValues.includes(parseInt(selectId)+groundInfo.usageTime) && falseValues.includes(parseInt(selectId)-groundInfo.usageTime))) {
+                setModal('연속된 시간으로만 예약하실 수 있습니다')
+                return
+            }
+        } 
+        console.log(e.target.id+" " + reservInfo.time[e.target.id])
+        reservInfo.time[e.target.id] = !reservInfo.time[e.target.id]
+        falseValues = Object.entries(reservInfo.time).filter(([key, value]) => value === false).map(([key, value]) => parseInt(key));
+
+        reservInfo.value = falseValues.length*groundInfo.fare;
+        setReservInfo({...reservInfo})
+        
+    }
 
     useEffect(() => {
         var req = {
             gno: gno,
-            date: reqDate
+            date: reservInfo.date
         }
         getInfoByGno(req).then((result) => {
             console.log(result)
@@ -30,36 +81,45 @@ const GroundInfoPage = () => {
                 closeTime +=24;
             }
             var newTimeArray = {};
-            var newTimeArray2 = {};
-            for(let i = 6; i <= 29; i++) {
-                newTimeArray[i] = openTime <= i && i <= closeTime;
-            }
             for(let hour = openTime; hour<closeTime; hour+=result.groundInfo.usageTime) {
-                newTimeArray2[hour] = true;
+                newTimeArray[hour] = true;
             }
-            
-            
+            reservInfo.time = {...newTimeArray};
+            setReservInfo({...reservInfo})
             if(result.reservList != null) {
                 for(var e of result.reservList) {
                     var etime = parseInt(e.time);
-                    newTimeArray2[etime] = false;
                     newTimeArray[etime] = false;
-                    for(var i= 1; i<result.groundInfo.usageTime; i++) {
-                        etime = etime+i;
-                        newTimeArray[etime] = false;
-                    }
                 }
             } 
-            console.log(newTimeArray2);
-            setTimeArray2(newTimeArray2)
-            setTimeArray(newTimeArray);
+            console.log(newTimeArray);
+            setTimeArray(newTimeArray)
    
         })
-    }, [])
- 
+    }, [reservInfo.date])
+    const closeModal = () => {
+          setModal(null);
+          reservInfo.submit= false;
+          setReservInfo({...reservInfo})
+        }
+    const handleClickReserve = () => {
+        if(!isLogin) {
+            moveToLogin();
+            return;
+        } 
+        reservInfo.submit = true;
+        setReservInfo({...reservInfo})
+    }
 
     return (
         <BasicLayout>
+            {reservInfo.submit ? (
+                <ReserveModal reservInfo={reservInfo} groundInfo={groundInfo} callbackFn={closeModal}/>
+            ) : (
+                <></>
+            )}
+            {modal ? <ResultModal title={`예약`} content={modal} close={`닫기`}
+                    callbackFn={closeModal}></ResultModal> : <></>}
             {groundInfo != null && (
 
             
@@ -86,7 +146,7 @@ const GroundInfoPage = () => {
                         <div className="text-base text-gray-600">
                             {groundInfo.addr}
                         </div>
-                        <div className="mt-7 w-fit">
+                        <div className="mt-4 w-fit">
                             <div className="font-medium text-xl pb-1">구장정보</div>
                             <div className="text-base">
                                 <div>구장크기 <span className="text-gray-800">{groundInfo.width}</span></div>
@@ -110,22 +170,62 @@ const GroundInfoPage = () => {
                     </div>
                   
                 </div>
-                <div className="mt-10">
-                    <div className="font-bold">시간 선택</div>
-                    <div className="flex mt-3 gap-2 max-w-3/4 overflow-x-scroll overflow-hidden p-2 pt-0">
+                <div className="mt-10  mx-auto ">
+                    <div className="font-bold inline-block">예약 날짜/시간 선택</div>
+                    <button className={`float-right btn btn-sm  gap-1 `} onClick={()=> {document.getElementById('my_modal_1').showModal()}}>
+                    {reservInfo.date !== '' ? reservInfo.date : '날짜선택'}
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" ><path d="M6 9l6 6 6-6"/></svg></button>
 
-                        {Object.entries(timeArray2).map(([hour, available]) => (
-                        <div key={hour} className={`flex-shrink-0  btn btn-wide ${!available ? 'bg-gray-300 text-white' : 'bg-green-500 text-white'}`}>
-                            {hour}~{parseInt(hour)+parseInt(groundInfo.usageTime)}
-                        </div>
-                    ))}
+                    <div className="mt-3 gap-2 max-sm:flex flex-col justify-center py-4 bg-gray-50 whitespace-nowrap overflow-x-auto">
+                        {Object.entries(timeArray).map(([hour, available]) => (
+                            <div key={hour} id={hour} className={`h-14 btn mr-1 ${!available ? 'btn-disabled' : ''}
+                                 ${!reservInfo.time[hour] ? 'btn-primary': 'btn-neutral'}` } onClick={handleClickTime}>
+                                {hour}~{parseInt(hour) + parseInt(groundInfo.usageTime)}시({groundInfo.usageTime}시간)
+                            </div>
+                        ))}
                     </div>
-                </div>   
-              
-                
 
+                </div> 
+
+                <div className="flex justify-end mt-4 ">
+                    <div className="flex items-center flex-col">
+                        <div className="font-bold text-lg mb-2">
+                            
+                            총 결제 금액   {reservInfo.value !== 0 ? reservInfo.value : 0}  원
+                        </div>
+                        <div className={`btn btn-wide ${reservInfo.value === 0 ? 'btn-disabled' : ''}`} onClick={handleClickReserve}>
+                            예약하기
+                        </div>
+                    </div>
+                </div>  
+                {/* 날짜 모달 */}
+                <dialog id="my_modal_1" className="modal">
+                    <div className="modal-box">
+                        <h3 className="font-bold text-lg">날짜</h3>
+                        <Calendar style={{width:'100%'}} className="w-full"
+                            locale={ko} 	// 한국어 달력
+                            months={1}  	// 1달치 달력만 디스플레이
+                            minDate={moment().toDate()}
+                            maxDate={moment().add(14, 'd').toDate()} //최대날짜
+                            date={calDate}		// 날짜값
+                            onChange={onChangeDate} 	     // onChange 함수
+                            dateDisplayFormat="yyyy-mm.dd" // 날짜 포맷값
+                        />
+                        <div className="modal-action">
+                        <form method="dialog">
+                            {/* if there is a button in form, it will close the modal */}
+                            <button className="btn btn-neutral mr-2" name="date" onClick={handleClickDate}>적용</button>
+                        </form>
+                        </div>
+                    </div>
+                    <form method="dialog" className="modal-backdrop">
+                        <button>close</button>
+                    </form>
+                </dialog>
+         
+                    
             </div>
-            
+                
             )}
         </BasicLayout>
     );

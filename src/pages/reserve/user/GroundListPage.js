@@ -11,7 +11,7 @@ import 'react-date-range/dist/styles.css'; // main style file
 import 'react-date-range/dist/theme/default.css'; // theme css file
 
 import { getListbyFilter } from 'api/reserveApi';
-import GroundListItem from 'components/ground/GroundListItemComponent';
+import GroundListItem from 'components/reserve/GroundListItemComponent';
 
 const initoption = {
     date:  moment().toDate(),

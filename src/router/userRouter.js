@@ -30,6 +30,7 @@ const memberRouter = () => {
             element: <Suspense fallback={Loading}><UserMyPage /></Suspense>
         },
         
+        
 
     ]
 }

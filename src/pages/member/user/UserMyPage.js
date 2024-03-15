@@ -31,7 +31,19 @@ const UserMyPage = () => {
         name: loginState.name,
       });
     }
-  }, [loginState]);
+    // 로컬 스토리지에서 수정된 정보 가져오기
+    const storedModifiedUserInfo = localStorage.getItem('modifiedUserInfo');
+    if (storedModifiedUserInfo) {
+      const parsedModifiedUserInfo = JSON.parse(storedModifiedUserInfo);
+      setMember(prevMember => ({
+        ...prevMember,
+        nickname: parsedModifiedUserInfo.nickname || prevMember.nickname,
+        tel: parsedModifiedUserInfo.tel || prevMember.tel,
+
+      }));
+    }
+  }, [loginState]); // loginState가 변경될 때마다 실행
+
 
   // 모달 열기 함수
   const openModal = () => {
@@ -56,7 +68,7 @@ const UserMyPage = () => {
             />
           </div>
           <div className="container text-center mt-2 font-bold">
-            {loginState.nickname}
+            {member.nickname}
           </div>
           <div className="flex justify-end ml-auto mt-4">
             <button

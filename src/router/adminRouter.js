@@ -9,8 +9,9 @@ import AdminGroundListPage from "../pages/member/admin/AdminGroundListPage.js";
 import AdminReserveListPage from "../pages/member/admin/AdminReserveListPage.js";
 import AdminOwnerManagePage from "../pages/member/admin/AdminOwnerManagePage.js";
 import AdminUserManagePage from "../pages/member/admin/AdminUserManagePage.js";
-import AdminAnnualStatistics from "pages/member/admin/AdminMemberStatistics.js";
 import AdminMonthlyStatistics from "pages/member/admin/AdminReserveStatistics.js";
+// import AdminAnnualStatistics from "pages/member/admin/AdminMemberStatistics.js";
+import StatisticsPage from "pages/member/admin/StatisticsPage.js";
 
 const AdminPage = lazy(() => import("../pages/member/admin/AdminPage"));
 
@@ -35,7 +36,7 @@ export default function adminRouter() {
         { path: "submenu4-url", element: <AdminOwnerManagePage /> }, 
         { path: "submenu5-url", element: <AdminUserManagePage /> }, 
         { path: "submenu6-url", element: <AdminMonthlyStatistics /> }, 
-        { path: "submenu7-url", element: <AdminAnnualStatistics /> }, 
+        { path: "submenu7-url", element: <StatisticsPage /> }, 
       ],
     },
   ];
