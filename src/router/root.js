@@ -5,6 +5,7 @@ import { createBrowserRouter, Outlet } from "react-router-dom";
 import memberRouter from "./userRouter.js";
 import ownerRouter from "./ownerRouter.js";
 import BoardRouter from "./boardRouter.js";
+import ReservRouter from "./reservRouter.js";
 import adminRouter from "./adminRouter"; // adminRouter를 불러옵니다.
 
 import MainHeader from "../components/layouts/mainHeader";
@@ -13,9 +14,11 @@ import AdminLogin from "../components/member/admin/AdminLoginComponent"; //admin
 
 const Loading = <div>Loading....</div>;
 const Main = lazy(() => import("../pages/MainPage"));
+const Test = lazy(() => import("../pages/test"));
 const Login = lazy(() => import("../pages/member/user/LoginPage.js"));
 const GroundInfoPage = lazy(() => import("pages/reserve/user/GroundInfoPage.js"))
-const GroundListPage = lazy(() => import("pages/reserve/user/GroundListPage"));
+const LoadingPage = lazy(() => import("pages/loading"))
+
 const BoardIndex = lazy(() => import("pages/board/IndexPage.js"));
 
 const AdminLayout = () => (
@@ -28,12 +31,23 @@ const AdminLayout = () => (
 
 const root = createBrowserRouter([
     {
-        path: "/",
+        path: "test",
         element: (
         <Suspense fallback={Loading}>
-            <Main />
+            <Test />
         </Suspense>
         ),
+    },
+    {
+        path: "/",
+        element: (
+            <Main />
+        ),
+    },
+    {
+        path: "loading",
+        element:  <LoadingPage />
+
     },
     {
         path: "login",
@@ -45,11 +59,7 @@ const root = createBrowserRouter([
     },
     {
         path: "reserve",
-        element: (
-        <Suspense fallback={Loading}>
-            <GroundListPage />
-        </Suspense>
-        ),
+        children: ReservRouter()
     },
     {
         path: "ground/:gno",
@@ -70,7 +80,7 @@ const root = createBrowserRouter([
     },
     {
         path: "board",
-        element: <Suspense fallback={Loading}><BoardIndex /></Suspense>,
+        element: <BoardIndex />,
         children: BoardRouter(),
     },
     ...adminRouter(), // adminRouter 함수를 호출하여 라우트 배열을 펼침

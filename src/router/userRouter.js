@@ -12,19 +12,19 @@ const memberRouter = () => {
     return [
         {
             path: "login",
-            element: <Suspense fallback={Loading}><Login /></Suspense>
+            element: <Login />
         },
         {
             path: "logout",
-            element: <Suspense fallback={Loading}><Logout /></Suspense>
+            element: <Logout />
         },
         {
             path: "kakao",
-            element: <Suspense fallback={Loading}><KakaoRedirect /></Suspense>
+            element: <KakaoRedirect />
         },
         {
             path: "join",
-            element: <Suspense fallback={Loading}><Join /></Suspense>
+            element: <Join />
         },
         {
             path: "mypage",

@@ -10,7 +10,7 @@ const GroundListItem = ({ groundInfo, date, callbackFn }) => {
         closeTime +=24;
     }
     for(let i = 6; i<= 29; i++) {
-        if(openTime<= i && i <= closeTime) {
+        if(openTime<= i && i < closeTime) {
             timeArray[i] = true;
         } else {
             timeArray[i] = false;
@@ -21,17 +21,16 @@ const GroundListItem = ({ groundInfo, date, callbackFn }) => {
         for(var e of split) {
             e = parseInt(e);
             timeArray[e] = false;
-            for(var i= 1; i<groundInfo.usageTime; i++) {
-                e = e+i;
+            for(var i= 1; i<parseInt(groundInfo.usageTime); i++) {
+                e++;
                 timeArray[e] = false;
             }
         }
 
     } 
-    // console.log(timeArray);
 
     useEffect(() => {
-        // console.log(groundInfo);
+        console.log(groundInfo);
     }, [groundInfo])
     const clickGround = (gno) => {
         navigate(`/ground/${gno}`, { state: {date:date} });
@@ -50,7 +49,13 @@ const GroundListItem = ({ groundInfo, date, callbackFn }) => {
                         <p className="text-gray-400">{groundInfo.fare}원/시간</p>
                     </div>
                     <div>
-                        <div className="skeleton w-32 h-20"></div>
+                    {(groundInfo.uploadFileNames &&  groundInfo.uploadFileNames.length !== 0 ) ? (
+                        <img src={`http://localhost:8080/goalracha/ground/view/${groundInfo.uploadFileNames[0]}`} className="w-32 h-20 object-cover"></img>
+                    ) : 
+                    <div className="skeleton w-32 h-20"></div>
+                    }
+                    
+                       
                     </div>
                 </div>
                 
