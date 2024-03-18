@@ -30,10 +30,6 @@ const GroundReadPage = () => {
         <div className="font-extrabold w-full bg-white mt-6">
             <div className="text-2xl">
                 <GroundReadComponent gno={gno}></GroundReadComponent>
-
-                <button onClick={() => moveToModify(gno)}>수정</button>
-                <button onClick={() => moveToList()}>목록</button>
-
             </div>
         </div >
     )

@@ -1,103 +1,41 @@
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import React from 'react';
+import { useDaumPostcodePopup } from 'react-daum-postcode';
+import { postcodeScriptUrl } from 'react-daum-postcode/lib/loadPostcode';
 
-const GroundListItem = ({ groundInfo, date, callbackFn }) => {
-    var timeArray = {} // 6부터29까지 29는 5시 
-    const navigate = useNavigate();
-    var openTime = groundInfo.openTime
-    var closeTime = groundInfo.closeTime
-    if(closeTime <= openTime) {
-        closeTime +=24;
-    }
-    for(let i = 6; i<= 29; i++) {
-        if(openTime<= i && i < closeTime) {
-            timeArray[i] = true;
-        } else {
-            timeArray[i] = false;
+function DaumPost(props) {
+    // 클릭 시 수행될 팝업 생성 함수
+    const open = useDaumPostcodePopup(postcodeScriptUrl);
+  
+    const handleComplete = (data) => {
+      let fullAddress = data.address;
+      let extraAddress = ''; // 추가될 주소
+      let localAddress = data.sido + ' ' + data.sigungu; // 지역주소(시, 도 + 시, 군, 구)
+
+      if (data.addressType === 'R') { // 주소타입이 도로명주소일 경우
+        if (data.bname !== '') {
+          extraAddress += data.bname; // 법정동, 법정리
         }
-    }
-    if(groundInfo.reserveTime != null) {
-        var split = groundInfo.reserveTime.split(',')
-        for(var e of split) {
-            e = parseInt(e);
-            timeArray[e] = false;
-            for(var i= 1; i<parseInt(groundInfo.usageTime); i++) {
-                e++;
-                timeArray[e] = false;
-            }
+        if (data.buildingName !== '') { // 건물명
+          extraAddress += (extraAddress !== '' ? `, ${data.buildingName}` : data.buildingName);
         }
-
-    } 
-
-    useEffect(() => {
-        console.log(groundInfo);
-    }, [groundInfo])
-    const clickGround = (gno) => {
-        navigate(`/ground/${gno}`, { state: {date:date} });
-
+        // 지역주소 제외 전체주소 치환
+        fullAddress = fullAddress.replace(localAddress, '');
+        // 조건 판단 완료 후 지역 주소 및 상세주소 state 수정
+        props.setAddressObj({
+          areaAddress: localAddress,
+          townAddress: fullAddress += (extraAddress !== '' ? `(${extraAddress})` : '')
+        });
+        // 주소 검색이 완료된 후 결과를 매개변수로 전달
+      }
     }
-    return (
-        <>
-            <div className=" my-4 border-b-8 border-gray-50 pb-6 cursor-pointer" onClick={() => clickGround(groundInfo.gno)}>
 
-                <div className="text-lg font-bold">{groundInfo.name}</div>
-                <p className="text-sm text-gray-600">{groundInfo.addr}</p>
+    // 클릭 시 발생할 이벤트
+    const handleClick = () => {
+      // 주소검색이 완료되고, 결과 주소를 클릭 시 해당 함수 수행
+      open({ onComplete: handleComplete });
+    }
 
-                <div className="flex justify-between">
-                    <div className='text-sm mt-3'>
-                        <p className="">{groundInfo.width}•{groundInfo.inAndOut}•{groundInfo.grassInfo}</p>
-                        <p className="text-gray-400">{groundInfo.fare}원/시간</p>
-                    </div>
-                    <div>
-                    {(groundInfo.uploadFileNames &&  groundInfo.uploadFileNames.length !== 0 ) ? (
-                        <img src={`http://localhost:8080/goalracha/ground/view/${groundInfo.uploadFileNames[0]}`} className="w-32 h-20 object-cover"></img>
-                    ) : 
-                    <div className="skeleton w-32 h-20"></div>
-                    }
-                    
-                       
-                    </div>
-                </div>
-                
-                
-                <div className="flex flex-wrap mt-3 w-full">
-                    {Object.entries(timeArray).map(([hour, available]) => (
-                        <div key={hour} className={`flex-grow mr-1 h-1 text-xs ${!available ? 'bg-gray-300 text-white' : 'bg-green-500 text-white'}`}>
-                        
-                        </div>
-                    ))}
-                </div>
-                <div className="w-full flex">
-                    <div className="w-1/4 text-sm text-gray-400">06시</div>
-                    <div className="w-1/4 text-sm text-gray-400">12시</div>
-                    <div className="w-1/4 text-sm text-gray-400">18시</div>
-                    <div className="w-1/4 text-sm text-gray-400">00시</div>
-                </div>
-                <div className="flex justify-between">
-                    <div className="flex mt-3 mr-3 text-xs">
-                        <div className="flex items-center">
-                            <span className="badge badge-success gap-2">
-                            
-                            </span>
-                            <p className="ml-1 text-gray-500">예약 가능</p>
-                            
-                        </div>
-                        <div className="ml-3 flex items-center">
-                            <span className="badge badge-success gap-2 bg-gray-300">
-                            
-                            </span>
-                            <p className="ml-1 text-gray-500">예약 불가</p>
-                        </div>
-                    </div>
-                    {/* <div className="flex justify-end">
-                        <button className="btn btn-md">예약하기</button>
-                    </div> */}
-                </div>
-                  
-            </div>
-            
-        </>
-    );
+    return <button type="button" onClick={handleClick}>주소찾기</button>;
 }
 
-export default GroundListItem;
+export default DaumPost;
