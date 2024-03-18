@@ -30,7 +30,7 @@ const GroundListItem = ({ groundInfo, date, callbackFn }) => {
     } 
 
     useEffect(() => {
-        console.log(groundInfo);
+        // console.log(groundInfo);
     }, [groundInfo])
     const clickGround = (gno) => {
         navigate(`/ground/${gno}`, { state: {date:date} });
@@ -50,7 +50,7 @@ const GroundListItem = ({ groundInfo, date, callbackFn }) => {
                     </div>
                     <div>
                     {(groundInfo.uploadFileNames &&  groundInfo.uploadFileNames.length !== 0 ) ? (
-                        <img src={`http://localhost:8080/goalracha/ground/view/${groundInfo.uploadFileNames[0]}`} className="w-32 h-20 object-cover"></img>
+                        <img src={`http://localhost:8080/goalracha/ground/view/${groundInfo.uploadFileNames[0]}`} className="w-32 h-20 object-cover rounded-lg"></img>
                     ) : 
                     <div className="skeleton w-32 h-20"></div>
                     }

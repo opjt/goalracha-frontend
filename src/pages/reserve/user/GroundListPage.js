@@ -36,7 +36,6 @@ const timeRanges = [
     ['04~06시','04시'],
   ];
 const GroundListPage = () => {
-
     const [option, setOption] = useState(initoption);   // 검색옵션
     const [showFilter, setShowFilter] = useState({date:"", time:"", inout:"",search:""});
     const [jsonResult, setJsonResult] = useState(initResult);

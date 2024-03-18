@@ -17,11 +17,11 @@ const ListComponent = () => {
   }, [page, size, refresh]);
 
   const handleTitleClick = (bno) => {
-    navigate(`/board/read/${bno}`);
+    navigate(`${bno}`);
   };
 
   const handleClickPlus = () => {
-    navigate(`/board/add`);
+    navigate(`add`);
   };
 
   return (

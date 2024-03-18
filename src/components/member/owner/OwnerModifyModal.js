@@ -1,13 +1,13 @@
 import React, { useState } from "react"
 import { useDispatch } from "react-redux"
 import { putOwnerModify } from "api/memberApi"
-import { modifyUserInfo } from "components/common/actions"
+import useCustomLogin from "hooks/useCustomLogin";
 
 const OwnerModifyModal = ({ closeModal, uNo, name, tel, onModalClose }) => {
     const dispatch = useDispatch();
     const [newName, setNewname] = useState(name);   // 새 담당자 이름 상태
     const [newTel, setNewTel] = useState(tel);  // 새 전화번호 상태
-
+    const { loginState, doUpdate } = useCustomLogin();
     const handleNameChange = (event) => {
         setNewname(event.target.value);
     };
@@ -26,17 +26,18 @@ const OwnerModifyModal = ({ closeModal, uNo, name, tel, onModalClose }) => {
             const response = await putOwnerModify(modifiedInfo, uNo);
             console.log("사용자 정보 수정 완료 : ", response);
 
-            // 수정된 정보를 로컬 스토리지에 저장
-            localStorage.setItem('modifiedInfo', JSON.stringify(modifiedInfo));
+            const modify = {
+                ...loginState,
+                name: newName,
+                tel: newTel 
+              };
+            doUpdate(modify);
 
-            // 수정된 정보를 Redux Store에 반영
-            dispatch(modifyUserInfo(modifiedInfo));
 
             // 모달 닫기 이벤트 호출
             closeModal();
 
-            // 모달 닫히면서 수정된 정보를 전달 (로그인 상태 업데이트)
-            onModalClose(modifiedInfo);
+
             
         } catch (error) {
             console.error("사용자 정보 수정 오류 : ", error);

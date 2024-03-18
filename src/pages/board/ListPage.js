@@ -1,6 +1,6 @@
 // 페이지네이션
 
-import ListComponent from "../../components/board/ListComponent1";
+import ListComponent from "../../components/board/AdminListComponent";
 const ListPage = () => {
   return (
     <div className="font-extrabold w-full bg-white mt-6 p-8 rounded-lg shadow-lg">

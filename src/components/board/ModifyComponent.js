@@ -56,6 +56,7 @@ const ModifyComponent = ({ bno }) => {
           title={"처리결과"}
           content={result}
           callbackFn={closeModal}
+          close={"확인"}
         />
       ) : null}
 

@@ -8,7 +8,7 @@ const KakaoRedirectPage = () => {
     const [searchParams] = useSearchParams()
     const authCode = searchParams.get("code")
     const dispatch = useDispatch()
-    const { moveToPath} = useCustomLogin()
+    const { moveToPath, afterLogin} = useCustomLogin()
     useEffect(() => {
         getAccessToken(authCode).then(accessToken => {
             console.log(accessToken)
@@ -21,7 +21,7 @@ const KakaoRedirectPage = () => {
                 if (memberInfo.email === memberInfo.nickname) {
                     moveToPath("/user/join")
                 } else {
-                    moveToPath("/")
+                    afterLogin()
                 }
 
             })

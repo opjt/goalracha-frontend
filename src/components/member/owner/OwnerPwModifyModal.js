@@ -1,10 +1,9 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
 import { putOwnerPwModify } from "api/memberApi";
-import { modifyOwnerInfo } from "components/common/actions";
+import useCustomLogin from "hooks/useCustomLogin";
 
 const OwnerPwModifyModal = ({ onPwModalClose, uNo, closeModal }) => {
-    const dispatch = useDispatch();
+    const { doLogout, moveToPath } = useCustomLogin();
     const [pw, setPw] = useState({
         oldpw: '',
         newpw: '',
@@ -31,12 +30,9 @@ const OwnerPwModifyModal = ({ onPwModalClose, uNo, closeModal }) => {
         try {
             const response = await putOwnerPwModify({ oldpw, newpw, newpwr }, uNo);
             console.log("비밀번호 수정 완료", response);
-
-            const modifiedPwInfo = { oldpw, newpw, newpwr };
-            localStorage.setItem('modifiedPwInfo', JSON.stringify(modifiedPwInfo));
-            dispatch(modifyOwnerInfo(modifiedPwInfo));
+            alert("비밀번호가 변경되었습니다")
+            
             closeModal(); // 모달을 닫는 함수 호출
-            onPwModalClose(modifiedPwInfo); // 모달 닫히면서 정보 전달 (로그인 상태 업데이트)
 
         } catch (error) {
             // 오류 메시지를 백엔드에서 반환했다면 그것을 사용하고, 그렇지 않으면 기본 오류 메시지를 사용합니다.

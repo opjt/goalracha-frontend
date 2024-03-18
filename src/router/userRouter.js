@@ -1,13 +1,15 @@
+import useCustomLogin from "hooks/useCustomLogin";
 import { Suspense, lazy } from "react";
-const Loading = <div>Loading....</div>
+import { Navigate } from "react-router-dom";
 const Login = lazy(() => import("../pages/member/user/LoginPage"))
 const Logout = lazy(() => import("../pages/member/user/UserLogoutPage"))
 const KakaoRedirect = lazy(() => import("../pages/member/user/KakaoRedirectPage"))
 const Join = lazy(() => import("../pages/member/user/UserJoinPage"))
 const UserMyPage = lazy(() => import("../pages/member/user/UserMyPage"))
+
 // const ReserveList = lazy(() => import("../pages/member/user/UserReserveListPage"))
 
-const memberRouter = () => {
+const MemberRouter = () => {
 
     return [
         {
@@ -28,7 +30,8 @@ const memberRouter = () => {
         },
         {
             path: "mypage",
-            element: <Suspense fallback={Loading}><UserMyPage /></Suspense>
+            element: <UserMyPage />
+            // element: isLogin ? <UserMyPage /> : <Navigate to="/user/login" />
         }
         // , 
         // {
@@ -38,6 +41,6 @@ const memberRouter = () => {
 
 
 
-    ]
-}
-export default memberRouter
+    ];
+};
+export default MemberRouter

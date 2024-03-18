@@ -3,6 +3,7 @@ import BasicLayout from "layouts/BasicLayout";
 import { useSelector } from "react-redux";
 import UserModifyModal from "components/member/user/UserModifyModal";
 import { Link } from "react-router-dom";
+import useCustomLogin from "hooks/useCustomLogin";
 
 // 초기 상태 정의
 const initState = {
@@ -17,11 +18,12 @@ const UserMyPage = () => {
   const loginState = useSelector((state) => state.loginSlice); // 로그인 상태 가져오기
   const [result, setResult] = useState(); // 결과 메시지 상태
   const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태
+  const {isLogin, moveToLogin} = useCustomLogin();
 
   // 컴포넌트가 마운트될 때 로그인 정보가 변경될 때마다 실행되는 useEffect
   useEffect(() => {
     // 로그인 정보가 존재하는 경우
-    if (loginState) {
+    if (isLogin) {
       // 회원 정보 상태 업데이트
       setMember({
         ...member,
@@ -30,17 +32,8 @@ const UserMyPage = () => {
         email: loginState.email,
         name: loginState.name,
       });
-    }
-    // 로컬 스토리지에서 수정된 정보 가져오기
-    const storedModifiedUserInfo = localStorage.getItem('modifiedUserInfo');
-    if (storedModifiedUserInfo) {
-      const parsedModifiedUserInfo = JSON.parse(storedModifiedUserInfo);
-      setMember(prevMember => ({
-        ...prevMember,
-        nickname: parsedModifiedUserInfo.nickname || prevMember.nickname,
-        tel: parsedModifiedUserInfo.tel || prevMember.tel,
-
-      }));
+    } else {
+      moveToLogin();
     }
   }, [loginState]); // loginState가 변경될 때마다 실행
 
@@ -92,7 +85,7 @@ const UserMyPage = () => {
             <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-4">
               회원탈퇴
             </button>
-            <Link to={"/user/logout"}>
+            <Link to={"/logout"}>
               <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-4">
                 로그아웃
               </button>
@@ -108,14 +101,7 @@ const UserMyPage = () => {
           uNo={loginState.uNo} // 사용자 번호 전달
           nickname={member.nickname} // 닉네임 정보 전달
           tel={member.tel} // 전화번호 정보 전달
-          onModalClose={(modifiedUserInfo) => {
-            // 모달이 닫힐 때 로그인 정보를 업데이트
-            setMember({
-              ...member,
-              nickname: modifiedUserInfo.nickname,
-              tel: modifiedUserInfo.tel,
-            });
-          }}
+     
         />
       )}
     </BasicLayout>

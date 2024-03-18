@@ -5,45 +5,44 @@ import { useEffect, useRef, useState } from "react";
 import { loadPaymentWidget } from "@tosspayments/payment-widget-sdk";
 import { nanoid } from "nanoid";
 
-const selector = "#payment-widget";
-const clientKey = "test_ck_eqRGgYO1r5ywnEyEoN2brQnN2Eya";
-const customerKey = "ANONYMOUS";
+const { kakao } = window;
 
 const Test = () => {
-  const paymentWidgetRef = useRef(null);
-  const paymentMethodsWidgetRef = useRef(null);
-  const [price, setPrice] = useState(50_000);
+  	const [map, setMap] = useState(null);
 
-  // useEffect(() => {
-  //   (async () => {
-  //     const paymentWidget = await loadPaymentWidget(clientKey, customerKey);
-
-  //     const paymentMethodsWidget = paymentWidget.renderPaymentMethods(
-  //       selector,
-  //       { value: price },
-  //       { variantKey: "DEFAULT" }
-  //     );
-
-  //     paymentWidgetRef.current = paymentWidget;
-  //     paymentMethodsWidgetRef.current = paymentMethodsWidget;
-  //   })();
-  // }, []);
-
-  // useEffect(() => {
-  //   const paymentMethodsWidget = paymentMethodsWidgetRef.current;
-
-  //   if (paymentMethodsWidget == null) {
-  //     return;
-  //   }
-
-  //   paymentMethodsWidget.updateAmount(price);
-  // }, [price]);
+  	var mapOption = {
+    	center: new kakao.maps.LatLng(0, 0), // 지도의 중심좌표
+    	level: 3, // 지도의 확대 레벨
+  	};
+	useEffect(() => {
+		const container = document.getElementById("map");
+    	var map = new kakao.maps.Map(container, mapOption);
+    	const geocoder = new kakao.maps.services.Geocoder();
+		geocoder.addressSearch( "대전광역시 서구 관저로 7-6",function (result, status) {
+			if (status === kakao.maps.services.Status.OK) {
+				var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+				var marker = new kakao.maps.Marker({
+					map: map,
+					position: coords,
+				});
+				map.setCenter(coords);
+			}
+		}
+		);
+  }, []);
+  const handleClick = () => {
+	
+  };
 
   return (
     <BasicLayout>
-       
+      <div
+        id="map"
+        style={{ width: "99%", height: "200px" }}
+        onClick={handleClick}
+      ></div>
 
-      <div className="bg-white p-6  md:mx-auto">
+      {/* <div className="bg-white p-6  md:mx-auto">
         <svg viewBox="0 0 24 24" className="text-green-600 w-16 h-16 mx-auto my-6">
           <path
             fill="currentColor"
@@ -82,9 +81,7 @@ const Test = () => {
             </a>
           </div>
         </div>
-      </div>
-
-    
+      </div> */}
     </BasicLayout>
   );
 };

@@ -52,6 +52,7 @@ const AddComponent = () => {
           title={"처리완료"}
           content={"등록완료"}
           callbackFn={closeModal}
+          close={"확인"}
         />
       ) : (
         <></>

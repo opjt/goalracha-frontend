@@ -1,4 +1,4 @@
-import { useEffect , useState, useCallback} from "react";
+import { useEffect , useState, useCallback, useRef} from "react";
 import { useParams,useLocation } from "react-router-dom";
 import BasicLayout from "layouts/BasicLayout";
 import { getInfoByGno } from 'api/reserveApi';
@@ -11,7 +11,8 @@ import 'react-date-range/dist/theme/default.css'; // theme css file
 import ResultModal from "components/common/ResultModal";
 import ReserveModal from "components/reserve/ReserveComponent";
 import useCustomLogin from "hooks/useCustomLogin";
-
+import KakaoMap from "components/common/kakaomap";
+// import { Map, MapMarker } from "react-kakao-maps-sdk";
 var initReserv = {
     date: '',
     time: {},
@@ -33,8 +34,9 @@ const GroundInfoPage = () => {
     const [imgslide, setImgslide] = useState(0);
     const [reservInfo, setReservInfo] = useState(initReserv);   
     const [modal, setModal] = useState(null);
-    const { moveToPath, isLogin, moveToLogin} = useCustomLogin()
-    
+    const { moveToPath, isLogin, moveToLogin, moveToLoginWithCookie} = useCustomLogin()
+    const location = useLocation();
+    const carouselElement = useRef(null);
 
     const onChangeDate = useCallback((date) => { // date 변경값을 받아오는 함수
         if (!date) {return;} // 날짜값이 없을 때 예외처리
@@ -57,6 +59,7 @@ const GroundInfoPage = () => {
             
         
     }
+
     const handleClickTime = (e) => { //시간버튼 클릭 핸들러
         
         var selectId = e.target.id;
@@ -80,14 +83,31 @@ const GroundInfoPage = () => {
         
     }
 
+
     useEffect(() => {
         var req = {
             gno: gno,
             date: reservInfo.date
         }
+
+        //카카오맵
+        
         getInfoByGno(req).then((result) => {
             console.log(result)
             setGroundInfo(result.groundInfo)
+            // const geocoder = new kakao.maps.services.Geocoder();
+  
+            // let callback = function(result, status) {
+            //     if (status === kakao.maps.services.Status.OK) {
+            //     const newSearch = result[0]
+            //     setState({
+            //         center: { lat: newSearch.y, lng: newSearch.x }
+            //     })
+            //     }
+            // };
+            // geocoder.addressSearch(`${searchAddress}`, callback);
+            
+        
             var openTime = result.groundInfo.openTime;
             var closeTime = result.groundInfo.closeTime;
             if(closeTime <= openTime) {
@@ -117,12 +137,22 @@ const GroundInfoPage = () => {
         }
     const handleClickReserve = () => {
         if(!isLogin) {
-            moveToLogin();
+            moveToLoginWithCookie(location.pathname);
             return;
         } 
         reservInfo.submit = true;
         setReservInfo({...reservInfo})
     }
+
+    
+
+    const scrollCarousel = (targetImageNumber) => {
+        const carouselWidth = carouselElement.current.clientWidth;
+        const targetXPixel = carouselWidth * targetImageNumber + 1;
+    
+        carouselElement.current.scrollTo(targetXPixel, 0);
+      };
+      
 
     return (
         <BasicLayout>
@@ -138,35 +168,35 @@ const GroundInfoPage = () => {
             
             <div className="p-2">
                 
-            
-                <div className="carousel w-full h-80">
-                
-                        <div id={`slide${imgslide}`} className="carousel-item relative w-full overflow-hidden " style={{ transition: 'transform 2s ease-in-out' }}>
+                <div className="carousel w-full h-80" ref={carouselElement}>
+                        {/* <div id={`slide${imgslide}`} className="carousel-item relative w-full overflow-hidden " style={{ transition: 'transform 2s ease-in-out' }}>
                             {(groundInfo.uploadFileNames &&  groundInfo.uploadFileNames.length !== 0 ) ? (
                                 <img src={`http://localhost:8080/goalracha/ground/view/${groundInfo.uploadFileNames[imgslide]}`} className="w-full h-full object-cover" /> 
                             ) : 
                               <div className="skeleton w-full h-full"></div>
                             }
-                    
-                            {/* <img src={`http://localhost:8080/goalracha/ground/view/${groundInfo.uploadFileNames[imgslide]}`} className="w-full h-full object-cover" /> */}
                             
                             <div className="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
                                 <div id="left" className="btn btn-circle" onClick={handleClickCarousel}>❮</div> 
                                 <div id="right" className="btn btn-circle" onClick={handleClickCarousel}>❯</div> 
                                 
                             </div>
-                        </div>
-                
-                    {/* {groundInfo.uploadFileNames.map((imgFile, i) =>
-                        <div id={`slide${i}`} className="carousel-item relative w-full overflow-hidden">
+                        </div> */} 
+                        
+                        
+                    {groundInfo.uploadFileNames.length === 0 && (
+                        <div className="skeleton w-full h-full"></div>
+                    )}
+                    {groundInfo.uploadFileNames.map((imgFile, i) =>
+                        <div id={`slide${i}`} className="carousel-item relative w-full overflow-hidden" key={i}>
                             <img src={`http://localhost:8080/goalracha/ground/view/${imgFile}`} className="w-full h-full object-cover" />
                             
                             <div className="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
-                                <a href={`#slide${(i == 0 ? groundInfo.uploadFileNames.length-1 : i-1)}`} className="btn btn-circle">❮</a> 
-                                <a href={`#slide${i == groundInfo.uploadFileNames.length-1 ? 0 : i+1}`} className="btn btn-circle">❯</a>
+                                <button onClick={() => scrollCarousel(i == 0 ? groundInfo.uploadFileNames.length-1 : i-1)} className="btn btn-circle">❮</button> 
+                                <button onClick={() => scrollCarousel(i == groundInfo.uploadFileNames.length-1 ? 0 : i+1)}  className="btn btn-circle">❯</button>
                             </div>
                         </div>
-                    )} */}
+                    )}
 
                 
                 </div>
@@ -181,7 +211,7 @@ const GroundInfoPage = () => {
                             {groundInfo.addr}
                         </div>
                         <div className="mt-4 w-fit">
-                            <div className="font-medium text-xl pb-1">구장정보</div>
+                            <div className="font-bold text-xl pb-1">구장정보</div>
                             <div className="text-base">
                                 <div>구장크기 <span className="text-gray-800">{groundInfo.width}</span></div>
                                 <div>추천인원 <span className="text-gray-800">{groundInfo.recommdMan}</span></div>
@@ -194,12 +224,12 @@ const GroundInfoPage = () => {
                             시설정보
                         </div>
                         <ul className="p-2">
-                            <li className="w-2/5 inline-flex py-1">풋살화 대여</li>
-                            <li className="w-2/5 inline-flex py-1">풋살공 대여</li>
-                            <li className="w-2/5 inline-flex py-1">조끼 대여</li>
-                            <li className="w-2/5 inline-flex py-1">냉난방 시설</li>
-                            <li className="w-2/5 inline-flex py-1">샤워실</li>
-                            <li className="w-2/5 inline-flex py-1">주차장</li>
+                            <li className={`w-2/5 inline-flex py-1 ${groundInfo.footwearIsYn ? '' : 'opacity-20 line-through'}`}><img src="/svg/shoes.svg" className="w-5 mr-1 " /> 풋살화 대여</li>
+                            <li className={`w-2/5 inline-flex py-1 ${groundInfo.ballIsYn ? '' : 'opacity-20 line-through'}`}><img src="/svg/ball.svg" className="w-5 mr-1" /> 풋살공 대여</li>
+                            <li className={`w-2/5 inline-flex py-1 ${groundInfo.vestIsYn ? '' : 'opacity-20 line-through'}`}><img src="/svg/vest.svg" className="w-5 mr-1" /> 조끼 대여</li>
+                            <li className={`w-2/5 inline-flex py-1 ${groundInfo.airconIsYn ? '' : 'opacity-20 line-through'}`}><img src="/svg/aircon.svg" className="w-5 mr-1" /> 냉난방 시설</li>
+                            <li className={`w-2/5 inline-flex py-1 ${groundInfo.showerIsYn ? '' : 'opacity-20 line-through'}`}><img src="/svg/shower.svg" className="w-5 mr-1" /> 샤워실</li>
+                            <li className={`w-2/5 inline-flex py-1 ${groundInfo.parkareaIsYn ? '' : 'opacity-20 line-through'}`}><img src="/svg/car.svg" className="w-5 mr-1" /> 주차장</li>
                         </ul>
                     </div>
                   
@@ -232,6 +262,43 @@ const GroundInfoPage = () => {
                         </div>
                     </div>
                 </div>  
+                
+                <div className="mt-2">
+                    <div className="font-bold text-lg">위치</div>
+                    <KakaoMap addr="가산동147-47" name={groundInfo.name}/>
+                </div>
+
+                <div className="mt-4">
+                    <div tabIndex={0} className="collapse collapse-open bg-base-100 border-2">
+                        <input type="checkbox" /> 
+                        <div className="collapse-title text-lg font-bold">
+                            이용안내
+                        </div>
+                        <div className="collapse-content"> 
+                            <pre>{groundInfo.userGuide}</pre>
+                        </div>
+                    </div>
+
+                    <div tabIndex={0} className="collapse collapse-open bg-base-100 border-2 mt-4">
+                        <input type="checkbox" /> 
+                        <div className="collapse-title text-lg font-bold">
+                            이용규칙
+                        </div>
+                        <div className="collapse-content"> 
+                            <pre>{groundInfo.userRules}</pre>
+                        </div>
+                    </div>
+
+                    <div tabIndex={0} className="collapse collapse-open bg-base-100 border-2 mt-4">
+                        <input type="checkbox" /> 
+                        <div className="collapse-title text-lg font-bold">
+                            환불 규정
+                        </div>
+                        <div className="collapse-content"> 
+                            <pre>{groundInfo.refundRules}</pre>
+                        </div>
+                    </div>
+                </div>
                 {/* 날짜 모달 */}
                 <dialog id="my_modal_1" className="modal">
                     <div className="modal-box">

@@ -9,7 +9,7 @@ const TopnavAdmin = () => {
 
   // 페이지 이동 함수들
   const goToMyPage = () => navigate('/adminPage');
-  const goToDashBoard = () => navigate('/board/list');
+  const goToDashBoard = () => navigate('/adminPage/notice');
 
   // 구장관리 서브메뉴 이동
   const goToSubmenu2 = () => navigate('/adminPage/submenu2-url'); // 구장 리스트

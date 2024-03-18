@@ -58,7 +58,7 @@ const GroundModifyComponent = ({gno, moveList, moveRead}) =>  {
     }
     
 
-    return
+    return 
     <h2 className="flex-auto text-2xl font-bold mb-4">구장 상태</h2>
     <div className="justify-center">
       <label

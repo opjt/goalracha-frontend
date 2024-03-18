@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux"
 import { Navigate, createSearchParams, useNavigate } from "react-router-dom"
-
+import { getCookie, setCookie, removeCookie } from "../util/cookieUtil";
 import { loginPostAsync, logout, update } from "../slices/loginSlice"
 const useCustomLogin = () => {
     const navigate = useNavigate()
@@ -23,6 +23,21 @@ const useCustomLogin = () => {
     const moveToLogin = () => { //----------------------로그인 페이지로 이동
         navigate({ pathname: '/user/login' }, { replace: true })
     }
+    const moveToLoginWithCookie = (path) => { //----------------------로그인 페이지로 이동
+        setCookie("loginurl", path, 1) //1 일
+        navigate({ pathname: '/user/login' }, { replace: true })
+    }
+    const afterLogin = () => {
+        var url = getCookie("loginurl")
+        //닉네임 처리
+        if(url && url != '') {
+            removeCookie("loginurl")
+            navigate({pathname: url}, {replace: true})
+        } else {
+            navigate({ pathname: '/' }, { replace: true })
+        }
+        
+    }
     const moveToLoginReturn = () => { //--------------------로그인 페이지로 이동 컴포넌트
         return <Navigate replace to="/user/login" />
     }
@@ -44,7 +59,7 @@ const useCustomLogin = () => {
     }
     return {
         loginState, isLogin, doLogin, doLogout, doUpdate,moveToPath, moveToLogin,
-        moveToLoginReturn, exceptionHandle
+        moveToLoginReturn, exceptionHandle, moveToLoginWithCookie,afterLogin
     }
 }
 

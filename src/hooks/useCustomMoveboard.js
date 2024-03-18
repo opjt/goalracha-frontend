@@ -51,7 +51,7 @@ const useCustomMove = () => {
   const moveToRead = (num) => {
     console.log(queryDefault);
     navigate({
-      pathname : `../read/${num}`,
+      pathname : `../${num}`,
       search : queryDefault
     })
   };

@@ -14,7 +14,7 @@ const Topnav = () => {
             구장예약
           </NavLink>
           <NavLink
-            to="/board/list"
+            to="/notice"
             className={({ isActive }) =>
               isActive ? "font-bold ml-5" : "ml-5"
             }

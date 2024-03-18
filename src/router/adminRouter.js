@@ -15,6 +15,12 @@ import StatisticsPage from "pages/member/admin/StatisticsPage.js";
 
 const AdminPage = lazy(() => import("../pages/member/admin/AdminPage"));
 
+const BoardList = lazy(() => import("../pages/board/ListPage"));
+const BoardRead = lazy(() => import("../pages/board/ReadPage"));
+const BoardAdd = lazy(() => import("../pages/board/AddPage"));
+const BoardModify = lazy(() => import("../pages/board/ModifyPage"));
+
+
 const AdminLayout = () => (
   <>
     <MainHeader />
@@ -37,6 +43,12 @@ export default function adminRouter() {
         { path: "submenu5-url", element: <AdminUserManagePage /> }, 
         { path: "submenu6-url", element: <AdminMonthlyStatistics /> }, 
         { path: "submenu7-url", element: <StatisticsPage /> }, 
+        { path: "notice", children: [
+          {path: ":bno" , element: <BoardRead/>},
+          {path: "", element: <BoardList/>},
+          {path: "add", element: <BoardAdd/>},
+          {path: "modify/:bno", element: <BoardModify/>}
+        ] }, 
       ],
     },
   ];

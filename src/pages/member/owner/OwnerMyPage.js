@@ -40,17 +40,7 @@ const OwnerMyPage = () => {
             });
         }
         // 로컬 스토리지에서 수정된 정보 가져오기
-        const storedModifiedInfo = localStorage.getItem('modifiedInfo');
-        if (storedModifiedInfo) {
-            const parsedModifiedInfo = JSON.parse(storedModifiedInfo);
-            setMember(prevMember => ({
-                ...prevMember,
-                pw: "******", // 비밀번호를 가립니다.
-                name: parsedModifiedInfo.name || prevMember.name, 
-                tel: parsedModifiedInfo.tel || prevMember.tel,
-                
-            }));
-        }
+        
     }, [loginInfo]); // loginInfo가 변경될 때마다 실행
 
     // 비밀번호 모달 열기 함수
@@ -224,12 +214,6 @@ const OwnerMyPage = () => {
                     uNo={loginInfo.uNo}
                     pw={member.pw}
                     isOpen={isPwModalOpen} // isOpen prop 추가
-                    onPwModalClose={(modifiedPwInfo) => {
-                        setMember({
-                            ...member,
-                            pw: modifiedPwInfo.pw
-                        });
-                    }}
                 />
             )}
 
@@ -241,13 +225,6 @@ const OwnerMyPage = () => {
                     name={member.name}
                     tel={member.tel}
                     isOpen={isModalOpen} // isOpen prop 추가
-                    onModalClose={(modifiedInfo) => {
-                        setMember({
-                            ...member,
-                            name: modifiedInfo.name,
-                            tel: modifiedInfo.tel
-                        });
-                    }}
                 />
 
 
