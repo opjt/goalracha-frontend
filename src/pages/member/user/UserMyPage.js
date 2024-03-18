@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import BasicLayout from "layouts/BasicLayout";
 import { useSelector } from "react-redux";
 import UserModifyModal from "components/member/user/UserModifyModal";
