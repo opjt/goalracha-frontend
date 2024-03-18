@@ -1,4 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { fetchGrounds, changeGroundState, fetchImagesByGno } from '../../../api/adminAPI';
+import Slider from 'react-slick';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 
 const AdminGroundListPage = () => {
   const [grounds, setGrounds] = useState([]); // 구장 리스트를 저장할 상태
@@ -8,52 +12,45 @@ const AdminGroundListPage = () => {
   const [showModal, setShowModal] = useState(false); // 모달 표시 여부
 
   useEffect(() => {
-    fetchGrounds();
+    fetchGroundsData();
   }, []);
 
-  const fetchGrounds = () => {
+  useEffect(() => {
+    console.log('선택된 구장:', selectedGround);
+  }, [selectedGround]);
+  
+  const fetchGroundsData = async () => {
     setIsLoading(true);
-    fetch('http://localhost:8080/goalracha/ground/')
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Could not fetch ground data.');
-        }
-        return response.json();
-      })
-      .then(data => {
-        console.log("Loaded grounds data:", data.dtoList); // 로그 출력: 불러온 데이터
-        // 각 구장 객체의 gNo 값 존재 여부 확인을 위한 로그 출력
-        data.dtoList.forEach(ground => console.log(`gno: ${ground.gno}`));
-        setGrounds(data.dtoList);
-        setIsLoading(false);
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        setIsLoading(false);
-      });
+    try {
+      const response = await fetchGrounds();
+      setGrounds(response.data.dtoList || []);
+    } catch (error) {
+      console.error('Error fetching grounds:', error);
+    }
+    setIsLoading(false);
   };
 
+  const handleUpdateGroundState = async (gno, currentState) => {
+    const newState = currentState === 1 ? 2 : 1;
+    try {
+      await changeGroundState(gno, newState);
+      await fetchGroundsData(); // 상태 변경 후 목록 새로고침을 확실하게 수행
+    } catch (error) {
+      console.error('Error updating ground state:', error);
+    }
+  };
 
-  const changeGroundState = (gno, currentState) => {
-    console.log(`changeGroundState called with gno: ${gno}, currentState: ${currentState}`); // 여기에 로그 추가
-    const newState = currentState === 1 ? 2 : 1; // 현재 상태가 1(미승인)이면 2(승인)로, 2(승인)이면 1(미승인)로 변경
-    fetch(`http://localhost:8080/goalracha/ground/changeState/${gno}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ newState }), // newState 값 을 서버에 전송
-    })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('구장 상태 업데이트 실패');
-      }
-      return response.json();
-    })
-    .then(() => {
-      fetchGrounds(); // 상태 변경 후 목록 새로고침
-    })
-    .catch(error => console.error('Error:', error));
+  const handleSelectGround = async (ground) => {
+    setIsLoading(true);
+    try {
+      const images = await fetchImagesByGno(ground.gno);
+      setSelectedGround({ ...ground, uploadFileNames: images });
+      setShowModal(true);
+    } catch (error) {
+      console.error('Error fetching images for ground:', error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   // 마우스 이벤트 핸들러
@@ -88,6 +85,19 @@ const AdminGroundListPage = () => {
     return ground.state.toString() === filter;
   });
 
+  // 슬라이더 설정
+  const sliderSettings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    prevArrow: <button className="slick-prev">Previous</button>,
+    nextArrow: <button className="slick-next">Next</button>
+  };
+
+  
+
   return (
     <div className="container mx-auto mt-5">
       <h2 className="text-2xl font-bold mb-5">구장 리스트(DB 연동)</h2>
@@ -103,7 +113,7 @@ const AdminGroundListPage = () => {
       <table className="table-auto w-full">
         <thead className="bg-gray-200">
           <tr>
-            {["구장이름", "구장주소", "실내외", "구장크기", "잔디정보", "추천인원", "기본이용시간", "오픈시간", "마감시간", "요금", "이용안내", "이용규칙", "환불규정", "변경규정", "팀조끼대여여부", "풋살화대여여부", "샤워실여부", "공대여여부", "지붕여부", "냉난방시설여부", "주차장여부", "구장상태", "유저일련번호"].map((header, index) => (
+            {["구장이름", "구장주소", "실내외", "구장크기", "잔디정보", "추천인원", "기본이용시간", "오픈시간", "마감시간", "요금", "이용안내", "이용규칙", "환불규정", "팀조끼대여여부", "풋살화대여여부", "샤워실여부", "공대여여부", "지붕여부", "냉난방시설여부", "주차장여부", "구장상태"].map((header, index) => (
               <th key={index} className="px-4 py-2">{header}</th>
             ))}
           </tr>
@@ -113,12 +123,9 @@ const AdminGroundListPage = () => {
             
             <tr key={index} className={`${index % 2 === 0 ? 'bg-gray-100' : 'bg-white'}`}>
               {/* 구장 이름에 onClick 이벤트 추가 */}
-              <td className="border px-4 py-2 cursor-pointer hover:bg-gray-100" onClick={() => {
-                setSelectedGround(ground);
-                setShowModal(true);
-              }}>
-                {ground.name}
-              </td>
+              <td className="border px-4 py-2 cursor-pointer hover:bg-gray-100" onClick={() => handleSelectGround(ground)}>
+              {ground.name}
+            </td>
               <td className="border px-4 py-2">{ground.addr}</td>
               <td className="border px-4 py-2">{ground.inAndOut}</td>
               <td className="border px-4 py-2">{ground.width}</td>
@@ -131,7 +138,6 @@ const AdminGroundListPage = () => {
               <td className="border px-4 py-2">{ground.userGuide}</td>
               <td className="border px-4 py-2">{ground.userRules}</td>
               <td className="border px-4 py-2">{ground.refundRules}</td>
-              <td className="border px-4 py-2">{ground.changeRules}</td>
               <td className="border px-4 py-2">{ground.vestIsYn ? '예' : '아니오'}</td>
               <td className="border px-4 py-2">{ground.footwearIsYn ? '예' : '아니오'}</td>
               <td className="border px-4 py-2">{ground.showerIsYn ? '예' : '아니오'}</td>
@@ -139,13 +145,13 @@ const AdminGroundListPage = () => {
               <td className="border px-4 py-2">{ground.airconIsYn ? '예' : '아니오'}</td>
               <td className="border px-4 py-2">{ground.parkareaIsYn ? '예' : '아니오'}</td>
               <td className="border px-4 py-2">{ground.roopIsYn ? '예' : '아니오'}</td>
-              {/* 구장 정보 */}
+              {/* 구장 상태(state) */}
               <td className="border px-4 py-2">
                 {}
                 <button
                   onMouseEnter={() => handleMouseEnter(ground.gno)}
                   onMouseLeave={() => handleMouseLeave(ground.gno)}
-                  onClick={() =>  { console.log(ground.gno); changeGroundState(ground.gno, ground.state)}} // 버튼 클릭 시 상태 변경 함수 호출
+                  onClick={() =>  { console.log(ground.gno); handleUpdateGroundState(ground.gno, ground.state)}} // 버튼 클릭 시 상태 변경 함수 호출
                   className="px-4 py-2 text-white rounded"
                   style={{
                     backgroundColor: ground.isMouseOver
@@ -164,21 +170,22 @@ const AdminGroundListPage = () => {
         </tbody>
       </table>
 
-       {/* 모달 창 */}
-        {showModal && selectedGround && (
-          <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full" onClick={closeModal}>
-            <div className="relative top-20 mx-auto p-5 border w-3/4 shadow-lg rounded-md bg-white" onClick={e => e.stopPropagation()}>
-              <div className="mt-3 text-center">
-              <h3 className="text-lg leading-6 font-medium text-gray-900">{selectedGround.name} - 상세 정보</h3>
-              {/* 모달 내용: 선택된 구장의 상세 정보 표시 */}
-              <div className="mt-2">
-              {/* 구장 사진 표시 */}
-              {selectedGround.uploadFileNames && selectedGround.uploadFileNames.length > 0 && (
-              <img src={`http://localhost:8080/goalracha/ground/view/${selectedGround.uploadFileNames[0]}`} alt="Ground Image" className="max-w-full h-auto mx-auto"/>
-          )}
+{/* 모달 창 로직 */}
+{showModal && selectedGround && (
+  <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full" onClick={closeModal}>
+    <div className="relative top-20 mx-auto p-5 border w-3/4 shadow-lg rounded-md bg-white" onClick={e => e.stopPropagation()}>
+      <div className="mt-3 text-center">
+        <h3 className="text-lg leading-6 font-medium text-gray-900">{selectedGround.name} - 상세 정보</h3>
+        <div className="mt-2">
+          {/* 구장 사진 표시 */}
+          <Slider {...sliderSettings}>
+          {selectedGround.uploadFileNames && selectedGround.uploadFileNames.map((fileName, index) => (
+            <img key={index} src={`http://localhost:8080/goalracha/ground/view/${fileName}`} alt={`Ground Image ${index}`} className="max-w-full h-auto mx-auto"/>
+          ))}
+          </Slider>
         </div>
         <div className="mt-4">
-          <button onClick={() => setShowModal(false)} className="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-blue-500 border border-transparent rounded-md hover:bg-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500">
+          <button onClick={closeModal} className="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-blue-500 border border-transparent rounded-md hover:bg-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500">
             닫기
           </button>
         </div>
@@ -186,7 +193,6 @@ const AdminGroundListPage = () => {
     </div>
   </div>
 )}
-
     </div>
   );
 };
