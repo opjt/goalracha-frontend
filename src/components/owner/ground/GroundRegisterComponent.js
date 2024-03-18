@@ -27,8 +27,9 @@ const initState = {
   airconIsYn: false,
   parkareaIsYn: false,
   roopIsYn: false,
-  state: 0,
+  state: 1,
   uNo: 2,
+  postcode: "",
   files: [],
 };
 
@@ -46,6 +47,9 @@ const GroundRegisterComponent = () => {
 
   const handleChange = (e) => {
     ground[e.target.name] = e.target.value;
+    if(e.target.type == "checkbox") {
+      ground[e.target.name] = e.target.checked;
+    }
     setGround({ ...ground });
   };
 
@@ -94,6 +98,9 @@ const GroundRegisterComponent = () => {
     moveToGroundList({ page: 1 });
   };
 
+  const IsYn = [
+
+  ]
   // 이미지 업로드 input의 onChange
   const saveImgFile = () => {
     const file = uploadRef.current.files[0];
@@ -103,6 +110,29 @@ const GroundRegisterComponent = () => {
       setImgFile(reader.result);
     };
   };
+  
+  function DaumPostcode(){
+    new window.daum.Postcode({
+          oncomplete: function(data) {
+            
+            console.log(data);
+            
+              // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+              // 도로명 주소의 노출 규칙에 따라 주소를 표시한다.
+              // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+              var roadAddr = data.roadAddress; // 도로명 주소 변수
+              var jibunAddr = data.jibunAddress; // 지번 주소 변수
+              // 우편번호와 주소 정보를 해당 필드에 넣는다.
+              if(roadAddr !== ''){
+                  ground.addr = roadAddr;
+              } 
+              else if(jibunAddr !== ''){
+                ground.addr = jibunAddr;
+              }
+              setGround({...ground})
+          }
+      }).open();
+  }
 
   return (
     <div className=" flex-wrap flex-direction justify-center max-w-screen-lg h-100% bg-gray-100">
@@ -143,7 +173,9 @@ const GroundRegisterComponent = () => {
             >
               구장 주소:
             </label>
+            <button className="flex float-end mb-2 btn btn-xs" onClick={DaumPostcode} >주소 찾기</button>
             <input
+              id="addr"
               type={"text"}
               name="addr"
               placeholder="대한시 민국구 1945번길 815"
@@ -297,7 +329,7 @@ const GroundRegisterComponent = () => {
             alt="안녕"
             className="w-full rounded-md"
           />
-          <div className=""></div>
+          <div className="skeleton"></div>
           <input
             ref={uploadRef}
             type={"File"}
@@ -317,9 +349,8 @@ const GroundRegisterComponent = () => {
                 <input
                   type={"checkbox"}
                   name="vestIsYn"
-                  defaultChecked
                   className="checkbox"
-                  value={ground.vestIsYn}
+                  checked={ground.vestIsYn}
                   onChange={handleChange}
                 />
               </label>
@@ -331,9 +362,8 @@ const GroundRegisterComponent = () => {
                 <input
                   type={"checkbox"}
                   name="footwearIsYn"
-                  defaultChecked
                   className="checkbox"
-                  value={ground.footwearIsYn}
+                  checked={ground.footwearIsYn}
                   onChange={handleChange}
                 />
               </label>
@@ -345,9 +375,8 @@ const GroundRegisterComponent = () => {
                 <input
                   type={"checkbox"}
                   name="showerIsYn"
-                  defaultChecked
                   className="checkbox"
-                  value={ground.showerIsYn}
+                  checked={ground.showerIsYn}
                   onChange={handleChange}
                 />
               </label>
@@ -359,9 +388,8 @@ const GroundRegisterComponent = () => {
                 <input
                   type={"checkbox"}
                   name="roopIsYn"
-                  defaultChecked
                   className="checkbox"
-                  value={ground.roopIsYn}
+                  checked={ground.roopIsYn}
                   onChange={handleChange}
                 />
               </label>
@@ -373,9 +401,8 @@ const GroundRegisterComponent = () => {
                 <input
                   type={"checkbox"}
                   name="ballIsYn"
-                  defaultChecked
                   className="checkbox"
-                  value={ground.ballIsYn}
+                  checked={ground.ballIsYn}
                   onChange={handleChange}
                 />
               </label>
@@ -387,9 +414,8 @@ const GroundRegisterComponent = () => {
                 <input
                   type={"checkbox"}
                   name="airconIsYn"
-                  defaultChecked
                   className="checkbox"
-                  value={ground.airconIsYn}
+                  checked={ground.airconIsYn}
                   onChange={handleChange}
                 />
               </label>
@@ -401,9 +427,8 @@ const GroundRegisterComponent = () => {
                 <input
                   type={"checkbox"}
                   name="parkareaIsYn"
-                  defaultChecked
                   className="checkbox"
-                  value={ground.parkareaIsYn}
+                  checked={ground.parkareaIsYn}
                   onChange={handleChange}
                 />
               </label>
@@ -461,7 +486,7 @@ const GroundRegisterComponent = () => {
         <div className="mt-8">
           <button
             type="button"
-            className=" w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-700"
+            className=" w-full btn text-xl"
             onClick={handleClickAdd}
           >
             등록
