@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import { modifyMember, checkNickname } from "api/memberApi";
 import useCustomLogin from "hooks/useCustomLogin";
 import ResultModal from "../../common/ResultModal";
+import { useNavigate } from "react-router-dom";
 
 const initState = {
   name: "",
@@ -18,10 +19,15 @@ const JoinComponent = () => {
   const [modalContent, setModalContent] = useState("");
   const [checkname, setCheckname] = useState(false);
   const [agreeTerms, setAgreeTerms] = useState(false);
-  const [showMessage, setShowMessage] = useState(false);
+  const [showMessage, setShowMessage] = useState(false); // 중복 확인 메시지 표시 여부
   const [isButtonDisabled, setIsButtonDisabled] = useState(false); // 버튼 활성화 여부
   const loginInfo = useSelector((state) => state.loginSlice);
   const { moveToPath, isLogin, doUpdate } = useCustomLogin();
+  const navigate = useNavigate(); // useNavigate 훅을 사용하여 페이지 이동 선언
+  // 상태 변수 추가
+  const [nicknameInput, setNicknameInput] = useState(""); // 입력된 닉네임 상태 변수 추가
+
+  
 
   useEffect(() => {
     if (!isLogin) {
@@ -39,35 +45,55 @@ const JoinComponent = () => {
   };
 
   // 닉네임 중복검사 코드
-  const handleClickCheckNickname = async () => {
-    if (member.nickname === "") {
+const handleClickCheckNickname = async () => {
+  if (nicknameInput === "") {
+    return;
+  }
+  try {
+    const encodedNickname = encodeURIComponent(nicknameInput); // 닉네임 인코딩
+    const result = await checkNickname(encodedNickname); // 인코딩된 닉네임으로 요청 보내기
+    setCheckname(!result.available); // 결과에 따라 중복 여부 설정
+    setShowMessage(true); // 메시지 표시
+    setIsButtonDisabled(true); // 중복확인 버튼 비활성화
+  } catch (error) {
+    console.error("Error while checking nickname:", error);
+  }
+};
+
+// 닉네임 입력 변경 시 실행되는 함수
+const handleNicknameChange = (e) => {
+  setMember({ ...member, nickname: e.target.value });
+  setNicknameInput(e.target.value); // 입력된 닉네임 상태 변수 업데이트
+  setIsButtonDisabled(false); // 닉네임 입력이 변경되면 중복확인 버튼 활성화
+  setShowMessage(false); // 닉네임이 변경되면 중복 확인 메시지 숨기기
+  setCheckname(false); // 중복 확인 상태 초기화
+};
+
+
+  // 회원가입 버튼 클릭 조건
+  const handleClickModify = async () => {
+    // 닉네임 중복 확인을 하지 않은 경우
+    // 중복 확인 메시지가 "이미 사용 중인 닉네임입니다."이면 회원가입을 막고 모달창을 표시
+    if (!checkname) {
+      setModalContent("닉네임 중복을 확인해주세요.");
+      setShowModal(true);
       return;
     }
-    try {
-      const encodedNickname = encodeURIComponent(member.nickname); // 닉네임 인코딩
-      const result = await checkNickname(encodedNickname); // 인코딩된 닉네임으로 요청 보내기
-      setCheckname(!result.available); // 결과에 따라 중복 여부 설정
-      setShowMessage(true); // 메시지 표시
-      setIsButtonDisabled(false); // 중복확인 후 버튼 활성화
-    } catch (error) {
-      console.error("Error while checking nickname:", error);
-    }
-  };
 
-  // 회원가입 조건
-  const handleClickModify = () => {
+    // 이름, 닉네임, 연락처, 약관동의를 만족하지 않을 경우
     if (
       member.name.length === 0 ||
       member.nickname.length === 0 ||
       member.tel.length === 0 ||
-      !agreeTerms ||
-      checkname
+      !agreeTerms
     ) {
       setModalContent("모든 정보를 입력하고 약관에 동의해주세요.");
       setShowModal(true);
       return;
     }
-    modifyMember(member).then((result) => {
+
+    try {
+      await modifyMember(member);
       const join = {
         ...loginInfo,
         name: member.name,
@@ -75,8 +101,10 @@ const JoinComponent = () => {
         nickname: member.nickname,
       };
       doUpdate(join);
-      moveToPath("/");
-    });
+      navigate(""); // 조건 충족 후 회원가입 클릭시 페이지 이동
+    } catch (error) {
+      console.error("Error while modifying member:", error);
+    }
   };
 
   const handleModalClose = () => {
@@ -132,14 +160,15 @@ const JoinComponent = () => {
               <span className="text-base label-text">닉네임</span>
             </label>
             <div className="flex">
-              <input
-                className="w-4/5 input input-bordered"
-                name="nickname"
-                type="text"
-                placeholder="사용하실 닉네임을 입력해주세요."
-                value={member.nickname || ""}
-                onChange={handleChange}
-              />
+            <input
+  className="w-4/5 input input-bordered"
+  name="nickname"
+  type="text"
+  placeholder="사용하실 닉네임을 입력해주세요."
+  value={member.nickname || ""}
+  onChange={handleNicknameChange} // 닉네임이 변경될 때마다 호출
+/>
+
               <button
                 type="button"
                 onClick={handleClickCheckNickname}
@@ -149,13 +178,14 @@ const JoinComponent = () => {
                 중복확인
               </button>
             </div>
-            {showMessage && (
-              <div className={checkname ? "text-green-500" : "text-red-500"}>
-                {checkname
-                  ? "사용 가능한 닉네임입니다." : "이미 사용 중인 닉네임입니다."
-                  }
-              </div>
-            )}
+                
+{showMessage && nicknameInput && (
+  <div className={checkname ? "text-green-500" : "text-red-500"}>
+    {checkname
+      ? "사용 가능한 닉네임입니다."
+      : "이미 사용 중인 닉네임입니다."}
+  </div>
+)}
           </div>
           <div>
             <label className="label">

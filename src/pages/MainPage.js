@@ -6,6 +6,7 @@ import { useEffect } from "react";
 
 
 
+
 const MainPage = () => {
     const { isLogin, loginState,moveToPath} = useCustomLogin();
     useEffect(() => {
