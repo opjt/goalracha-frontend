@@ -2,6 +2,7 @@ import axios from 'axios';
 
 // API의 기본 URL 설정
 const API_BASE_URL = 'http://localhost:8080/goalracha/ground/';
+const host = `${process.env.REACT_APP_SERVER}/api/member`;
 
 // 구장 목록을 불러오는 함수
 export const fetchGrounds = async () => {
@@ -19,5 +20,27 @@ export const fetchImagesByGno = async (gno) => {
     return response.json();
   } catch (error) {
     console.error('Error fetching images:', error);
+  }
+};
+
+// 사용자 목록 불러오기
+export const fetchMembers = async () => {
+  try {
+    const response = await axios.get(`${host}/user`);
+    return response.data;
+  } catch (error) {
+    console.error("Fetching members failed:", error);
+    throw error;
+  }
+};
+
+// 사업자 목록 불러오기
+export const fetchOwners = async () => {
+  try {
+    const response = await axios.get(`${host}/owner`);
+    return response.data;
+  } catch (error) {
+    console.error("Fetching members failed:", error);
+    throw error;
   }
 };

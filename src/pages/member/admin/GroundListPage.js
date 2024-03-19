@@ -10,6 +10,8 @@ const AdminGroundListPage = () => {
   const [filter, setFilter] = useState('all'); // 'all', '1' (미승인), '2' (승인)
   const [selectedGround, setSelectedGround] = useState(null); // 모달에 표시될 구장의 상세 정보
   const [showModal, setShowModal] = useState(false); // 모달 표시 여부
+  // 여기에서 searchTerm 상태를 선언하고 초기화합니다.
+  const [searchTerm, setSearchTerm] = useState(''); // 검색어 상태를 위한 코드 추가
 
   useEffect(() => {
     fetchGroundsData();
@@ -79,12 +81,12 @@ const AdminGroundListPage = () => {
   if (isLoading) return <div>Loading...</div>;
   if (!grounds.length) return <div>No ground data found.</div>;
 
-   // 필터링된 구장 목록
-   const filteredGrounds = grounds.filter(ground => {
-    if (filter === 'all') return true;
-    return ground.state.toString() === filter;
+  // 검색어에 따른 필터링 추가
+  const filteredGrounds = grounds.filter(ground => {
+    if (filter === 'all' && searchTerm === '') return true;
+    if (filter !== 'all' && !ground.state.toString().includes(filter)) return false;
+    return ground.name.toLowerCase().includes(searchTerm.toLowerCase());
   });
-
   // 슬라이더 설정
   const sliderSettings = {
     dots: true,
@@ -102,12 +104,34 @@ const AdminGroundListPage = () => {
     <div className="container mx-auto mt-5">
       <h2 className="text-2xl font-bold mb-5">구장 리스트(DB 연동)</h2>
 
-      {/* 필터 버튼 */}
-      <div className="mb-4">
-        <button onClick={() => setFilter('all')} className="mr-2 px-4 py-2 bg-gray-400 text-white rounded">모든 구장</button>
-        <button onClick={() => setFilter('1')} className="mr-2 px-4 py-2 bg-red-400 text-white rounded">미승인 구장</button>
-        <button onClick={() => setFilter('2')} className="px-4 py-2 bg-green-400 text-white rounded">승인 구장</button>
-      </div>
+      {/* 필터 버튼과 검색 입력 필드를 포함하는 div */}
+  <div className="flex justify-between items-center mb-4">
+    {/* 필터 버튼 그룹 */}
+    <div>
+      <button onClick={() => setFilter('all')} className="mr-2 px-4 py-2 bg-gray-400 text-white rounded">모든 구장</button>
+      <button onClick={() => setFilter('1')} className="mr-2 px-4 py-2 bg-red-400 text-white rounded">미승인 구장</button>
+      <button onClick={() => setFilter('2')} className="px-4 py-2 bg-green-400 text-white rounded">승인 구장</button>
+    </div>
+    
+    {/* 검색 입력 필드 */}
+    <div>
+      <input
+        type="text"
+        placeholder="구장 검색..."
+        className="input border p-2" // 스타일을 조정해 입력 필드를 눈에 띄게 만듭니다.
+        style={{
+          padding: '10px',
+          fontSize: '1rem',
+          border: '2px solid #4A90E2', // 테두리 색상 변경
+          boxShadow: '0 4px 6px rgba(32, 33, 36, 0.28)', // 그림자 효과 추가
+          borderRadius: '5px', // 테두리 둥글게
+          width: '300px', // 입력 필드 너비
+          transition: 'all 0.3s', // 부드러운 전환 효과
+        }}
+        onChange={(e) => setSearchTerm(e.target.value)}
+      />
+    </div>
+  </div>
 
       {/* 테이블 */}
       <table className="table-auto w-full">

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import AdminMemberStatistics from './AdminMemberStatistics';
+import AdminMemberStatistics from './MemberStatistics';
 import axios from 'axios';
 
 
@@ -27,7 +27,8 @@ const StatisticsPage = () => {
   }, []);
 
   return (
-    <div>
+    <div className="container mx-auto mt-5">
+      <h2 className="text-2xl font-bold mb-5">회원 통계 (DB 연동)</h2>
       <AdminMemberStatistics ownerCount={ownerCount} userCount={userCount} />
     </div>
   );
