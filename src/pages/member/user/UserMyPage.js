@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import UserModifyModal from "components/member/user/UserModifyModal";
 import { Link } from "react-router-dom";
 import { withdrawMember } from "api/memberApi"; // withdrawMember 함수 import
+import useCustomLogin from "hooks/useCustomLogin";
 
 
 // 초기 상태 정의
