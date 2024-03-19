@@ -58,7 +58,7 @@ const JoinComponent = () => {
     }
     const closeModal = () => {
         setResult(null)
-        moveToPath("/")
+        moveToPath("/owner/login")
     }
     const handleClickJoin = () => {
         joinOwner(member).then(result => {
