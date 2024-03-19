@@ -19,7 +19,6 @@ const initState = {
   userGuide: "",
   userRules: "",
   refundRules: "",
-  changeRules: "",
   vestIsYn: false,
   footwearIsYn: false,
   showerIsYn: false,
@@ -35,7 +34,6 @@ const initState = {
 
 const GroundRegisterComponent = () => {
   const [imgFile, setImgFile] = useState("");
-  const imgRef = useRef();
 
   const navigate = useNavigate();
   const [ground, setGround] = useState({ ...initState });
@@ -75,7 +73,6 @@ const GroundRegisterComponent = () => {
     formData.append("userGuide", ground.userGuide);
     formData.append("userRules", ground.userRules);
     formData.append("refundRules", ground.refundRules);
-    formData.append("changeRules", ground.changeRules);
     formData.append("vestIsYn", ground.vestIsYn);
     formData.append("footwearIsYn", ground.footwearIsYn);
     formData.append("showerIsYn", ground.showerIsYn);
@@ -143,6 +140,7 @@ const GroundRegisterComponent = () => {
             title={"구장등록 결과"}
             content={`${ground.name} 등록 신청`}
             callbackFn={closeModal}
+            close={"닫기"}
           />
         ) : (
           <></>
@@ -182,6 +180,7 @@ const GroundRegisterComponent = () => {
               value={ground.addr}
               onChange={handleChange}
               className="input input-bordered w-full max-w-xs"
+              disabled
             />
           </div>
 
@@ -261,7 +260,7 @@ const GroundRegisterComponent = () => {
               기본 이용 시간:
             </label>
             <input
-              type={"text"}
+              type={"number"}
               name="usageTime"
               placeholder="1 (시간단위로 숫자만 입력)"
               value={ground.usageTime}
@@ -312,7 +311,7 @@ const GroundRegisterComponent = () => {
               요금:
             </label>
             <input
-              type={"text"}
+              type={"number"}
               name="fare"
               placeholder="35000 (원단위로 숫자만 입력)"
               value={ground.fare}

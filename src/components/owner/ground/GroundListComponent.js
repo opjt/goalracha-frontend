@@ -69,7 +69,7 @@ const GroundList = ({ groundList }) => {
         ))}
       </div>
       <div className="float-right right-5 mt-2">
-          <button className="btn btn-active " onClick={moveToRegister}>
+          <button className="btn btn-active btn-neutral " onClick={moveToRegister}>
             등록
           </button>
         </div>

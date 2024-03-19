@@ -1,8 +1,5 @@
 import { useState } from "react";
-import {
-  createSearchParams,
-  useNavigate,
-  useSearchParams } from "react-router-dom"
+import { createSearchParams, useNavigate, useSearchParams } from "react-router-dom"
 
 const getNum = (param, defaultValue) => {
   if (!param) {
@@ -64,10 +61,10 @@ const useCustomMove = () => {
 
 
   
-  const moveToModify = (num) => {
+  const moveToModify = (gno) => {
     console.log(queryDefault);
     navigate({
-      pathname: `../modify/${num}`,
+      pathname: `../modify/${gno}`,
       search: queryDefault, //수정시에 기존의 쿼리 스트링 유지를 위해
     });
   };
@@ -81,7 +78,15 @@ const useCustomMove = () => {
     })
   };
 
-  const moveToRegister = (num) => {
+  const moveToModifyRead = (num) => {
+    console.log(queryDefault);
+    navigate({
+      pathname : `../../ground/read/${num}`,
+      search : queryDefault
+    })
+  };
+
+  const moveToRegister = () => {
     console.log(queryDefault);
     navigate({
       pathname : `../ground/register/`,
@@ -89,6 +94,6 @@ const useCustomMove = () => {
     })
   };
 
-  return { moveToList, moveToModify, moveToRead, moveToGroundList, moveToRegister, page, size, refresh }; //refresh 추가
+  return { moveToList, moveToModify, moveToRead, moveToGroundList, moveToRegister, moveToModifyRead, page, size, refresh }; //refresh 추가
 };
 export default useCustomMove;
