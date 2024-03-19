@@ -2,7 +2,6 @@ import axios from "axios"
 import jwtAxios from "../util/jwtUtil"
 const host = `${process.env.REACT_APP_SERVER}/api/member`
 
-
 export const loginPost = async (loginParam) => {
 
     const header = { headers: { "Content-Type": "x-www-form-urlencoded" } }
@@ -67,3 +66,13 @@ export const putOwnerPwModify = async (member, uNo) => {
         throw error; // 오류 발생 시 오류를 호출한 곳으로 반환
     }
 };
+
+// 회원 탈퇴 요청 함수
+export const withdrawMember = async (uNo) => {
+    try {
+        const res = await axios.delete(`${host}/${uNo}`);
+      return res.data; // 회원 탈퇴가 정상적으로 처리되었을 경우 응답 데이터 반환
+    } catch (error) {
+      throw error; // 오류 발생 시 오류를 호출한 곳으로 반환
+    }
+    };
