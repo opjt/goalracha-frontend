@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import BasicLayout from "layouts/BasicLayout";
 import { useSelector } from "react-redux";
 import UserModifyModal from "components/member/user/UserModifyModal";
@@ -18,7 +18,7 @@ const UserMyPage = () => {
   const loginState = useSelector((state) => state.loginSlice); // 로그인 상태 가져오기
   const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태
   const [isWithdrawalModalOpen, setIsWithdrawalModalOpen] = useState(false); // 회원 탈퇴 모달 상태
-  const {isLogin, moveToLogin} = useCustomLogin();
+  const { isLogin, moveToLogin } = useCustomLogin();
 
   // 컴포넌트가 마운트될 때 로그인 정보가 변경될 때마다 실행되는 useEffect
   useEffect(() => {
@@ -99,12 +99,26 @@ const UserMyPage = () => {
           </div>
           {/* 예약 내역 조회 및 이용 내역 조회 버튼 */}
           <div className="flex justify-center mt-4">
-            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-4">
-              예약 내역 조회하기
-            </button>
-            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-4">
-              이용 내역 조회하기
-            </button>
+            <Link
+              to={{
+                pathname: "/reserve/PreviousReservations",
+                state: { uNo: loginState.uNo } // uNo를 state로 전달
+              }}
+            >
+              <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-4">
+                이전 예약 내역 목록
+              </button>
+            </Link>
+            <Link
+              to={{
+                pathname: "/reserve/ReservationStatus",
+                state: { uNo: loginState.uNo } // uNo를 state로 전달
+              }}
+            >
+              <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-4">
+                예약 현황
+              </button>
+            </Link>
           </div>
           {/* 회원탈퇴 및 로그아웃 버튼 */}
           <div className="flex justify-end ml-auto mt-4">
@@ -130,7 +144,7 @@ const UserMyPage = () => {
           uNo={loginState.uNo} // 사용자 번호 전달
           nickname={member.nickname} // 닉네임 정보 전달
           tel={member.tel} // 전화번호 정보 전달
-     
+
         />
       )}
 

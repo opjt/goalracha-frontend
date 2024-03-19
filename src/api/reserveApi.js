@@ -41,6 +41,18 @@ export const getOwnerReserveList = async (pageParam, uNo) => {
     return res.data
 }
 
+export const reserveListUser = async (req) => {
+    const res = await axios.get(`${host}/v/ground/${req.gno}/${req.date}`)
+    return res.data
+}
+
+// owner 예약 목록
+export const getOwnerReserveList = async (pageParam, uNo) => {
+    const { page, size } = pageParam
+    const res = await axios.get(`${host}/v/owner-list/${uNo}`, { params: { page: page, size: size } })
+    return res.data
+}
+
 // admin 예약 목록(전체)
 export const getAllReserveList =async(pageParam) => {
     const {page, size} = pageParam

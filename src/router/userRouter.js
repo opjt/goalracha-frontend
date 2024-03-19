@@ -32,15 +32,7 @@ const MemberRouter = () => {
             path: "mypage",
             element: <UserMyPage />
             // element: isLogin ? <UserMyPage /> : <Navigate to="/user/login" />
-        }
-        // , 
-        // {
-        //     path: "reserve-list",
-        //     element: <Suspense fallback={Loading}><ReserveList /></Suspense>
-        // },
-
-
-
+        },
     ];
 };
 export default MemberRouter
