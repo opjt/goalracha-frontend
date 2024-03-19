@@ -5,6 +5,7 @@ const Loading = <div>Loading....</div>;
 const GroundList = lazy(() => import("../pages/owner/ground/GroundListPage.js"))
 const GroundRead = lazy(() => import("../pages/owner/ground/GroundReadPage"));
 const GroundRegister = lazy(() => import("../pages/owner/ground/GroundRegisterPage"));
+const GroundModify = lazy(() =>  import("pages/owner/ground/GroundModifyPage.js"))
 
 const groundRouter = () => {
     return [
@@ -20,6 +21,10 @@ const groundRouter = () => {
             path: "register",
             element: <Suspense fallback={Loading}><GroundRegister /></Suspense>
         },
+        {
+            path: "modify/:gno",
+            element: <Suspense fallback={Loading}><GroundModify /></Suspense>
+        }
     ];
 };
 

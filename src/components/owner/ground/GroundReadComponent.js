@@ -293,15 +293,15 @@ const GroundReadComponent = ({ gno }) => {
         <div className="mt-8 flex justify-center">
           <button
             type="button"
-            className="m-4 text-xl w-6/12 btn"
+            className="m-4 text-xl w-6/12 btn btn-neutral"
             onClick={moveToList}
           >
             목록
           </button>
           <button
             type="button"
-            className="m-4 text-xl w-6/12 btn"
-            onClick={moveToModify}
+            className="m-4 text-xl w-6/12 btn btn-neutral"
+            onClick={() => moveToModify(gno)}
           >
             수정
           </button>

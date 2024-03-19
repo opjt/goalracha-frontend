@@ -1,9 +1,14 @@
-import { useState, useRef } from "react";
-import { postGroundRegister } from "../../../api/groundApi";
+import { useState, useRef, useEffect } from "react";
+import {
+  API_SERVER_HOST,
+  getGround,
+  putGround,
+  deleteGround,
+} from "../../../api/groundApi";
 import RegisterGroundModal from "../../../components/common/registerGroundModal";
 import ResultModal from "components/common/ResultModal";
 import useCustomMove from "../../../hooks/groundCustomMove";
-import { useNavigate } from "react-router-dom";
+import Slider from "react-slick";
 
 const initState = {
   name: "",
@@ -19,7 +24,6 @@ const initState = {
   userGuide: "",
   userRules: "",
   refundRules: "",
-  changeRules: "",
   vestIsYn: false,
   footwearIsYn: false,
   showerIsYn: false,
@@ -27,35 +31,56 @@ const initState = {
   airconIsYn: false,
   parkareaIsYn: false,
   roopIsYn: false,
-  state: 0,
   postcode: "",
   files: [],
+  uploadFileNames: [],
 };
 
-const GroundRegisterComponent = () => {
+const GroundModifyComponent = ({ gno }) => {
+  const [ground, setGround] = useState(initState);
   const [imgFile, setImgFile] = useState("");
-  const imgRef = useRef();
-
-  const navigate = useNavigate();
-  const [ground, setGround] = useState({ ...initState });
   const uploadRef = useRef();
   const [fetching, setFetching] = useState(false);
   const [result, setResult] = useState(null);
 
-  const { moveToGroundList } = useCustomMove();
+  const { moveToGroundList, moveToModifyRead } = useCustomMove();
 
-  const handleChange = (e) => {
+  const host = API_SERVER_HOST;
+
+  useEffect(() => {
+    setFetching(true);
+
+    getGround(gno).then((data) => {
+      setGround(data);
+      setFetching(false);
+    });
+  }, [gno]);
+
+  const handleChangeModify = (e) => {
     ground[e.target.name] = e.target.value;
+
+    if (e.target.type == "checkbox") {
+      ground[e.target.name] = e.target.checked;
+    }
+    console.log(ground)
     setGround({ ...ground });
   };
 
-  const handleClickAdd = (e) => {
-    const files = uploadRef.current.files;
+  const deleteOldImages = (imageName) => {
+    const resultFilenames = ground.uploadFileNames.filter(
+      (fileName) => fileName !== imageName
+    );
+    ground.uploadFileNames = resultFilenames;
+    setGround({ ...ground });
+  };
 
+  const handleClickModify = (e) => {
+    const files = uploadRef.current.files;
     const formData = new FormData();
 
-    for (let i = 0; i < files.length; i++) {
-      formData.append("files", files[i]);
+
+    for (let i = 0; i < ground.files.length; i++) {
+      formData.append("files", ground.files[i]);
     }
 
     formData.append("name", ground.name);
@@ -71,7 +96,6 @@ const GroundRegisterComponent = () => {
     formData.append("userGuide", ground.userGuide);
     formData.append("userRules", ground.userRules);
     formData.append("refundRules", ground.refundRules);
-    formData.append("changeRules", ground.changeRules);
     formData.append("vestIsYn", ground.vestIsYn);
     formData.append("footwearIsYn", ground.footwearIsYn);
     formData.append("showerIsYn", ground.showerIsYn);
@@ -81,17 +105,37 @@ const GroundRegisterComponent = () => {
     formData.append("roopIsYn", ground.roopIsYn);
     formData.append("state", ground.state);
 
+    for (let i = 0; i < ground.uploadFileNames.length; i++) {
+      formData.append("files", ground.uploadFileNames[i]);
+    }
+
     setFetching(true);
-    postGroundRegister(formData)
-      .then((data) => {
+
+    putGround(gno, formData).then((data) => {
+      console.log(data)
+        setResult("Modified");
         setFetching(false);
-        setResult(data.result);
       })
       .catch((error) => console.error(error));
+
+      console.log(formData)
   };
+
+  const handleClickDelete = () => {
+    setFetching(true);
+    deleteGround(gno).then((data) => {
+      console.log(data)
+      setResult("Deleted");
+      setFetching(false);
+    });
+  };
+
   const closeModal = () => {
-    setResult(null);
-    moveToGroundList({ page: 1 });
+    if (result === "Modified") {
+      moveToModifyRead(gno);
+    } else if (result === "Deleted") {
+      moveToGroundList({ page: 1 });
+    }
   };
 
   // 이미지 업로드 input의 onChange
@@ -103,29 +147,57 @@ const GroundRegisterComponent = () => {
       setImgFile(reader.result);
     };
   };
-  
-  function DaumPostcode(){
+
+  const handleChangeState = (e) => {
+    const newState = e.target.value;
+    setFetching(true);
+
+    if (ground.state === 2 || ground.state === 3) {
+      setGround({ ...ground, state: newState });
+    }
+    console.log("스테이트"+ground)
+  };
+
+  function DaumPostcode() {
     new window.daum.Postcode({
-          oncomplete: function(data) {
-            
-            console.log(data);
-            
-              // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
-              // 도로명 주소의 노출 규칙에 따라 주소를 표시한다.
-              // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
-              var roadAddr = data.roadAddress; // 도로명 주소 변수
-              var jibunAddr = data.jibunAddress; // 지번 주소 변수
-              // 우편번호와 주소 정보를 해당 필드에 넣는다.
-              if(roadAddr !== ''){
-                  ground.addr = roadAddr;
-              } 
-              else if(jibunAddr !== ''){
-                ground.addr = jibunAddr;
-              }
-              setGround({...ground})
-          }
-      }).open();
+      oncomplete: function (data) {
+        console.log(data);
+
+        // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+        // 도로명 주소의 노출 규칙에 따라 주소를 표시한다.
+        // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+        var roadAddr = data.roadAddress; // 도로명 주소 변수
+        var jibunAddr = data.jibunAddress; // 지번 주소 변수
+        // 우편번호와 주소 정보를 해당 필드에 넣는다.
+        if (roadAddr !== "") {
+          ground.addr = roadAddr;
+        } else if (jibunAddr !== "") {
+          ground.addr = jibunAddr;
+        }
+        setGround({ ...ground });
+      },
+    }).open();
   }
+
+  const stateMapping = {
+    0: "삭제된 구장입니다",
+    1: "등록신청",
+    2: "오픈",
+    3: "준비중",
+    4: "폐업",
+  };
+
+  const sliderSettings = {
+    dots: true, // 아래 점 (dots) 표시 여부
+    infinite: true, // 마지막 이미지 이후 첫 이미지로 자동 루프 여부
+    slidesToShow: 1, // 한번에 보여지는 슬라이드 수
+    slidesToScroll: 1, // 한번에 넘어가는 슬라이드 수
+    autoplay: true, // 자동 슬라이드 여부
+    autoplaySpeed: 3000, // 자동으로 넘어가는 시간 간격
+    arrows: true, // 좌,우 버튼
+    pauseOnFocus: true, // focus시 정지
+    pauseOnHover: true, // hover시 정지
+  };
 
   return (
     <div className=" flex-wrap flex-direction justify-center max-w-screen-lg h-100% bg-gray-100">
@@ -133,15 +205,15 @@ const GroundRegisterComponent = () => {
         {fetching ? <RegisterGroundModal /> : <></>}
         {result ? (
           <ResultModal
-            title={"구장등록 결과"}
-            content={`${ground.name} 등록 신청`}
+            title={"구장수정 결과"}
+            content={`${ground.name} 수정완료`}
             callbackFn={closeModal}
           />
         ) : (
           <></>
         )}
         <div className="bg-white mb-4 w-3/6 p-8">
-          <h2 className="text-2xl font-bold mb-4 text-gray-800">구장 등록</h2>
+          <h2 className="text-2xl font-bold mb-4 text-gray-800">구장 수정</h2>
           <div className="mb-4">
             <label
               htmlFor="name"
@@ -154,7 +226,7 @@ const GroundRegisterComponent = () => {
               name="name"
               placeholder="골라차풋살클럽"
               value={ground.name}
-              onChange={handleChange}
+              onChange={handleChangeModify}
               className="input input-bordered w-full max-w-xs"
             />
           </div>
@@ -166,15 +238,21 @@ const GroundRegisterComponent = () => {
             >
               구장 주소:
             </label>
-            <button className="flex float-end mb-2 btn btn-xs" onClick={DaumPostcode} >주소 찾기</button>
+            <button
+              className="flex float-end mb-2 btn btn-xs"
+              onClick={DaumPostcode}
+            >
+              주소 찾기
+            </button>
             <input
               id="addr"
               type={"text"}
               name="addr"
               placeholder="대한시 민국구 1945번길 815"
               value={ground.addr}
-              onChange={handleChange}
+              onChange={handleChangeModify}
               className="input input-bordered w-full max-w-xs"
+              disabled
             />
           </div>
 
@@ -190,7 +268,7 @@ const GroundRegisterComponent = () => {
               name="inAndOut"
               placeholder="실외"
               value={ground.inAndOut}
-              onChange={handleChange}
+              onChange={handleChangeModify}
               className="input input-bordered w-full max-w-xs"
             />
           </div>
@@ -207,7 +285,7 @@ const GroundRegisterComponent = () => {
               name="width"
               placeholder="40*40"
               value={ground.width}
-              onChange={handleChange}
+              onChange={handleChangeModify}
               className="input input-bordered w-full max-w-xs"
             />
           </div>
@@ -224,7 +302,7 @@ const GroundRegisterComponent = () => {
               name="grassInfo"
               placeholder="인조잔디"
               value={ground.grassInfo}
-              onChange={handleChange}
+              onChange={handleChangeModify}
               className="input input-bordered w-full max-w-xs"
             />
           </div>
@@ -241,7 +319,7 @@ const GroundRegisterComponent = () => {
               name="recommdMan"
               placeholder="5:5"
               value={ground.recommdMan}
-              onChange={handleChange}
+              onChange={handleChangeModify}
               className="input input-bordered w-full max-w-xs"
             />
           </div>
@@ -254,11 +332,11 @@ const GroundRegisterComponent = () => {
               기본 이용 시간:
             </label>
             <input
-              type={"text"}
+              type={"number"}
               name="usageTime"
               placeholder="1 (시간단위로 숫자만 입력)"
               value={ground.usageTime}
-              onChange={handleChange}
+              onChange={handleChangeModify}
               className="input input-bordered w-full max-w-xs"
             />
           </div>
@@ -275,7 +353,7 @@ const GroundRegisterComponent = () => {
               name="openTime"
               placeholder="8 (24시간단위로 숫자만 입력)"
               value={ground.openTime}
-              onChange={handleChange}
+              onChange={handleChangeModify}
               className="input input-bordered w-full max-w-xs"
             />
           </div>
@@ -292,7 +370,7 @@ const GroundRegisterComponent = () => {
               name="closeTime"
               placeholder="24 (24시간단위로 숫자만 입력)"
               value={ground.closeTime}
-              onChange={handleChange}
+              onChange={handleChangeModify}
               className="input input-bordered w-full max-w-xs"
             />
           </div>
@@ -305,31 +383,45 @@ const GroundRegisterComponent = () => {
               요금:
             </label>
             <input
-              type={"text"}
+              type={"number"}
               name="fare"
               placeholder="35000 (원단위로 숫자만 입력)"
               value={ground.fare}
-              onChange={handleChange}
+              onChange={handleChangeModify}
               className="input input-bordered w-full max-w-xs"
             />
           </div>
         </div>
 
         <div className="w-6/12 mb-4 bg-white p-8 ">
-          <div className="text-2xl font-bold mb-4 text-gray-800">사진 등록</div>
-          <img
-            src={imgFile ? imgFile : `/img/download.png`}
-            alt="안녕"
-            className="w-full rounded-md"
-          />
-          <div className="skeleton"></div>
+          <div className="text-2xl font-bold mb-4 text-gray-800">사진 수정</div>
+          <Slider {...sliderSettings}>
+            {ground.uploadFileNames.map((imgFile, i) => (
+              <div
+                key={i}
+                className="carousel-item relative w-full align-middle"
+              >
+                <img
+                  key={i} // carousel 내부의 각 <img>에 대해  고유한 key 필요
+                  src={`${host}/goalracha/ground/view/${imgFile}`}
+                  className="w-full h-full object-cover"
+                  alt={imgFile} // 파일명을 alt 속성으로 사용
+                />
+                <button
+                  className="btn btn-neutral w-full mt-6"
+                  onClick={() => deleteOldImages(imgFile)}
+                >기존이미지 삭제</button>
+              </div>
+            ))}
+          </Slider>
+
           <input
             ref={uploadRef}
             type={"File"}
             accept="/image/*"
             onChange={saveImgFile}
             multiple={true}
-            className="file-input file-input-bordered w-full max-w-xs"
+            className="mt-6 file-input file-input-bordered w-full max-w-xs"
           ></input>
 
           <div className="flex-wrap bg-white pt-8 w-full ">
@@ -345,7 +437,7 @@ const GroundRegisterComponent = () => {
                   defaultChecked
                   className="checkbox"
                   value={ground.vestIsYn}
-                  onChange={handleChange}
+                  onChange={handleChangeModify}
                 />
               </label>
             </div>
@@ -359,7 +451,7 @@ const GroundRegisterComponent = () => {
                   defaultChecked
                   className="checkbox"
                   value={ground.footwearIsYn}
-                  onChange={handleChange}
+                  onChange={handleChangeModify}
                 />
               </label>
             </div>
@@ -373,7 +465,7 @@ const GroundRegisterComponent = () => {
                   defaultChecked
                   className="checkbox"
                   value={ground.showerIsYn}
-                  onChange={handleChange}
+                  onChange={handleChangeModify}
                 />
               </label>
             </div>
@@ -387,7 +479,7 @@ const GroundRegisterComponent = () => {
                   defaultChecked
                   className="checkbox"
                   value={ground.roopIsYn}
-                  onChange={handleChange}
+                  onChange={handleChangeModify}
                 />
               </label>
             </div>
@@ -401,7 +493,7 @@ const GroundRegisterComponent = () => {
                   defaultChecked
                   className="checkbox"
                   value={ground.ballIsYn}
-                  onChange={handleChange}
+                  onChange={handleChangeModify}
                 />
               </label>
             </div>
@@ -415,7 +507,7 @@ const GroundRegisterComponent = () => {
                   defaultChecked
                   className="checkbox"
                   value={ground.airconIsYn}
-                  onChange={handleChange}
+                  onChange={handleChangeModify}
                 />
               </label>
             </div>
@@ -429,9 +521,30 @@ const GroundRegisterComponent = () => {
                   defaultChecked
                   className="checkbox"
                   value={ground.parkareaIsYn}
-                  onChange={handleChange}
+                  onChange={handleChangeModify}
                 />
               </label>
+            </div>
+
+            <h2 className="flex-auto text-2xl font-bold mb-4 text-gray-800">
+              구장상태
+            </h2>
+            <div>
+              <label className="label"></label>
+              <select
+                type={"select"}
+                name="state"
+                className="select select-bordered w-full max-w-xs"
+                onChange={handleChangeState}
+                value={ground.state}
+                disabled={!(ground.state === 2 || ground.state === 3)}
+              >
+                <option value={ground.state} disabled >
+                  {stateMapping[ground.state] || "상태 정보 없음"}
+                </option>
+                <option value={2}>오픈</option>
+                <option value={3}>준비중</option>
+              </select>
             </div>
           </div>
         </div>
@@ -446,7 +559,7 @@ const GroundRegisterComponent = () => {
             type={"text"}
             name="userGuide"
             value={ground.userGuide}
-            onChange={handleChange}
+            onChange={handleChangeModify}
             className="textarea textarea-bordered w-full h-40"
           />
         </div>
@@ -462,7 +575,7 @@ const GroundRegisterComponent = () => {
             type={"text"}
             name="userRules"
             value={ground.userRules}
-            onChange={handleChange}
+            onChange={handleChangeModify}
             className="textarea textarea-bordered w-full h-40"
           />
         </div>
@@ -478,18 +591,32 @@ const GroundRegisterComponent = () => {
             type={"text"}
             name="refundRules"
             value={ground.refundRules}
-            onChange={handleChange}
+            onChange={handleChangeModify}
             className="textarea textarea-bordered w-full h-40"
           />
         </div>
 
-        <div className="mt-8">
+        <div className="mt-8 flex justify-center">
           <button
             type="button"
-            className=" w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-700"
-            onClick={handleClickAdd}
+            className="m-2 w-3/12 btn btn-neutral text-xl"
+            onClick={moveToGroundList}
           >
-            등록
+            목록
+          </button>
+          <button
+            type="button"
+            className="m-2 w-5/12 btn btn-neutral text-xl"
+            onClick={handleClickModify}
+          >
+            수정
+          </button>
+          <button
+            type="button"
+            className="m-2 w-3/12 btn btn-error text-xl"
+            onClick={handleClickDelete}
+          >
+            삭제
           </button>
         </div>
       </div>
@@ -497,4 +624,4 @@ const GroundRegisterComponent = () => {
   );
 };
 
-export default GroundRegisterComponent;
+export default GroundModifyComponent;
