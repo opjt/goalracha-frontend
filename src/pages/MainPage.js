@@ -10,11 +10,15 @@ import { useEffect } from "react";
 const MainPage = () => {
     const { isLogin, loginState,moveToPath} = useCustomLogin();
     useEffect(() => {
-        if(isLogin) {
-            if(loginState.email === loginState.nickname) {
-               moveToPath("/user/join")
-            }
-       }
+        console.log(loginState);
+        var moveUrl ="/reserve"
+        if(loginState.type =="OWNER") {
+            moveUrl = "/owner/ground"
+        } 
+        if(loginState.type=="ADMIN") {
+            moveUrl = "/adminPage"
+        }
+        moveToPath(moveUrl)
     })
 
     const link = getKakaoLoginLink()
@@ -35,7 +39,6 @@ const MainPage = () => {
                         <div> {loginState.email} </div>
                         <Link to={'/user/logout'}>Logout</Link>
                     </div>
-                    
                 }
             </div>
             <br />

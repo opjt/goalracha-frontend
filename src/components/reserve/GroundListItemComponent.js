@@ -10,7 +10,7 @@ const GroundListItem = ({ groundInfo, date, callbackFn }) => {
         closeTime +=24;
     }
     for(let i = 6; i<= 29; i++) {
-        if(openTime<= i && i < closeTime) {
+        if(openTime<= i && i <= closeTime-groundInfo.usageTime) {
             timeArray[i] = true;
         } else {
             timeArray[i] = false;
@@ -46,7 +46,7 @@ const GroundListItem = ({ groundInfo, date, callbackFn }) => {
                 <div className="flex justify-between">
                     <div className='text-sm mt-3'>
                         <p className="">{groundInfo.width}•{groundInfo.inAndOut}•{groundInfo.grassInfo}</p>
-                        <p className="text-gray-400">{groundInfo.fare}원/시간</p>
+                        <p className="text-gray-400">{groundInfo.fare.toLocaleString('ko-KR')}원/시간</p>
                     </div>
                     <div>
                     {(groundInfo.uploadFileNames &&  groundInfo.uploadFileNames.length !== 0 ) ? (

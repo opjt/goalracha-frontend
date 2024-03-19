@@ -185,9 +185,6 @@ const ReserveModal = ({ reservInfo ,groundInfo, callbackFn}) => {
                         <button>close</button>
                     </form>
             </dialog>
-
-
-
     );
 }
 

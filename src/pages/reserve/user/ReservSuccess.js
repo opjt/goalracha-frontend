@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import BasicLayout from "layouts/BasicLayout";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams, Link} from "react-router-dom";
 import { addReserv } from 'api/reserveApi';
 import moment from 'moment';
 const secretKey = `${process.env.REACT_APP_TOSS_SK}`;
@@ -23,13 +23,12 @@ const ReservSuccess = () => {
 			}
 		);
 		const json = await response.json();
-		
+		// console.log(json)
 
 		if (!response.ok) {
 			// TODO: 구매 실패 비즈니스 로직 구현
-			console.log(json);
 			navigate(`/reserve/fail?code=${json.code}&message=${json.message}`);
-			return;
+			throw new Error("응답실패")
 		}
 
 		// TODO: 구매 완료 비즈니스 로직 구현
@@ -60,6 +59,8 @@ const ReservSuccess = () => {
 			}
 			result.time = timeString;
 			setResult(result)
+		}).catch((e) => {
+			navigate(`/reserve/fail?message=예약실패 관리자에게 문의하십시오`);
 		})
 	}
 
@@ -75,9 +76,10 @@ const ReservSuccess = () => {
 		
 			try {
 			  const result = await confirm(requestData);
+			  console.log("결제 성공")
 			  await doReserv(result.orderName);
 			} catch (error) {
-			  // 오류 처리
+				
 			}
 		  };
 		
@@ -120,12 +122,11 @@ const ReservSuccess = () => {
 						</tbody>
 					</table>
 					<div className="py-10 text-center">
-						<a
-						href="#"
+						<Link to="/"
 						className="px-12 bg-indigo-600 hover:bg-indigo-500 text-white py-3"
 						>
 						예약내역 확인
-						</a>
+						</Link>
 					</div>
 					</div>
 				</div>

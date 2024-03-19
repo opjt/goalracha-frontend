@@ -17,7 +17,19 @@ const initState = {
     tel: "",
     check: false
 }
+const customStyle = {
+    cursor: 'initial',
+    background: 'initial',
+    color: 'black'
+  };
 
+  const text1 = `대관 서비스 개인정보 제3자 제공 방침
+
+  1. 수집 항목 : 실명, 휴대전화번호, 이메일, 주소, 생년월일, ID 등
+  2. 수집 목적 : 시설 대관 관리
+  3. 보관 기간 : 대관 일시로부터 1년
+  4. 제공 받는 자 : 해당 체육시설
+  `
 const JoinComponent = () => {
     const [member, setMember] = useState(initState)
     const [idcheck, setIdcheck] = useState(false)
@@ -46,29 +58,76 @@ const JoinComponent = () => {
         if (member.id == "") {
             return;
         }
-        checkMemberId(member.id).then(result => {
-            console.log(result)
-            if (result.result === false) {
+        checkMemberId(member.id).then(res => {
+            if (res.result === false) {
                 setIdcheck(true)
-
-
+            } else {
+                setResult({content:"이미 사용중인 아이디입니다",close:"확인"})
             }
-
         })
     }
     const closeModal = () => {
+        var msg = result;
         setResult(null)
-        moveToPath("/")
+        console.log(msg)
+        if(msg.content == "회원가입이 완료되었습니다") {
+            moveToPath("/owner/login")
+        }
+        
     }
     const handleClickJoin = () => {
+        var checkMember = checkValidate(member)
+        if(checkMember != true) {
+            setResult({content:checkMember,close:"확인"})
+            return;
+        }
+        
         joinOwner(member).then(result => {
             console.log(member)
-
-            setResult("회원가입이 완료되었습니다")
+            setResult({content:"회원가입이 완료되었습니다",close:"로그인하고 이용하기"})
             console.log(result)
 
         })
 
+    }
+
+    const checkValidate = (member) => {
+        var regex_business = /^\d{3}-\d{2}-\d{5}$/;
+        var regex_email = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        var regex_tel = /^\d{3}-\d{3,4}-\d{4}$/; 
+        var regex_id = /^(?=.*[a-zA-Z\d])[a-zA-Z\d]{6,20}$/;
+
+        console.log(member)
+        if(!regex_business.test(member.business_id)) {
+            return "잘못된 형식의 사업자번호입니다"
+        }
+        if(member.business_name.length <= 1) {
+            return "사업자명을 입력해주세요"
+        }
+        if(member.name.length <= 1) {
+            return "담당자 이름을 입력해주세요"
+        }
+        if(!idcheck) {
+            return "아이디 중복을 확인해주세요"
+        }
+        if(!regex_email.test(member.email)) {
+            return "잘못된 이메일 형식입니다"
+        }
+        if(!regex_id.test(member.id)) {
+            return "잘못된 아이디 형식입니다"
+        }
+        if(!regex_tel.test(member.tel)) {
+            return "잘못된 전화번호 형식입니다"
+        }
+        if(!member.check2) {
+            return "이용약관에 동의하지 않았습니다"
+        }
+        if(member.pw !== member.pwr) {
+            return "비밀번호를 다시 확인해주세요."
+        }
+        
+        return true;
+        
     }
 
 
@@ -76,7 +135,7 @@ const JoinComponent = () => {
         <>
             <MainHeader />
             <div className="relative flex flex-col justify-center h-screen overflow-hidden">
-                {result ? <ResultModal title={`회원가입`} content={result} close={`로그인하고 이용하기`}
+                {result ? <ResultModal title={`회원가입`} content={result.content} close={result.close}
                     callbackFn={closeModal}></ResultModal> : <></>}
 
                 <div className="w-full p-6 m-auto bg-white rounded-md shadow-md ring-2 ring-gray-800/50 lg:max-w-xl">
@@ -86,7 +145,7 @@ const JoinComponent = () => {
                             <label className="label">
                                 <span className="text-base label-text">사업자번호</span>
                             </label>
-                            <input className="w-full input input-bordered" name="business_id" type={'text'} placeholder="Name" value={member.business_id} onChange={handleChange} />
+                            <input className="w-full input input-bordered" name="business_id" type={'text'} placeholder="000-00-00000" value={member.business_id} onChange={handleChange} />
                         </div>
                         <div className="flex justify-between">
                             <div className="w-1/2 mr-1">
@@ -107,7 +166,7 @@ const JoinComponent = () => {
                                 <span className="text-base label-text">아이디</span>
                             </label>
                             <div className="flex">
-                                <input className="w-4/5 input input-bordered" name="id" type={'text'} placeholder="" value={member.id} onChange={handleChange} />
+                                <input className="w-4/5 input input-bordered" name="id" type={'text'} placeholder="6~20자 영문(특수문자 불가능)" value={member.id} onChange={handleChange} />
                                 <button type="button" onClick={handleClickcheckId} className={`btn btn-neutral ${idcheck ? 'btn-disabled' : ''} w-1/5 ml-1 text-ellipsis min-w-24`}>중복확인</button>
                             </div>
                         </div>
@@ -129,7 +188,7 @@ const JoinComponent = () => {
                             <label className="label">
                                 <span className="text-base label-text">이메일</span>
                             </label>
-                            <input className="w-full input input-bordered" type={'text'} name="email" placeholder="-포함하여 입력하십시오" value={member.email} onChange={handleChange} />
+                            <input className="w-full input input-bordered" type={'text'} name="email" placeholder="" value={member.email} onChange={handleChange} />
                         </div>
                         <div>
                             <label className="label">
@@ -139,15 +198,13 @@ const JoinComponent = () => {
                         </div>
                         <div className="">
                             <label className="label">
-                                <span className="text-base label-text">약관동의1</span>
+                                <span className="text-base label-text">이용약관</span>
                             </label>
-                            <div className="w-full h-28 input input-bordered overflow-auto ">약관동의서약관동의서약관동의서약관동의서약관동의서약관동의서약관동의서약관동의서약관동의서약관동의서약관동의서약관동의서약관동의서약관동의서약관동의서약관동의서약관동의서약관동의서약약관동의서약관동의서약관동의서약관동의서약관동의서약관동의서약관동의서약관동의서약관동의서약관동의서약관동의서약관동의서약관동의서약관동의서약관동의서약관동의서약관동의서약관동의서약관동의서약관동의서약관동의서약관동의서약관동의서관동의서약관동의서약관동의서약관동의서약관동의서</div>
-
+                        
+                            <textarea disabled className="w-full h-28 input input-bordered overflow-auto bg-gray-200 text-sm" style={customStyle} defaultValue={text1}/>
                             <div className="flex items-center">
-                                <input type="checkbox" className="checkbox checkbox-sm" name="check" checked={member.check} onChange={handleChange} />
-                                <label>
-                                    약관동의
-                                </label>
+                                <input type="checkbox" className="checkbox checkbox-sm" name="check2" id="check2"  value={member.check2} onChange={handleChange}/>
+                                <label className="ml-1 text-sm" htmlFor="check2">위의 시설 이용 약관에 동의합니다.</label>
                             </div>
 
                         </div>

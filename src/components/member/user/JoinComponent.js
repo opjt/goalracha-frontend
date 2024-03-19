@@ -122,6 +122,7 @@ const handleNicknameChange = (e) => {
           title="알림"
           content={modalContent}
           callbackFn={handleModalClose}
+          close={"확인"}
         />
       )}
       <div className="w-full p-6 m-auto bg-white rounded-md shadow-md ring-2 ring-gray-800/50 lg:max-w-xl">

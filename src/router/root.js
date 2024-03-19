@@ -28,9 +28,7 @@ const root = createBrowserRouter([
     },
     {
         path: "/",
-        element: (
-            <Navigate replace to="/reserve" />
-        ),
+        element: <Main />
     },
     {
         path: "loading",

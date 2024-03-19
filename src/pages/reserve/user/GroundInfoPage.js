@@ -114,7 +114,7 @@ const GroundInfoPage = () => {
                 closeTime +=24;
             }
             var newTimeArray = {};
-            for(let hour = openTime; hour<closeTime; hour+=result.groundInfo.usageTime) {
+            for(let hour = openTime; hour<=closeTime-result.groundInfo.usageTime; hour+=result.groundInfo.usageTime) {
                 newTimeArray[hour] = true;
             }
             reservInfo.time = {...newTimeArray};
@@ -211,11 +211,11 @@ const GroundInfoPage = () => {
                             {groundInfo.addr}
                         </div>
                         <div className="mt-4 w-fit">
-                            <div className="font-bold text-xl pb-1">구장정보</div>
-                            <div className="text-base">
-                                <div>구장크기 <span className="text-gray-800">{groundInfo.width}</span></div>
-                                <div>추천인원 <span className="text-gray-800">{groundInfo.recommdMan}</span></div>
-                                <div>잔디정보 <span className="text-gray-800">{groundInfo.grassInfo}</span></div>
+                            <div className="font-bold text-xl pb-1 b">구장정보</div>
+                            <div className="text-base bg-gray-100 p-2 rounded-lg px-4">
+                                <div className="font-bold opacity-85">구장크기 <span className="opacity-100 font-normal text-black ml-11">{groundInfo.width}</span></div>
+                                <div className="font-bold opacity-85">추천인원 <span className="opacity-100 font-normal text-black ml-11">{groundInfo.recommdMan}</span></div>
+                                <div className="font-bold opacity-85">잔디정보 <span className="opacity-100 font-normal text-black ml-11">{groundInfo.grassInfo}</span></div>
                         </div>
                     </div>
                     </div>
@@ -244,7 +244,8 @@ const GroundInfoPage = () => {
                         {Object.entries(timeArray).map(([hour, available]) => (
                             <div key={hour} id={hour} className={`h-14 btn mr-1 ${!available ? 'btn-disabled' : ''}
                                  ${!reservInfo.time[hour] ? 'btn-primary': 'btn-neutral'}` } onClick={handleClickTime}>
-                                {hour}~{parseInt(hour) + parseInt(groundInfo.usageTime)}시({groundInfo.usageTime}시간)
+                                {/* {hour}~{parseInt(hour) + parseInt(groundInfo.usageTime)}시({groundInfo.usageTime}시간) */} 
+                                {hour > 24 ? hour-24 : hour}~{(parseInt(hour) + parseInt(groundInfo.usageTime)) > 24 ? (parseInt(hour) + parseInt(groundInfo.usageTime)) - 24 : parseInt(hour) + parseInt(groundInfo.usageTime)}시({groundInfo.usageTime}시간)
                             </div>
                         ))}
                     </div>
@@ -265,7 +266,7 @@ const GroundInfoPage = () => {
                 
                 <div className="mt-2">
                     <div className="font-bold text-lg">위치</div>
-                    <KakaoMap addr="가산동147-47" name={groundInfo.name}/>
+                    <KakaoMap addr={groundInfo.addr} name={groundInfo.name}/>
                 </div>
 
                 <div className="mt-4">

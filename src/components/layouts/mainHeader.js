@@ -4,7 +4,7 @@ import {
   createSearchParams,
   useLocation,
 } from "react-router-dom";
-import { useState } from "react";
+import { useState ,useEffect} from "react";
 import { update } from "slices/searchSlice";
 import { useDispatch } from "react-redux";
 import useCustomLogin from "hooks/useCustomLogin";
@@ -13,7 +13,8 @@ const MainHeader = ({ children }) => {
 	const dispatch = useDispatch();
   	const navigate = useNavigate();
 	const location = useLocation();
-	const { loginState } = useCustomLogin();
+	const { loginState, isLogin,moveToPath } = useCustomLogin();
+	//유저아이콘클릭시 이동주소
 	var myPageUrl = "/user/mypage";
 	if(loginState.type && loginState.type != '') {
 		myPageUrl = `/${loginState.type}/mypage`
@@ -21,6 +22,14 @@ const MainHeader = ({ children }) => {
 			myPageUrl = '/adminPage'
 		}
 	} 
+
+	useEffect(() => {
+        if(isLogin) {
+            if(loginState.email === loginState.nickname) {
+               moveToPath("/user/join")
+            }
+       }
+    })
 	
 	
 	const handleInputChange = (e) => {

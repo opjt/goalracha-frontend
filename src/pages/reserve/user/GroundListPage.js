@@ -41,10 +41,12 @@ const GroundListPage = () => {
     const [jsonResult, setJsonResult] = useState(initResult);
     const searchState = useSelector((state) => state.searchSlice);
     const dispatch = useDispatch()
+
     useEffect(() => {
         showFilter.search = searchState;
         setShowFilter({...showFilter})
     }, [searchState])
+
     const onChangeDate = useCallback((date) => { // date 변경값을 받아오는 함수
         if (!date) {return;} // 날짜값이 없을 때 예외처리
         option.date = date;
@@ -93,7 +95,6 @@ const GroundListPage = () => {
         } else {
             reqInout = req.inout.split(",")
         }
-
         //검색값 지정
         if(req.search !== '') {
             reqSearch = req.search;
@@ -107,17 +108,7 @@ const GroundListPage = () => {
         }
         return reqValue;
     }
-    // const getResult = (req) => {
-    //     var reqValue = initchange(req);
-    //     console.log(reqValue)
-    //     getListbyFilter(reqValue)
-    //     .then((result) => {
-    //         setJsonResult(result)
-    //     })
-    //     .catch((e) => {
-    //         console.error(e);
-    //     });
-    // }
+
     const getResultasync = async (req) => {
         try {
             const reqValue = initchange(req);
@@ -141,7 +132,6 @@ const GroundListPage = () => {
         setOption({...option})
     }
     const handleClickReset = (e) => { //초기화버튼핸들러
-        console.log(e.target.name);
         if(e.target.name === "date") {
             option.date = moment().toDate();
             showFilter.date = ""
@@ -154,7 +144,7 @@ const GroundListPage = () => {
             option.inout = {in: false, out:false};
             showFilter.inout = ""
         }
-        if(e.target.name === "search") {
+        if(e.target.name === "search" || e.target.name === undefined) {
             showFilter.search = ""
             dispatch(update(""))
         }
@@ -200,8 +190,7 @@ const GroundListPage = () => {
             {showFilter.search !== '' && (
                 <button className={`btn btn-sm  gap-1 btn-neutral`} name="search" onClick={handleClickReset}>
                 {showFilter.search}
-                {/* <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" ><path d="M6 9l6 6 6-6"/></svg></button> */}
-                <svg xmlns="http://www.w3.org/2000/svg"   width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <svg xmlns="http://www.w3.org/2000/svg" name="search" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line>
                 </svg>
                 </button>
@@ -210,19 +199,20 @@ const GroundListPage = () => {
         </div>
 
         <div className="mt-5">
-        
+            {jsonResult && jsonResult["groundreservList"].length >= 1 ? (
+                jsonResult["groundreservList"].map((item) => {
+                const groundNo = item[0]; // 구장 번호를 변수로 지정
+                const groundInfo = jsonResult.groundlist[groundNo]; // 구장 정보를 찾음
+                groundInfo.reserveTime = item[1];
 
-        {jsonResult["groundreservList"].map((item) => {
-            const groundNo = item[0]; // 구장 번호를 변수로 지정
-            const groundInfo = jsonResult.groundlist[groundNo]; // 구장 정보를 찾음
-            groundInfo.reserveTime = item[1]
-            
-            return (   
-                <GroundListItem key={groundNo} groundInfo={groundInfo} date={showFilter.date}/>
-            );
-            })}
+                return (
+                    <GroundListItem key={groundNo} groundInfo={groundInfo} date={showFilter.date}/>
+                );
+                })
+            ) : (
+                <div className='p-3 font-bold text-lg text-center bg-gray-200 rounded-lg'>조건과 일치하는 구장이 없습니다</div>
+            )}
         </div>
-
 
 
 

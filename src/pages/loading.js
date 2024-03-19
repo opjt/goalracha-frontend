@@ -1,4 +1,3 @@
-// 상세페이지(임의 클릭시 나오는 페이지)
 
 const LoadingPage = () => {
   return (
