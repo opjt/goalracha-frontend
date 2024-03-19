@@ -5,13 +5,12 @@ import { Outlet } from "react-router-dom";
 import MainHeader from "../components/layouts/mainHeader";
 import TopNavAdmin from "../components/layouts/topnavadmin";
 
-import AdminGroundListPage from "../pages/member/admin/AdminGroundListPage.js";
-import AdminReserveListPage from "../pages/member/admin/AdminReserveListPage.js";
-import AdminOwnerManagePage from "../pages/member/admin/AdminOwnerManagePage.js";
-import AdminUserManagePage from "../pages/member/admin/AdminUserManagePage.js";
-import AdminMonthlyStatistics from "pages/member/admin/AdminReserveStatistics.js";
-// import AdminAnnualStatistics from "pages/member/admin/AdminMemberStatistics.js";
-import StatisticsPage from "pages/member/admin/StatisticsPage.js";
+import AdminGroundListPage from "../pages/member/admin/GroundListPage.js";
+import AdminReserveListPage from "../pages/member/admin/ReserveListPage.js";
+import AdminOwnerManagePage from "../pages/member/admin/OwnerManagePage.js";
+import AdminUserManagePage from "../pages/member/admin/UserManagePage.js";
+import AdminMonthlyStatistics from "pages/member/admin/ReserveStatistics.js";
+import StatisticsPage from "pages/member/admin/MemberStatisticsPage.js";
 
 const AdminPage = lazy(() => import("../pages/member/admin/AdminPage"));
 

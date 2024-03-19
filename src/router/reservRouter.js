@@ -5,6 +5,8 @@ const Loading = <div>Loading....</div>;
 const GroundListPage = lazy(() => import("pages/reserve/user/GroundListPage"));
 const Success = lazy(() => import("pages/reserve/user/ReservSuccess"));
 const Fail = lazy(() => import("pages/reserve/user/ReservFail"));
+const AdminReserveList = lazy(() => import("pages/reserve/admin/AdminReserveListPage"))
+
 const reservRouter = () => {
     return [
         {
@@ -18,7 +20,11 @@ const reservRouter = () => {
         {
             path: "fail",
             element: <Fail />
-        }
+        },
+        {
+            path: "list",
+            element: <AdminReserveList />
+        },
     ];
 };
 
