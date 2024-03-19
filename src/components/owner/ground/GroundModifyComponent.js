@@ -208,6 +208,7 @@ const GroundModifyComponent = ({ gno }) => {
             title={"구장수정 결과"}
             content={`${ground.name} 수정완료`}
             callbackFn={closeModal}
+            close={"닫기"}
           />
         ) : (
           <></>
