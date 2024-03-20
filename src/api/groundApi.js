@@ -15,17 +15,17 @@ export const getGround = async (gno) => {
 }
 
 // 전체 리스트 불러오기(이미지가 등록된)
-export const getGroundList = async ( pageParam ) => {
-  const{page, size} = pageParam
-  const res = await axios.get(`${prefix}/`, {params: {page:page, size:size}})
+export const getGroundList = async (pageParam, uNo) => {
+  const { page, size } = pageParam
+  const res = await axios.get(`${prefix}/${uNo}`, { params: { page: page, size: size } })
 
   return res.data
 }
 
 // 구장등록
 export const postGroundRegister = async (groundInfo) => {
-  const header = {headers: {"Content-Type": "multipart/form-data"}}
-  const res = await jwtAxios.post(`${prefix}/register`,groundInfo, header)
+  const header = { headers: { "Content-Type": "multipart/form-data" } }
+  const res = await jwtAxios.post(`${prefix}/register`, groundInfo, header)
 
   return res.data
 };
@@ -33,14 +33,14 @@ export const postGroundRegister = async (groundInfo) => {
 // 구장삭제
 export const deleteGround = async (gno) => {
   const res = await axios.delete(`${prefix}/delete/${gno}`)
-  
+
   return res.data
 }
 
 // 구장수정
 export const putGround = async (gno, ground) => {
-  const header = {headers: {"Content-Type": "multipart/form-data"}}
+  const header = { headers: { "Content-Type": "multipart/form-data" } }
   const res = await jwtAxios.put(`${prefix}/modify/${gno}`, ground, header)
-  
+
   return res.data
 }
