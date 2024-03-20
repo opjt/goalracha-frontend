@@ -1,9 +1,11 @@
 import { useState, useRef } from "react";
 import { postGroundRegister } from "../../../api/groundApi";
-import RegisterGroundModal from "../../../components/common/registerGroundModal";
 import ResultModal from "components/common/ResultModal";
 import useCustomMove from "../../../hooks/groundCustomMove";
 import { useNavigate } from "react-router-dom";
+import Select from "react-select";
+import { useSelector } from "react-redux";
+import useCustomLogin from "hooks/useCustomLogin";
 
 const initState = {
   name: "",
@@ -27,7 +29,7 @@ const initState = {
   parkareaIsYn: false,
   roopIsYn: false,
   state: 1,
-  uNo: 2,
+  uNo: "",
   postcode: "",
   files: [],
 };
@@ -40,15 +42,37 @@ const GroundRegisterComponent = () => {
   const uploadRef = useRef();
   const [fetching, setFetching] = useState(false);
   const [result, setResult] = useState(null);
+  const {isLogin, loginState} = useCustomLogin()
 
   const { moveToGroundList } = useCustomMove();
+  
+  const uNo = loginState.uNo; 
+  console.log(uNo)
 
+  // ground 속성의 값을 등록받은 값으로 변경
   const handleChange = (e) => {
     ground[e.target.name] = e.target.value;
-    if(e.target.type == "checkbox") {
+
+    // checkbox타입이 checkbox일 경우 check속성을 값으로 입력받음
+    if (e.target.type == "checkbox") {
       ground[e.target.name] = e.target.checked;
     }
     setGround({ ...ground });
+  };
+  
+  // 셀렉트 라이브러리를 사용한 ground 속성의 값 변경
+  const handleSelectChange = (result, name) => {
+    if (name == "inAndOut") {
+      ground.inAndOut = result.value;
+    } else if(name == "openTime") {
+      ground.openTime = result.value;
+    } else if(name == "closeTime") {
+      ground.closeTime = result.value;
+    }
+      
+    setGround({...ground})
+    console.log(name);
+    console.log(result.value);
   };
 
   const handleClickAdd = (e) => {
@@ -81,6 +105,11 @@ const GroundRegisterComponent = () => {
     formData.append("parkareaIsYn", ground.parkareaIsYn);
     formData.append("roopIsYn", ground.roopIsYn);
     formData.append("state", ground.state);
+    formData.append("uNo", uNo)
+
+    console.log(ground.inAndOut);
+    console.log(ground.openTime);
+    console.log(ground.closeTime);
 
     setFetching(true);
     postGroundRegister(formData)
@@ -90,14 +119,12 @@ const GroundRegisterComponent = () => {
       })
       .catch((error) => console.error(error));
   };
+
   const closeModal = () => {
     setResult(null);
     moveToGroundList({ page: 1 });
   };
 
-  const IsYn = [
-
-  ]
   // 이미지 업로드 input의 onChange
   const saveImgFile = () => {
     const file = uploadRef.current.files[0];
@@ -107,34 +134,90 @@ const GroundRegisterComponent = () => {
       setImgFile(reader.result);
     };
   };
-  
-  function DaumPostcode(){
+
+  function DaumPostcode() {
     new window.daum.Postcode({
-          oncomplete: function(data) {
-            
-            console.log(data);
-            
-              // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
-              // 도로명 주소의 노출 규칙에 따라 주소를 표시한다.
-              // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
-              var roadAddr = data.roadAddress; // 도로명 주소 변수
-              var jibunAddr = data.jibunAddress; // 지번 주소 변수
-              // 우편번호와 주소 정보를 해당 필드에 넣는다.
-              if(roadAddr !== ''){
-                  ground.addr = roadAddr;
-              } 
-              else if(jibunAddr !== ''){
-                ground.addr = jibunAddr;
-              }
-              setGround({...ground})
-          }
-      }).open();
+      oncomplete: function (data) {
+        console.log(data);
+
+        // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+        // 도로명 주소의 노출 규칙에 따라 주소를 표시한다.
+        // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+        var roadAddr = data.roadAddress; // 도로명 주소 변수
+        var jibunAddr = data.jibunAddress; // 지번 주소 변수
+        // 우편번호와 주소 정보를 해당 필드에 넣는다.
+        if (roadAddr !== "") {
+          ground.addr = roadAddr;
+        } else if (jibunAddr !== "") {
+          ground.addr = jibunAddr;
+        }
+        setGround({ ...ground });
+      },
+    }).open();
   }
+
+  const inAndOutSelect = [
+    { value: "실내", label: "실내" },
+    { value: "실외", label: "실외" },
+  ];
+
+  const openTimeSelect = [
+    { value: "1", label: "오전1시" },
+    { value: "2", label: "오전2시" },
+    { value: "3", label: "오전3시" },
+    { value: "4", label: "오전4시" },
+    { value: "5", label: "오전5시" },
+    { value: "6", label: "오전6시" },
+    { value: "7", label: "오전7시" },
+    { value: "8", label: "오전8시" },
+    { value: "9", label: "오전9시" },
+    { value: "10", label: "오전10시" },
+    { value: "11", label: "오전11시" },
+    { value: "12", label: "오후12시" },
+    { value: "13", label: "오후1시" },
+    { value: "14", label: "오후2시" },
+    { value: "15", label: "오후3시" },
+    { value: "16", label: "오후4시" },
+    { value: "17", label: "오후5시" },
+    { value: "18", label: "오후6시" },
+    { value: "19", label: "오후7시" },
+    { value: "20", label: "오후8시" },
+    { value: "21", label: "오후9시" },
+    { value: "22", label: "오후10시" },
+    { value: "23", label: "오후11시" },
+    { value: "24", label: "오전12시" },
+  ];
+
+  const closeTimeSelect = [
+    { value: "1", label: "오전1시" },
+    { value: "2", label: "오전2시" },
+    { value: "3", label: "오전3시" },
+    { value: "4", label: "오전4시" },
+    { value: "5", label: "오전5시" },
+    { value: "6", label: "오전6시" },
+    { value: "7", label: "오전7시" },
+    { value: "8", label: "오전8시" },
+    { value: "9", label: "오전9시" },
+    { value: "10", label: "오전10시" },
+    { value: "11", label: "오전11시" },
+    { value: "12", label: "오후12시" },
+    { value: "13", label: "오후1시" },
+    { value: "14", label: "오후2시" },
+    { value: "15", label: "오후3시" },
+    { value: "16", label: "오후4시" },
+    { value: "17", label: "오후5시" },
+    { value: "18", label: "오후6시" },
+    { value: "19", label: "오후7시" },
+    { value: "20", label: "오후8시" },
+    { value: "21", label: "오후9시" },
+    { value: "22", label: "오후10시" },
+    { value: "23", label: "오후11시" },
+    { value: "24", label: "오전12시" },
+  ];
 
   return (
     <div className=" flex-wrap flex-direction justify-center max-w-screen-lg h-100% bg-gray-100">
       <div className="max-w-screen-lg flex mb-4">
-        {fetching ? <RegisterGroundModal /> : <></>}
         {result ? (
           <ResultModal
             title={"구장등록 결과"}
@@ -171,7 +254,12 @@ const GroundRegisterComponent = () => {
             >
               구장 주소:
             </label>
-            <button className="flex float-end mb-2 btn btn-xs" onClick={DaumPostcode} >주소 찾기</button>
+            <button
+              className="flex float-end mb-2 btn btn-xs"
+              onClick={DaumPostcode}
+            >
+              주소 찾기
+            </button>
             <input
               id="addr"
               type={"text"}
@@ -191,14 +279,26 @@ const GroundRegisterComponent = () => {
             >
               실내외:
             </label>
-            <input
-              type={"text"}
-              name="inAndOut"
-              placeholder="실외"
-              value={ground.inAndOut}
-              onChange={handleChange}
-              className="input input-bordered w-full max-w-xs"
-            />
+            <div>
+              {/* <select
+                type={"select"}
+                name="InAndOut"
+                className="select select-bordered w-full max-w-xs"
+                onChange={handleChange}
+                value={ground.inAndOut}
+              >
+                <option value={'실내'}>실내</option>
+                <option value={'실외'}>실외</option>
+              </select> */}
+              <Select
+                className=" w-full max-w-xs"
+                type={"select"}
+                name="InAndOut"
+                onChange={(option) => handleSelectChange(option, "inAndOut")}
+                options={inAndOutSelect}
+                placeholder="유형 선택"
+              />
+            </div>
           </div>
 
           <div className="mb-4">
@@ -276,13 +376,12 @@ const GroundRegisterComponent = () => {
             >
               오픈 시간:
             </label>
-            <input
-              type={"text"}
-              name="openTime"
-              placeholder="8 (24시간단위로 숫자만 입력)"
-              value={ground.openTime}
-              onChange={handleChange}
-              className="input input-bordered w-full max-w-xs"
+            <Select
+              className=" w-full max-w-xs"
+              type={"select"}
+              onChange={(option) => handleSelectChange(option, "openTime")}
+              options={openTimeSelect}
+              placeholder="유형 선택"
             />
           </div>
 
@@ -293,13 +392,12 @@ const GroundRegisterComponent = () => {
             >
               마감 시간:
             </label>
-            <input
-              type={"text"}
-              name="closeTime"
-              placeholder="24 (24시간단위로 숫자만 입력)"
-              value={ground.closeTime}
-              onChange={handleChange}
-              className="input input-bordered w-full max-w-xs"
+            <Select
+              className=" w-full max-w-xs"
+              type={"select"}
+              onChange={(option) => handleSelectChange(option, "closeTime")}
+              options={closeTimeSelect}
+              placeholder="유형 선택"
             />
           </div>
 
@@ -324,15 +422,14 @@ const GroundRegisterComponent = () => {
         <div className="w-6/12 mb-4 bg-white p-8 ">
           <div className="text-2xl font-bold mb-4 text-gray-800">사진 등록</div>
           <img
-            src={imgFile ? imgFile : `/img/download.png`}
-            alt="안녕"
-            className="w-full rounded-md"
+            src={imgFile}
+            alt="이미지를 등록해주세요"
+            className="w-full h-40 flex rounded-md skeleton"
           />
           <div className="skeleton"></div>
           <input
             ref={uploadRef}
             type={"File"}
-            accept="/image/*"
             onChange={saveImgFile}
             multiple={true}
             className="file-input file-input-bordered w-full max-w-xs"
