@@ -539,6 +539,7 @@ const GroundModifyComponent = ({ gno }) => {
                 </option>
                 <option value={2}>오픈</option>
                 <option value={3}>준비중</option>
+                <option value={4}>폐업신청</option>
               </select>
             </div>
           </div>
