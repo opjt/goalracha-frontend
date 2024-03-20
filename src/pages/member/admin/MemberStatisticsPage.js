@@ -3,7 +3,7 @@ import AdminMemberStatistics from './MemberStatistics';
 import axios from 'axios';
 
 
-const StatisticsPage = () => {
+const MemberStatisticsPage = () => {
   const [ownerCount, setOwnerCount] = useState(0);
   const [userCount, setUserCount] = useState(0);
 
@@ -34,4 +34,4 @@ const StatisticsPage = () => {
   );
 };
 
-export default StatisticsPage;
+export default MemberStatisticsPage;

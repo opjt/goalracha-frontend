@@ -12,16 +12,17 @@ const TopnavAdmin = () => {
   const goToDashBoard = () => navigate('/adminPage/notice');
 
   // 구장관리 서브메뉴 이동
-  const goToSubmenu2 = () => navigate('/adminPage/submenu2-url'); // 구장 리스트
-  const goToSubmenu3 = () => navigate('/adminPage/submenu3-url'); // 예약 내역 
+  const goToSubmenu2 = () => navigate('/adminPage/GroundListPage'); // 구장 리스트
+  const goToSubmenu3 = () => navigate('/adminPage/ReserveListPage'); // 예약 내역 
 
   // 유저관리 서브메뉴 이동
-  const goToUserSubmenu1 = () => navigate('/adminPage/submenu4-url'); // 사업자 관리
-  const goToUserSubmenu2 = () => navigate('/adminPage/submenu5-url'); // 사용자 관리 
+  const goToUserSubmenu1 = () => navigate('/adminPage/OwnerManagePage'); // 사업자 관리
+  const goToUserSubmenu2 = () => navigate('/adminPage/UserManagePage'); // 사용자 관리 
 
   // 통계관리 서브메뉴 이동
-  const goToStatsSubmenu1 = () => navigate('/adminPage/submenu6-url'); // 월별 통계
-  const goToStatsSubmenu2 = () => navigate('/adminPage/submenu7-url'); // 년별 통계
+  const goToStatsSubmenu1 = () => navigate('/adminPage/ReserveStatisticsPage'); // 예약 통계
+  const goToStatsSubmenu2 = () => navigate('/adminPage/MemberStatisticsPage'); // 년별 통계
+  const goToStatsSubmenu3 = () => navigate('/adminPage/SalesStatisticsPage'); // 년별 통계
 
   return (
     <div className="max-w-screen-xl mx-auto navbar bg-base-100 px-2 py-0 min-h-1">
@@ -67,6 +68,7 @@ const TopnavAdmin = () => {
             <div className="absolute left-0 w-full mt-px py-2 bg-white shadow-xl flex flex-col">
               <button onClick={goToStatsSubmenu1} className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-200 hover:shadow-lg">예약 통계</button>
               <button onClick={goToStatsSubmenu2} className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-200 hover:shadow-lg">회원 통계</button>
+              <button onClick={goToStatsSubmenu3} className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-200 hover:shadow-lg">매출 통계</button>
             </div>
           )}
         </div>
