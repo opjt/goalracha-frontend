@@ -206,7 +206,6 @@ const GroundReadComponent = ({ gno }) => {
                     className="w-full h-full object-cover"
                     alt={imgFile} // 파일명을 alt 속성으로 사용
                   />
-                  <div className="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2"></div>
                 </div>
               ))}
             </Slider>

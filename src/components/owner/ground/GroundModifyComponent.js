@@ -5,7 +5,6 @@ import {
   putGround,
   deleteGround,
 } from "../../../api/groundApi";
-import RegisterGroundModal from "../../../components/common/registerGroundModal";
 import ResultModal from "components/common/ResultModal";
 import useCustomMove from "../../../hooks/groundCustomMove";
 import Slider from "react-slick";
@@ -32,7 +31,6 @@ const initState = {
   parkareaIsYn: false,
   roopIsYn: false,
   postcode: "",
-  files: [],
   uploadFileNames: [],
 };
 
@@ -62,7 +60,7 @@ const GroundModifyComponent = ({ gno }) => {
     if (e.target.type == "checkbox") {
       ground[e.target.name] = e.target.checked;
     }
-    console.log(ground)
+    
     setGround({ ...ground });
   };
 
@@ -78,9 +76,8 @@ const GroundModifyComponent = ({ gno }) => {
     const files = uploadRef.current.files;
     const formData = new FormData();
 
-
-    for (let i = 0; i < ground.files.length; i++) {
-      formData.append("files", ground.files[i]);
+    for (let i = 0; i < files.length; i++) {
+      formData.append(`files`, files[i]);
     }
 
     formData.append("name", ground.name);
@@ -106,9 +103,13 @@ const GroundModifyComponent = ({ gno }) => {
     formData.append("state", ground.state);
 
     for (let i = 0; i < ground.uploadFileNames.length; i++) {
-      formData.append("files", ground.uploadFileNames[i]);
+      formData.append("uploadFileNames", ground.uploadFileNames[i]);
     }
 
+    console.log(files);
+    console.log(uploadRef);
+    console.log(ground.uploadFileNames);
+    console.log(formData.getAll)
     setFetching(true);
 
     putGround(gno, formData).then((data) => {
@@ -117,8 +118,6 @@ const GroundModifyComponent = ({ gno }) => {
         setFetching(false);
       })
       .catch((error) => console.error(error));
-
-      console.log(formData)
   };
 
   const handleClickDelete = () => {
@@ -138,15 +137,16 @@ const GroundModifyComponent = ({ gno }) => {
     }
   };
 
-  // 이미지 업로드 input의 onChange
-  const saveImgFile = () => {
-    const file = uploadRef.current.files[0];
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onloadend = () => {
-      setImgFile(reader.result);
-    };
-  };
+  // // 이미지 업로드 input의 onChange
+  // const saveImgFile = () => {
+  //   const file = uploadRef.current.files[0];
+  //   const reader = new FileReader();
+  //   reader.readAsDataURL(file);
+  //   reader.onloadend = () => {
+  //     setImgFile(reader.result);
+  //     console.log(reader)
+  //   };
+  // };
 
   const handleChangeState = (e) => {
     const newState = e.target.value;
@@ -202,7 +202,6 @@ const GroundModifyComponent = ({ gno }) => {
   return (
     <div className=" flex-wrap flex-direction justify-center max-w-screen-lg h-100% bg-gray-100">
       <div className="max-w-screen-lg flex mb-4">
-        {fetching ? <RegisterGroundModal /> : <></>}
         {result ? (
           <ResultModal
             title={"구장수정 결과"}
@@ -397,13 +396,16 @@ const GroundModifyComponent = ({ gno }) => {
         <div className="w-6/12 mb-4 bg-white p-8 ">
           <div className="text-2xl font-bold mb-4 text-gray-800">사진 수정</div>
           <Slider {...sliderSettings}>
+          {ground.uploadFileNames.length === 0 && (
+                        <div className="skeleton w-full h-full"></div>
+                    )}
             {ground.uploadFileNames.map((imgFile, i) => (
               <div
                 key={i}
                 className="carousel-item relative w-full align-middle"
               >
                 <img
-                  key={i} // carousel 내부의 각 <img>에 대해  고유한 key 필요
+                // carousel 내부의 각 <img>에 대해  고유한 key 필요
                   src={`${host}/goalracha/ground/view/${imgFile}`}
                   className="w-full h-full object-cover"
                   alt={imgFile} // 파일명을 alt 속성으로 사용
@@ -419,8 +421,6 @@ const GroundModifyComponent = ({ gno }) => {
           <input
             ref={uploadRef}
             type={"File"}
-            accept="/image/*"
-            onChange={saveImgFile}
             multiple={true}
             className="mt-6 file-input file-input-bordered w-full max-w-xs"
           ></input>
@@ -435,9 +435,8 @@ const GroundModifyComponent = ({ gno }) => {
                 <input
                   type={"checkbox"}
                   name="vestIsYn"
-                  defaultChecked
                   className="checkbox"
-                  value={ground.vestIsYn}
+                  checked={ground.vestIsYn}
                   onChange={handleChangeModify}
                 />
               </label>
@@ -449,9 +448,8 @@ const GroundModifyComponent = ({ gno }) => {
                 <input
                   type={"checkbox"}
                   name="footwearIsYn"
-                  defaultChecked
                   className="checkbox"
-                  value={ground.footwearIsYn}
+                  checked={ground.footwearIsYn}
                   onChange={handleChangeModify}
                 />
               </label>
@@ -463,9 +461,8 @@ const GroundModifyComponent = ({ gno }) => {
                 <input
                   type={"checkbox"}
                   name="showerIsYn"
-                  defaultChecked
                   className="checkbox"
-                  value={ground.showerIsYn}
+                  checked={ground.showerIsYn}
                   onChange={handleChangeModify}
                 />
               </label>
@@ -477,9 +474,8 @@ const GroundModifyComponent = ({ gno }) => {
                 <input
                   type={"checkbox"}
                   name="roopIsYn"
-                  defaultChecked
                   className="checkbox"
-                  value={ground.roopIsYn}
+                  checked={ground.roopIsYn}
                   onChange={handleChangeModify}
                 />
               </label>
@@ -491,9 +487,8 @@ const GroundModifyComponent = ({ gno }) => {
                 <input
                   type={"checkbox"}
                   name="ballIsYn"
-                  defaultChecked
                   className="checkbox"
-                  value={ground.ballIsYn}
+                  checked={ground.ballIsYn}
                   onChange={handleChangeModify}
                 />
               </label>
@@ -505,9 +500,8 @@ const GroundModifyComponent = ({ gno }) => {
                 <input
                   type={"checkbox"}
                   name="airconIsYn"
-                  defaultChecked
                   className="checkbox"
-                  value={ground.airconIsYn}
+                  checked={ground.airconIsYn}
                   onChange={handleChangeModify}
                 />
               </label>
@@ -519,9 +513,8 @@ const GroundModifyComponent = ({ gno }) => {
                 <input
                   type={"checkbox"}
                   name="parkareaIsYn"
-                  defaultChecked
                   className="checkbox"
-                  value={ground.parkareaIsYn}
+                  checked={ground.parkareaIsYn}
                   onChange={handleChangeModify}
                 />
               </label>
@@ -545,6 +538,7 @@ const GroundModifyComponent = ({ gno }) => {
                 </option>
                 <option value={2}>오픈</option>
                 <option value={3}>준비중</option>
+                <option value={4}>폐업신청</option>
               </select>
             </div>
           </div>

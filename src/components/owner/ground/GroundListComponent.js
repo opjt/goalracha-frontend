@@ -3,7 +3,6 @@ import PageComponent from "../../common/pageComponent";
 import useCustomMove from "../../../hooks/groundCustomMove";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import GroundReadComponent from "./GroundReadComponent";
 
 const initState = {
   dtoList: [],
@@ -22,7 +21,7 @@ const GroundList = ({ groundList }) => {
 
   const navigate = useNavigate();
 
-  const { page, size, moveToList, moveToRead, moveToRegister } = useCustomMove();
+  const { page, size, moveToPage, moveToRead, moveToRegister } = useCustomMove();
 
   const [serverData, setServerData] = useState(initState);
 
@@ -76,7 +75,7 @@ const GroundList = ({ groundList }) => {
       <div>
         <PageComponent
           serverData={serverData}
-          movePage={moveToList}
+          movePage={moveToPage}
         ></PageComponent>
       </div>
     </div>

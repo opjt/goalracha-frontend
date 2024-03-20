@@ -38,6 +38,26 @@ const useCustomMove = () => {
       search: queryStr,
     });
     setRefresh(!refresh); //추가
+    
+  };
+
+  const moveToPage = (pageParam) => {
+    let queryStr = "";
+    if (pageParam) {
+      const pageNum = getNum(pageParam.page, page);
+      const sizeNum = getNum(pageParam.size, size);
+      queryStr = createSearchParams({
+        page: pageNum,
+        size: sizeNum,
+      }).toString();
+    } else {
+      queryStr = queryDefault;
+    }
+    navigate({
+      pathname: `../ground/`,
+      search: queryStr,
+    });
+    setRefresh(!refresh); //추가
   };
 
   const moveToGroundList = (pageParam) => {
@@ -94,6 +114,6 @@ const useCustomMove = () => {
     })
   };
 
-  return { moveToList, moveToModify, moveToRead, moveToGroundList, moveToRegister, moveToModifyRead, page, size, refresh }; //refresh 추가
+  return { moveToList, moveToModify, moveToRead, moveToGroundList, moveToRegister, moveToModifyRead, moveToPage, page, size, refresh }; //refresh 추가
 };
 export default useCustomMove;
