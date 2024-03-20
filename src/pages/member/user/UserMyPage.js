@@ -3,9 +3,9 @@ import BasicLayout from "layouts/BasicLayout";
 import { useSelector } from "react-redux";
 import UserModifyModal from "components/member/user/UserModifyModal";
 import { Link } from "react-router-dom";
-import { withdrawMember } from "api/memberApi"; // withdrawMember 함수 import
 import useCustomLogin from "hooks/useCustomLogin";
-
+import WithdrawConfirmationModal from "components/member/user/WithdrawConfirmationModal"; // 회원 탈퇴 확인 모달 import
+import { withdrawMember } from "api/memberApi"; // 회원 탈퇴 API 호출
 
 // 초기 상태 정의
 const initState = {
@@ -21,6 +21,7 @@ const UserMyPage = () => {
   const [result, setResult] = useState(); // 결과 메시지 상태
   const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태
   const {isLogin, moveToLogin} = useCustomLogin();
+  const [isWithdrawConfirmationModalOpen, setIsWithdrawConfirmationModalOpen] = useState(false); // 회원 탈퇴 확인 모달 상태
 
   // 컴포넌트가 마운트될 때 로그인 정보가 변경될 때마다 실행되는 useEffect
   useEffect(() => {
@@ -49,18 +50,26 @@ const UserMyPage = () => {
     setIsModalOpen(false);
   };
 
-  // 회원 탈퇴 함수
-  const handleWithdrawal = async () => {
-    try {
-      // 회원 탈퇴 요청 보내기
-      await withdrawMember(loginState.uNo);
-      // 회원 탈퇴 후 어떤 작업을 할지 결정
-      console.log("회원 탈퇴가 완료되었습니다.");
-    } catch (error) {
-      // 오류 처리
-      console.error("회원 탈퇴에 실패했습니다:", error);
-    }
-  };
+ // 회원 탈퇴 함수
+  const handleWithdraw = async () => {
+  try {
+    await withdrawMember(loginState.uNo); // 회원 탈퇴 요청
+    setResult("회원 탈퇴가 성공적으로 처리되었습니다.");
+  } catch (error) {
+    setResult("회원 탈퇴에 실패하였습니다.");
+  }
+};
+
+// 모달 열기 함수
+const openWithdrawConfirmationModal = () => {
+  setIsWithdrawConfirmationModalOpen(true);
+};
+
+// 모달 닫기 함수
+const closeWithdrawConfirmationModal = () => {
+  setIsWithdrawConfirmationModalOpen(false);
+};
+
 
   return (
     <BasicLayout>
@@ -111,7 +120,7 @@ const UserMyPage = () => {
           {/* 회원탈퇴 및 로그아웃 버튼 */}
           <div className="flex justify-end ml-auto mt-4">
             <button
-              onClick={handleWithdrawal} // 회원 탈퇴 함수 실행
+              onClick={openWithdrawConfirmationModal} // 회원탈퇴 확인 모달
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-4"
             >
               회원탈퇴
@@ -132,9 +141,16 @@ const UserMyPage = () => {
           uNo={loginState.uNo} // 사용자 번호 전달
           nickname={member.nickname} // 닉네임 정보 전달
           tel={member.tel} // 전화번호 정보 전달
-     
+
         />
       )}
+
+      {/* 회원 탈퇴 확인 모달 */}
+      <WithdrawConfirmationModal
+        isOpen={isWithdrawConfirmationModalOpen}
+        onClose={closeWithdrawConfirmationModal}
+        onConfirmWithdraw={handleWithdraw}
+      />
 
     </BasicLayout>
   );
