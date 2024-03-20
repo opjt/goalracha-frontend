@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { fetchOwners } from "../../../api/adminAPI";
 
-const AdminOwnerManagePage = () => {
+const OwnerManagePage = () => {
   const [owners, setOwners] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
@@ -53,13 +53,11 @@ const AdminOwnerManagePage = () => {
         <table className="min-w-full leading-normal mt-8">
           <thead>
             <tr className="text-left text-gray-700 bg-gray-200">
-              <th className="px-5 py-3 border-b-2 border-gray-200">이름</th>
+              <th className="px-5 py-3 border-b-2 border-gray-200">구장명</th>
+              <th className="px-5 py-3 border-b-2 border-gray-200">담당자 이름</th>
               <th className="px-5 py-3 border-b-2 border-gray-200">아이디</th>
               <th className="px-5 py-3 border-b-2 border-gray-200">이메일</th>
               <th className="px-5 py-3 border-b-2 border-gray-200">전화번호</th>
-              <th className="px-5 py-3 border-b-2 border-gray-200">
-                담당자 이름
-              </th>
               <th className="px-5 py-3 border-b-2 border-gray-200">
                 사업자 번호
               </th>
@@ -71,11 +69,11 @@ const AdminOwnerManagePage = () => {
             {filteredOwners.map((owner) => (
               <tr key={owner.uNo} className="border-b border-gray-200">
                 {console.log(owner)}
+                <td className="px-5 py-5">{owner.businessName}</td>
                 <td className="px-5 py-5">{owner.name}</td>
                 <td className="px-5 py-5">{owner.userId}</td>
                 <td className="px-5 py-5">{owner.email}</td>
                 <td className="px-5 py-5">{owner.tel}</td>
-                <td className="px-5 py-5">{owner.businessName}</td>
                 <td className="px-5 py-5">{owner.businessId}</td>
                 <td className="px-5 py-5">{owner.type}</td>
                 <td className="px-5 py-5">{owner.createDate}</td>
@@ -88,4 +86,4 @@ const AdminOwnerManagePage = () => {
   );
 };
 
-export default AdminOwnerManagePage;
+export default OwnerManagePage;

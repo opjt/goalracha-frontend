@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { getAllReserveList } from "api/reserveApi";
 
-const AdminReserveListPage = () => {
+const ReserveListPage = () => {
   const [reserveList, setReserveList] = useState([]); // 예약 목록 상태 설정
   const [page, setPage] = useState(1); // 페이지 상태 설정
   const [size] = useState(10); // 페이지 크기 상수 설정
@@ -102,4 +102,4 @@ const AdminReserveListPage = () => {
   );
 };
 
-export default AdminReserveListPage;
+export default ReserveListPage;

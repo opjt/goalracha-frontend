@@ -4,7 +4,7 @@ import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 
-const AdminGroundListPage = () => {
+const GroundListPage = () => {
   const [grounds, setGrounds] = useState([]); // 구장 리스트를 저장할 상태
   const [isLoading, setIsLoading] = useState(true);
   const [filter, setFilter] = useState('all'); // 'all', '1' (미승인), '2' (승인)
@@ -166,9 +166,9 @@ const AdminGroundListPage = () => {
               <td className="border px-4 py-2">{ground.footwearIsYn ? '예' : '아니오'}</td>
               <td className="border px-4 py-2">{ground.showerIsYn ? '예' : '아니오'}</td>
               <td className="border px-4 py-2">{ground.ballIsYn ? '예' : '아니오'}</td>
+              <td className="border px-4 py-2">{ground.roopIsYn ? '예' : '아니오'}</td>
               <td className="border px-4 py-2">{ground.airconIsYn ? '예' : '아니오'}</td>
               <td className="border px-4 py-2">{ground.parkareaIsYn ? '예' : '아니오'}</td>
-              <td className="border px-4 py-2">{ground.roopIsYn ? '예' : '아니오'}</td>
               {/* 구장 상태(state) */}
               <td className="border px-4 py-2">
                 {}
@@ -188,7 +188,6 @@ const AdminGroundListPage = () => {
                   : ground.state === 1 ? '미승인' : '승인'}
                 </button>
               </td>
-              <td className="border px-4 py-2">{ground.u_no}</td>
             </tr>
           ))}
         </tbody>
@@ -199,12 +198,14 @@ const AdminGroundListPage = () => {
   <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full" onClick={closeModal}>
     <div className="relative top-20 mx-auto p-5 border w-3/4 shadow-lg rounded-md bg-white" onClick={e => e.stopPropagation()}>
       <div className="mt-3 text-center">
-        <h3 className="text-lg leading-6 font-medium text-gray-900">{selectedGround.name} - 상세 정보</h3>
+        <h3 className="text-lg leading-6 font-medium text-gray-900">{selectedGround.name} - 구장상세 정보</h3>
         <div className="mt-2">
           {/* 구장 사진 표시 */}
           <Slider {...sliderSettings}>
           {selectedGround.uploadFileNames && selectedGround.uploadFileNames.map((fileName, index) => (
+            <div className="mx-auto" style={{ width: '100%', maxHeight: '300px', overflow: 'hidden' }}> {/* 이미지 컨테이너 크기 조정 */}
             <img key={index} src={`http://localhost:8080/goalracha/ground/view/${fileName}`} alt={`Ground Image ${index}`} className="max-w-full h-auto mx-auto"/>
+          </div>
           ))}
           </Slider>
         </div>
@@ -221,4 +222,4 @@ const AdminGroundListPage = () => {
   );
 };
 
-export default AdminGroundListPage;
+export default GroundListPage;
