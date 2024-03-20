@@ -6,6 +6,7 @@ const Logout = lazy(() => import("../pages/member/user/UserLogoutPage"))
 const KakaoRedirect = lazy(() => import("../pages/member/user/KakaoRedirectPage"))
 const Join = lazy(() => import("../pages/member/user/UserJoinPage"))
 const UserMyPage = lazy(() => import("../pages/member/user/UserMyPage"))
+const ReserveInfo = lazy(() => import("../pages/reserve/user/ReserveInfo"))
 
 // const ReserveList = lazy(() => import("../pages/member/user/UserReserveListPage"))
 
@@ -27,6 +28,10 @@ const MemberRouter = () => {
         {
             path: "join",
             element: <Join />
+        },
+        {
+            path: "reserve",
+            element: <ReserveInfo/>
         },
         {
             path: "mypage",

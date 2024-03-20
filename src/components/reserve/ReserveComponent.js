@@ -98,8 +98,9 @@ const ReserveModal = ({ reservInfo ,groundInfo, callbackFn}) => {
           await paymentWidget?.requestPayment({
             orderId: nanoid(),
             // orderId: `${loginState.uNo}_${reservInfo.date}`,
-            orderName: `${groundInfo.gno} ${loginState.uNo} ${reservInfo.date} ${timeArray}`,
-            successUrl: `${window.location.origin}/reserve/success`,
+            // orderName: `${groundInfo.gno} ${loginState.uNo} ${reservInfo.date} ${timeArray}`,
+            orderName: `${groundInfo.name}`,
+            successUrl: `${window.location.origin}/reserve/success?gno=${groundInfo.gno}&uno=${loginState.uNo}&date=${reservInfo.date}&time=${timeArray}`,
             failUrl: `${window.location.origin}/reserve/fail`
           });
         } catch (error) {

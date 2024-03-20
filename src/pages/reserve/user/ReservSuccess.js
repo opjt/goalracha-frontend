@@ -9,6 +9,12 @@ const encryptedSecretKey = `Basic ${btoa(secretKey + ":")}`;
 const ReservSuccess = () => {
 	const navigate = useNavigate();
 	const [searchParams] = useSearchParams();
+	var order = {
+		gno:searchParams.get("gno"),
+		uno:searchParams.get("uno"),
+		date:searchParams.get("date"),
+		time:searchParams.get("time")
+	}
 	const [result, setResult] = useState(null)
 	async function confirm(requestData) {
 		const response = await fetch(
@@ -23,7 +29,7 @@ const ReservSuccess = () => {
 			}
 		);
 		const json = await response.json();
-		// console.log(json)
+		console.log(json)
 
 		if (!response.ok) {
 			// TODO: 구매 실패 비즈니스 로직 구현
@@ -34,19 +40,22 @@ const ReservSuccess = () => {
 		// TODO: 구매 완료 비즈니스 로직 구현
 		return json;
 	}
-	async function doReserv(orderName) {
-		var orderArray = orderName.split(" ");
+	async function doReserv(orderInfo) {
 		//orderName: `${groundInfo.gno} ${loginState.uNo} ${reservInfo.date} ${timeArray}`,
-		var groundId = orderArray[0]
-		var userId = orderArray[1]
-		var date = orderArray[2]
-		var times = orderArray[3]
+		console.log(orderInfo)
+		var groundId = orderInfo.gno;
+		var userId = orderInfo.uno;
+		var date = orderInfo.date;
+		var times = orderInfo.time;
 		
 		var request = {
 			date: date,
 			time: times,
 			uNo: userId,
-			gNo: groundId
+			gNo: groundId,
+			payType: orderInfo.method,
+			payKey: orderInfo.paymentKey
+
 		}
 		await addReserv(request).then((result) => {
 			console.log(result)
@@ -60,7 +69,7 @@ const ReservSuccess = () => {
 			result.time = timeString;
 			setResult(result)
 		}).catch((e) => {
-			navigate(`/reserve/fail?message=예약실패 관리자에게 문의하십시오`);
+			 navigate(`/reserve/fail?message=예약실패 관리자에게 문의하십시오`);
 		})
 	}
 
@@ -77,7 +86,9 @@ const ReservSuccess = () => {
 			try {
 			  const result = await confirm(requestData);
 			  console.log("결제 성공")
-			  await doReserv(result.orderName);
+			  order.method = result.method;
+			  order.paymentKey = result.paymentKey;
+			  await doReserv(order);
 			} catch (error) {
 				
 			}
@@ -89,49 +100,62 @@ const ReservSuccess = () => {
   return (
 	
 	<BasicLayout>
-		{result != null && (
+		{result != null ? 
 			<>
-				<div className="bg-white p-6  md:mx-auto">
-					<svg viewBox="0 0 24 24" className="text-green-600 w-16 h-16 mx-auto my-6">
-					<path
-						fill="currentColor"
-						d="M12,0A12,12,0,1,0,24,12,12.014,12.014,0,0,0,12,0Zm6.927,8.2-6.845,9.289a1.011,1.011,0,0,1-1.43.188L5.764,13.769a1,1,0,1,1,1.25-1.562l4.076,3.261,6.227-8.451A1,1,0,1,1,18.927,8.2Z"
-					></path>
-					</svg>
-					<div className="text-center">
-					<h3 className="md:text-2xl text-base text-gray-900 font-semibold text-center">
-						결제 완료!
-					</h3>
-					<p className="text-gray-600 my-2">
-						{result.ground.name}
-					</p>
-					<table className="table max-w-80 mx-auto">
-						<thead>
-						<tr className="bg-slate-50">
-							<th>예약일</th>
-							<th>시간</th>
-							<th>예약자</th>
-						</tr>
-						</thead>
-						<tbody>
-						<tr className="bg-white">
-							<td>{moment(result.date).format("YYYY-MM-DD")}</td>
-							<td>{result.time}</td>
-							<td>{result.memberName}</td>
-						</tr>
-						</tbody>
-					</table>
-					<div className="py-10 text-center">
-						<Link to="/"
-						className="px-12 bg-indigo-600 hover:bg-indigo-500 text-white py-3"
-						>
-						예약내역 확인
-						</Link>
-					</div>
-					</div>
+			<div className="bg-white p-6  md:mx-auto">
+				<svg viewBox="0 0 24 24" className="text-green-600 w-16 h-16 mx-auto my-6">
+				<path
+					fill="currentColor"
+					d="M12,0A12,12,0,1,0,24,12,12.014,12.014,0,0,0,12,0Zm6.927,8.2-6.845,9.289a1.011,1.011,0,0,1-1.43.188L5.764,13.769a1,1,0,1,1,1.25-1.562l4.076,3.261,6.227-8.451A1,1,0,1,1,18.927,8.2Z"
+				></path>
+				</svg>
+				<div className="text-center">
+				<h3 className="md:text-2xl text-base text-gray-900 font-semibold text-center">
+					결제 완료!
+				</h3>
+				<p className="text-gray-600 my-2">
+					{result.ground.name}
+				</p>
+				<table className="table max-w-80 mx-auto">
+					<thead>
+					<tr className="bg-slate-50">
+						<th>예약일</th>
+						<th>시간</th>
+						<th>예약자</th>
+					</tr>
+					</thead>
+					<tbody>
+					<tr className="bg-white">
+						<td>{moment(result.date).format("YYYY-MM-DD")}</td>
+						<td>{result.time}</td>
+						<td>{result.memberName}</td>
+					</tr>
+					</tbody>
+				</table>
+				<div className="py-10 text-center">
+					<Link to="/"
+					className="px-12 bg-indigo-600 hover:bg-indigo-500 text-white py-3"
+					>
+					예약내역 확인
+					</Link>
 				</div>
-			</>
-		)}
+				</div>
+			</div>
+			</> 
+		: 
+		<>
+			<div className="bg-white p-6  md:mx-auto">
+				<svg className="mx-auto"xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#898989" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+				<div className="text-center">
+				<h3 className="md:text-2xl text-base text-gray-900 font-semibold text-center">
+					잠시만 기다려주세요...
+				</h3>
+				</div>
+			</div>
+			
+		</>
+			
+		}
       
 
     </BasicLayout>

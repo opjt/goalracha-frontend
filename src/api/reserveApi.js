@@ -15,8 +15,15 @@ export const getInfoByGno = async (req) => {
     return res.data
 }
 
+//user 예약
 export const addReserv = async (req) => {
     const res = await jwtAxios.post(`${host}/`, req)
+    return res.data
+}
+
+//user 예약 취소
+export const cancelReserv = async (req) => {
+    const res = await jwtAxios.post(`${host}/cancel`, req)
     return res.data
 }
 
