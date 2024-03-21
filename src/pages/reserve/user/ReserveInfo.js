@@ -1,18 +1,55 @@
-import { useEffect } from "react";
+import { useEffect,useState } from "react";
 import BasicLayout from "layouts/BasicLayout";
-import { useNavigate, useSearchParams,Link } from "react-router-dom";
-import { cancelReserv } from 'api/reserveApi';
+import { useNavigate, useSearchParams,Link,useLocation } from "react-router-dom";
+import { cancelReserv,reserveInfo } from 'api/reserveApi';
+import moment from "moment";
 const secretKey = `${process.env.REACT_APP_TOSS_SK}`;
 const encryptedSecretKey = `${btoa(secretKey + ":")}`;
-console.log(encryptedSecretKey)
 
+const initGroundInfo = {
+	groundName: '',
+	date: '',
+	time: '',
+	createDate: '',
+	pay: '',
+	payType: ''
+}
 const ReserveInfo = () => {
     const navigate = useNavigate();
-    const [searchParams] = useSearchParams();
-
+	const [result, setResult] = useState(initGroundInfo)
+	const { state } = useLocation();
     useEffect(() => {
-        
+		if(state == null) {
+			alert("??");
+			navigate("/")
+			return;
+		}
+		reserveInfo(state.payKey).then((res) => {
+			var reservInfoData = res.reserveInfo
+			reservInfoData.date = moment(reservInfoData.date).format("YYYY-MM-DD")
+			reservInfoData.createDate = moment(reservInfoData.createDate).format("YYYY-MM-DD")
+			var time = reservInfoData.time.split(",")
+			var timeString
+			if(time.length == 1) {
+				timeString = `${time[0]}:00 ~ ${parseInt(time[0]) +  res.groundInfo.usageTime}:00`;
+			} else {
+				timeString = `${time[0]}:00 ~ ${parseInt(time[time.length-1]) + res.groundInfo.usageTime}:00`;
+			}
+			reservInfoData.time =timeString
+			reservInfoData.pay = reservInfoData.pay * time.length
+			setResult(reservInfoData)
+			console.log(res.reserveInfo)
+		}).catch((error) => {
+			console.log(error)
+		})
+
     }, []);
+	// reserveInfo(req.payKeyd).then((result) => {
+	// 	console.log(result)
+	// }).catch((error) => {
+	// 	console.log(error.response.data)
+	// })
+
     const handleOnClick = () => {
 
         var req = {
@@ -22,7 +59,6 @@ const ReserveInfo = () => {
         cancelReserv(req).then((result) => {
             console.log(result)
         }).catch((error) => {
-            console.log(error)
         })
     }
     return (
@@ -37,15 +73,15 @@ const ReserveInfo = () => {
 							<tbody className="border-2 border-slate-200">
 							<tr >
 								<th className="bg-slate-200 border-b-2 mx-0 border-white text-center w-1/3">구장명</th>
-								<td >ddddddddddd</td>
+								<td >{result.groundName}</td>
 							</tr>
 							<tr>
 								<th className="bg-slate-200 border-b-2 mx-0 border-white text-center w-fit">날짜</th>
-								<td colSpan={2}>123</td>
+								<td colSpan={2}>{result.date}</td>
 							</tr>
 							<tr>
 								<th className="bg-slate-200  mx-0 border-white text-center w-fit">시간</th>
-								<td colSpan={2}>123</td>
+								<td colSpan={2}>{result.time}</td>
 							</tr>
 							</tbody>
 						</table>
@@ -56,15 +92,15 @@ const ReserveInfo = () => {
 							<tbody className="border-2 border-slate-200">
 							<tr >
 								<th className="bg-slate-200 border-b-2 mx-0 border-white text-center w-1/3">결제 날짜</th>
-								<td >ddddddddddd</td>
+								<td >{result.createDate}</td>
 							</tr>
 							<tr>
 								<th className="bg-slate-200 border-b-2 mx-0 border-white text-center w-fit">결제 금액</th>
-								<td colSpan={2}>123</td>
+								<td colSpan={2}>{result.pay}</td>
 							</tr>
 							<tr>
 								<th className="bg-slate-200  mx-0 border-white text-center w-fit">결제 수단</th>
-								<td colSpan={2}>123</td>
+								<td colSpan={2}>{result.payType}</td>
 							</tr>
 							</tbody>
 						</table>

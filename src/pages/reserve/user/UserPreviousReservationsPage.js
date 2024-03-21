@@ -55,9 +55,9 @@ const UserPreviousReservationsPage = () => {
                     <tbody>
                         {reserveList.map((reserve) => (
                             <tr key={reserve.reservationDate} className="border border-gray-300">
-                                <td className="p-2 border border-gray-300">{reserve.name}</td>
-                                <td className="p-2 border border-gray-300">{reserve.addr}</td>
-                                <td className="p-2 border border-gray-300">{new Date(reserve.reservationDate).toLocaleDateString()}</td>
+                                <td className="p-2 border border-gray-300">{reserve.groundName}</td>
+                                <td className="p-2 border border-gray-300">{reserve.groundAddr}</td>
+                                <td className="p-2 border border-gray-300">{new Date(reserve.reserveDate).toLocaleDateString()}</td>
                                 <td className="p-2 border border-gray-300">{reserve.time}</td>
                                 <td className="p-2 border border-gray-300">{new Date(reserve.createDate).toLocaleDateString()}</td>
                                 <td className="p-2 border border-gray-300">{reserve.price}</td>

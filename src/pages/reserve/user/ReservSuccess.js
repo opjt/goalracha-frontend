@@ -64,7 +64,7 @@ const ReservSuccess = () => {
 			if(time.length == 1) {
 				timeString = `${time[0]}:00 ~ ${parseInt(time[0]) + result.ground.usageTime}:00`;
 			} else {
-				timeString = `${time[0]}:00 ~ ${time[time.length-1]}:00`;
+				timeString = `${time[0]}:00 ~ ${parseInt(time[time.length-1]) + result.ground.usageTime}:00`;
 			}
 			result.time = timeString;
 			setResult(result)
