@@ -23,7 +23,7 @@ const ResultModal = ({ title, content, close, callbackFn }) => {
                           if(callbackFn) {
                               callbackFn();
                           }
-                      }}>닫기{close}</button>
+                      }}>{close}</button>
                   </form>
               </div>
           </div>
