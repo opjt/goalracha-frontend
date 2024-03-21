@@ -75,7 +75,7 @@ const GroundList = ({ groundList }) => {
         <div>
           <PageComponent
             serverData={serverData}
-            // movePage={moveToList}
+            movePage={moveToPage}
           ></PageComponent>
         </div>
       </div>
