@@ -3,8 +3,6 @@ import { useNavigate, Outlet } from "react-router-dom"; // React Router v6 ì‚¬ìš
 import useCustomLogin from "hooks/useCustomLogin";
 import jwtAxios from "util/jwtUtil"
 
-
-
 const AdminPage = () => {
   const navigate = useNavigate();
   const { loginState } = useCustomLogin();

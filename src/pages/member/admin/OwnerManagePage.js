@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { fetchOwners } from "../../../api/adminAPI";
+import { fetchOwners, fetchReservationsForUser } from "../../../api/adminAPI";
 
 const OwnerManagePage = () => {
   const [owners, setOwners] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
+  const [modalShow, setModalShow] = useState(false); // 모달 표시 상태
+  const [currentUser, setCurrentUser] = useState(null); // 현재 선택된 사용자 정보
+  const [currentUserReservations, setCurrentUserReservations] = useState([]); // 현재 선택된 사용자의 예약 정보 상태
 
   useEffect(() => {
     fetchOwners()
@@ -25,6 +28,19 @@ const OwnerManagePage = () => {
       (owner.businessName &&
         owner.businessName.toLowerCase().includes(searchTerm.toLowerCase())) // businessName이 정의된 경우에만 검색에 포함
   );
+
+
+  const handleUserClick = async (owner) => {
+    setCurrentUser(owner); // 선택된 사용자 정보 설정
+    const reservations = await fetchReservationsForUser(owner.businessName); // 예약 정보 가져오기
+    setCurrentUserReservations(reservations); // 가져온 예약 정보 저장
+    setModalShow(true); // 모달 표시
+  };
+
+  const handleCloseModal = () => {
+    setModalShow(false); // 모달 숨김
+  };
+
 
   return (
     <div className="container mx-auto mt-5">
@@ -53,7 +69,7 @@ const OwnerManagePage = () => {
         <table className="min-w-full leading-normal mt-8">
           <thead>
             <tr className="text-left text-gray-700 bg-gray-200">
-              <th className="px-5 py-3 border-b-2 border-gray-200">구장명</th>
+              <th className="px-5 py-3 border-b-2 border-gray-200">사업자명</th>
               <th className="px-5 py-3 border-b-2 border-gray-200">담당자 이름</th>
               <th className="px-5 py-3 border-b-2 border-gray-200">아이디</th>
               <th className="px-5 py-3 border-b-2 border-gray-200">이메일</th>
@@ -67,7 +83,7 @@ const OwnerManagePage = () => {
           </thead>
           <tbody>
             {filteredOwners.map((owner) => (
-              <tr key={owner.uNo} className="border-b border-gray-200">
+              <tr key={owner.uNo} className="border-b border-gray-200 cursor-pointer" onClick={() => handleUserClick(owner)}>
                 {console.log(owner)}
                 <td className="px-5 py-5">{owner.businessName}</td>
                 <td className="px-5 py-5">{owner.name}</td>
@@ -82,6 +98,25 @@ const OwnerManagePage = () => {
           </tbody>
         </table>
       )}
+
+      {/* 모달 구현 */}
+      {modalShow && (
+        <div className="fixed top-0 left-0 right-0 bottom-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
+          <div className="bg-white p-5 rounded-lg">
+            <h3 className="text-xl font-bold mb-4">{currentUser.businessName} 의 예약상세 정보</h3>
+            <ul>
+              {currentUserReservations.map((reservation, index) => (
+                <li key={index}>
+                  장소: {reservation.groundName}, 예약 날짜: {new Date(reservation.reserveDate).toLocaleDateString()}, 시간: {reservation.time}, 가격: {reservation.price}
+                </li>
+             ))}
+            </ul>
+            <button onClick={handleCloseModal} className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700">
+              닫기
+            </button>
+          </div>
+        </div>
+      )}          
     </div>
   );
 };

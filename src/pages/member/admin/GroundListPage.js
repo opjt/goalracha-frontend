@@ -110,7 +110,8 @@ const GroundListPage = () => {
     <div>
       <button onClick={() => setFilter('all')} className="mr-2 px-4 py-2 bg-gray-400 text-white rounded">모든 구장</button>
       <button onClick={() => setFilter('1')} className="mr-2 px-4 py-2 bg-red-400 text-white rounded">미승인 구장</button>
-      <button onClick={() => setFilter('2')} className="px-4 py-2 bg-green-400 text-white rounded">승인 구장</button>
+      <button onClick={() => setFilter('2')} className="mr-2 px-4 py-2 bg-green-400 text-white rounded">승인 구장</button>
+      <button onClick={() => setFilter('3')} className="mr-2 px-4 py-2 bg-blue-400 text-white rounded">폐업 구장</button>
     </div>
     
     {/* 검색 입력 필드 */}
