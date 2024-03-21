@@ -4,7 +4,6 @@ import ResultModal from "components/common/ResultModal";
 import useCustomMove from "../../../hooks/groundCustomMove";
 import { useNavigate } from "react-router-dom";
 import Select from "react-select";
-import { useSelector } from "react-redux";
 import useCustomLogin from "hooks/useCustomLogin";
 
 const initState = {
@@ -37,7 +36,6 @@ const initState = {
 const GroundRegisterComponent = () => {
   const [imgFile, setImgFile] = useState("");
 
-  const navigate = useNavigate();
   const [ground, setGround] = useState({ ...initState });
   const uploadRef = useRef();
   const [fetching, setFetching] = useState(false);
@@ -47,7 +45,7 @@ const GroundRegisterComponent = () => {
   const { moveToGroundList } = useCustomMove();
   
   const uNo = loginState.uNo; 
-  console.log(uNo)
+  //console.log(uNo)
 
   // ground 속성의 값을 등록받은 값으로 변경
   const handleChange = (e) => {
@@ -58,21 +56,6 @@ const GroundRegisterComponent = () => {
       ground[e.target.name] = e.target.checked;
     }
     setGround({ ...ground });
-  };
-  
-  // 셀렉트 라이브러리를 사용한 ground 속성의 값 변경
-  const handleSelectChange = (result, name) => {
-    if (name == "inAndOut") {
-      ground.inAndOut = result.value;
-    } else if(name == "openTime") {
-      ground.openTime = result.value;
-    } else if(name == "closeTime") {
-      ground.closeTime = result.value;
-    }
-      
-    setGround({...ground})
-    console.log(name);
-    console.log(result.value);
   };
 
   const handleClickAdd = (e) => {
@@ -110,6 +93,62 @@ const GroundRegisterComponent = () => {
     console.log(ground.inAndOut);
     console.log(ground.openTime);
     console.log(ground.closeTime);
+    console.log(uNo)
+    console.log(files.length)
+
+    if (!ground.name) {
+      alert("구장이름을 입력해주세요.");
+      return;
+    }
+    if (!ground.addr) {
+      alert("구장주소를 입력해주세요.");
+      return;
+    }
+    if (!ground.inAndOut) {
+      alert("실내/실외를 선택해주세요.");
+      return;
+    }
+    if (!ground.width) {
+      alert("구장크기를 입력해주세요.");
+      return;
+    }
+    if (!ground.recommdMan) {
+      alert("추천인원을 입력해주세요.");
+      return;
+    }
+    if (!ground.usageTime) {
+      alert("기본이용시간을 입력해주세요.");
+      return;
+    }
+    if (!ground.openTime) {
+      alert("오픈 시간을 선택해주세요.");
+      return;
+    }
+    if (!ground.closeTime) {
+      alert("마감 시간을 선택해주세요.");
+      return;
+    }
+    if (!ground.fare) {
+      alert("요금 입력해주세요.");
+      return;
+    }
+    if (files.length == 0) {
+      alert("구장사진을 등록해주세요.");
+      return;
+    }
+    if (!ground.userGuide) {
+      alert("이용안내를 입력해주세요.");
+      return;
+    }
+    if (!ground.userRules) {
+      alert("이용규칙을 입력해주세요.");
+      return;
+    }
+    if (!ground.refundRules) {
+      alert("환불규정을 입력해주세요.");
+      return;
+    }
+    
 
     setFetching(true);
     postGroundRegister(formData)
@@ -155,6 +194,18 @@ const GroundRegisterComponent = () => {
       },
     }).open();
   }
+    // 셀렉트 라이브러리를 사용한 ground 속성의 값 변경
+    const handleSelectChange = (result, name) => {
+      if (name == "inAndOut") {
+        ground.inAndOut = result.value;
+      } else if(name == "openTime") {
+        ground.openTime = result.value;
+      } else if(name == "closeTime") {
+        ground.closeTime = result.value;
+      }
+        
+      setGround({...ground})
+    };
 
   const inAndOutSelect = [
     { value: "실내", label: "실내" },
@@ -162,61 +213,61 @@ const GroundRegisterComponent = () => {
   ];
 
   const openTimeSelect = [
-    { value: "1", label: "오전1시" },
-    { value: "2", label: "오전2시" },
-    { value: "3", label: "오전3시" },
-    { value: "4", label: "오전4시" },
-    { value: "5", label: "오전5시" },
-    { value: "6", label: "오전6시" },
-    { value: "7", label: "오전7시" },
-    { value: "8", label: "오전8시" },
-    { value: "9", label: "오전9시" },
-    { value: "10", label: "오전10시" },
-    { value: "11", label: "오전11시" },
-    { value: "12", label: "오후12시" },
-    { value: "13", label: "오후1시" },
-    { value: "14", label: "오후2시" },
-    { value: "15", label: "오후3시" },
-    { value: "16", label: "오후4시" },
-    { value: "17", label: "오후5시" },
-    { value: "18", label: "오후6시" },
-    { value: "19", label: "오후7시" },
-    { value: "20", label: "오후8시" },
-    { value: "21", label: "오후9시" },
-    { value: "22", label: "오후10시" },
-    { value: "23", label: "오후11시" },
-    { value: "24", label: "오전12시" },
+    { value: "1", label: "01시" },
+    { value: "2", label: "02시" },
+    { value: "3", label: "03시" },
+    { value: "4", label: "04시" },
+    { value: "5", label: "05시" },
+    { value: "6", label: "06시" },
+    { value: "7", label: "07시" },
+    { value: "8", label: "08시" },
+    { value: "9", label: "09시" },
+    { value: "10", label: "10시" },
+    { value: "11", label: "11시" },
+    { value: "12", label: "12시" },
+    { value: "13", label: "13시" },
+    { value: "14", label: "14시" },
+    { value: "15", label: "15시" },
+    { value: "16", label: "16시" },
+    { value: "17", label: "17시" },
+    { value: "18", label: "18시" },
+    { value: "19", label: "19시" },
+    { value: "20", label: "20시" },
+    { value: "21", label: "21시" },
+    { value: "22", label: "22시" },
+    { value: "23", label: "23시" },
+    { value: "24", label: "24시" },
   ];
 
   const closeTimeSelect = [
-    { value: "1", label: "오전1시" },
-    { value: "2", label: "오전2시" },
-    { value: "3", label: "오전3시" },
-    { value: "4", label: "오전4시" },
-    { value: "5", label: "오전5시" },
-    { value: "6", label: "오전6시" },
-    { value: "7", label: "오전7시" },
-    { value: "8", label: "오전8시" },
-    { value: "9", label: "오전9시" },
-    { value: "10", label: "오전10시" },
-    { value: "11", label: "오전11시" },
-    { value: "12", label: "오후12시" },
-    { value: "13", label: "오후1시" },
-    { value: "14", label: "오후2시" },
-    { value: "15", label: "오후3시" },
-    { value: "16", label: "오후4시" },
-    { value: "17", label: "오후5시" },
-    { value: "18", label: "오후6시" },
-    { value: "19", label: "오후7시" },
-    { value: "20", label: "오후8시" },
-    { value: "21", label: "오후9시" },
-    { value: "22", label: "오후10시" },
-    { value: "23", label: "오후11시" },
-    { value: "24", label: "오전12시" },
+    { value: "1", label: "01시" },
+    { value: "2", label: "02시" },
+    { value: "3", label: "03시" },
+    { value: "4", label: "04시" },
+    { value: "5", label: "05시" },
+    { value: "6", label: "06시" },
+    { value: "7", label: "07시" },
+    { value: "8", label: "08시" },
+    { value: "9", label: "09시" },
+    { value: "10", label: "10시" },
+    { value: "11", label: "11시" },
+    { value: "12", label: "12시" },
+    { value: "13", label: "13시" },
+    { value: "14", label: "14시" },
+    { value: "15", label: "15시" },
+    { value: "16", label: "16시" },
+    { value: "17", label: "17시" },
+    { value: "18", label: "18시" },
+    { value: "19", label: "19시" },
+    { value: "20", label: "20시" },
+    { value: "21", label: "21시" },
+    { value: "22", label: "22시" },
+    { value: "23", label: "23시" },
+    { value: "24", label: "24시" },
   ];
 
   return (
-    <div className=" flex-wrap flex-direction justify-center max-w-screen-lg h-100% bg-gray-100">
+    <div className="form-control flex-wrap flex-direction justify-center max-w-screen-lg h-100% bg-gray-100">
       <div className="max-w-screen-lg flex mb-4">
         {result ? (
           <ResultModal
@@ -238,6 +289,7 @@ const GroundRegisterComponent = () => {
               구장 이름:
             </label>
             <input
+              required
               type={"text"}
               name="name"
               placeholder="골라차풋살클럽"
@@ -261,6 +313,7 @@ const GroundRegisterComponent = () => {
               주소 찾기
             </button>
             <input
+              required
               id="addr"
               type={"text"}
               name="addr"
@@ -279,18 +332,8 @@ const GroundRegisterComponent = () => {
             >
               실내외:
             </label>
-            <div>
-              {/* <select
-                type={"select"}
-                name="InAndOut"
-                className="select select-bordered w-full max-w-xs"
-                onChange={handleChange}
-                value={ground.inAndOut}
-              >
-                <option value={'실내'}>실내</option>
-                <option value={'실외'}>실외</option>
-              </select> */}
               <Select
+                required
                 className=" w-full max-w-xs"
                 type={"select"}
                 name="InAndOut"
@@ -298,7 +341,6 @@ const GroundRegisterComponent = () => {
                 options={inAndOutSelect}
                 placeholder="유형 선택"
               />
-            </div>
           </div>
 
           <div className="mb-4">
@@ -309,6 +351,7 @@ const GroundRegisterComponent = () => {
               구장 크기:
             </label>
             <input
+              required
               type={"text"}
               name="width"
               placeholder="40*40"
@@ -326,6 +369,7 @@ const GroundRegisterComponent = () => {
               잔디 정보:
             </label>
             <input
+              required
               type={"text"}
               name="grassInfo"
               placeholder="인조잔디"
@@ -343,6 +387,7 @@ const GroundRegisterComponent = () => {
               추천 인원:
             </label>
             <input
+              required
               type={"text"}
               name="recommdMan"
               placeholder="5:5"
@@ -360,6 +405,7 @@ const GroundRegisterComponent = () => {
               기본 이용 시간:
             </label>
             <input
+              required
               type={"number"}
               name="usageTime"
               placeholder="1 (시간단위로 숫자만 입력)"
@@ -377,11 +423,12 @@ const GroundRegisterComponent = () => {
               오픈 시간:
             </label>
             <Select
+              required
               className=" w-full max-w-xs"
               type={"select"}
               onChange={(option) => handleSelectChange(option, "openTime")}
               options={openTimeSelect}
-              placeholder="유형 선택"
+              placeholder="오픈시간 선택"
             />
           </div>
 
@@ -393,11 +440,12 @@ const GroundRegisterComponent = () => {
               마감 시간:
             </label>
             <Select
+              required
               className=" w-full max-w-xs"
               type={"select"}
               onChange={(option) => handleSelectChange(option, "closeTime")}
               options={closeTimeSelect}
-              placeholder="유형 선택"
+              placeholder="마감시간 선택"
             />
           </div>
 
@@ -409,7 +457,9 @@ const GroundRegisterComponent = () => {
               요금:
             </label>
             <input
+              required
               type={"number"}
+              step={"5000"}
               name="fare"
               placeholder="35000 (원단위로 숫자만 입력)"
               value={ground.fare}
@@ -428,6 +478,7 @@ const GroundRegisterComponent = () => {
           />
           <div className="skeleton"></div>
           <input
+            required
             ref={uploadRef}
             type={"File"}
             onChange={saveImgFile}
@@ -519,7 +570,7 @@ const GroundRegisterComponent = () => {
 
             <div className="mb-4 form-control">
               <label htmlFor="parkareaIsYn" className="label cursor-pointer">
-                <span className="label-text">주차장</span>
+                <span>주차장</span>
                 <input
                   type={"checkbox"}
                   name="parkareaIsYn"
@@ -539,6 +590,7 @@ const GroundRegisterComponent = () => {
             이용 안내:
           </label>
           <textarea
+            required
             type={"text"}
             name="userGuide"
             value={ground.userGuide}
@@ -555,6 +607,7 @@ const GroundRegisterComponent = () => {
             이용 규칙:
           </label>
           <textarea
+            required
             type={"text"}
             name="userRules"
             value={ground.userRules}
@@ -571,6 +624,7 @@ const GroundRegisterComponent = () => {
             환불 규정:
           </label>
           <textarea
+            required
             type={"text"}
             name="refundRules"
             value={ground.refundRules}
@@ -582,7 +636,7 @@ const GroundRegisterComponent = () => {
         <div className="mt-8">
           <button
             type="button"
-            className=" w-full btn text-xl"
+            className="w-full btn text-xl"
             onClick={handleClickAdd}
           >
             등록

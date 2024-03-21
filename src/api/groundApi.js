@@ -14,10 +14,18 @@ export const getGround = async (gno) => {
   return res.data
 }
 
-// 전체 리스트 불러오기(이미지가 등록된)
-export const getGroundList = async (pageParam, uNo) => {
+// 오너 리스트 불러오기(이미지가 등록된)
+export const getOwnerGroundList = async (pageParam, uNo) => {
   const { page, size } = pageParam
   const res = await axios.get(`${prefix}/${uNo}`, { params: { page: page, size: size } })
+
+  return res.data
+}
+
+// 전체 리스트 불러오기(이미지가 등록된)
+export const getGroundList = async (pageParam) => {
+  const { page, size } = pageParam
+  const res = await axios.get(`${prefix}/`, { params: { page: page, size: size } })
 
   return res.data
 }

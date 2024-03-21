@@ -8,6 +8,7 @@ import {
 import ResultModal from "components/common/ResultModal";
 import useCustomMove from "../../../hooks/groundCustomMove";
 import Slider from "react-slick";
+import Select from "react-select";
 
 const initState = {
   name: "",
@@ -60,7 +61,6 @@ const GroundModifyComponent = ({ gno }) => {
     if (e.target.type == "checkbox") {
       ground[e.target.name] = e.target.checked;
     }
-    
     setGround({ ...ground });
   };
 
@@ -69,7 +69,7 @@ const GroundModifyComponent = ({ gno }) => {
       (fileName) => fileName !== imageName
     );
     ground.uploadFileNames = resultFilenames;
-    setGround({ ...ground });
+    setGround({ ...ground, uploadFileNames: resultFilenames });
   };
 
   const handleClickModify = (e) => {
@@ -106,10 +106,59 @@ const GroundModifyComponent = ({ gno }) => {
       formData.append("uploadFileNames", ground.uploadFileNames[i]);
     }
 
-    console.log(files);
-    console.log(uploadRef);
-    console.log(ground.uploadFileNames);
-    console.log(formData.getAll)
+    if (!ground.name) {
+      alert("구장이름을 입력해주세요.");
+      return;
+    }
+    if (!ground.addr) {
+      alert("구장주소를 입력해주세요.");
+      return;
+    }
+    if (!ground.inAndOut) {
+      alert("실내/실외를 선택해주세요.");
+      return;
+    }
+    if (!ground.width) {
+      alert("구장크기를 입력해주세요.");
+      return;
+    }
+    if (!ground.recommdMan) {
+      alert("추천인원을 입력해주세요.");
+      return;
+    }
+    if (!ground.usageTime) {
+      alert("기본이용시간을 입력해주세요.");
+      return;
+    }
+    if (!ground.openTime) {
+      alert("오픈 시간을 선택해주세요.");
+      return;
+    }
+    if (!ground.closeTime) {
+      alert("마감 시간을 선택해주세요.");
+      return;
+    }
+    if (!ground.fare) {
+      alert("요금 입력해주세요.");
+      return;
+    }
+    if (files.length == 0) {
+      alert("구장사진을 등록해주세요.");
+      return;
+    }
+    if (!ground.userGuide) {
+      alert("이용안내를 입력해주세요.");
+      return;
+    }
+    if (!ground.userRules) {
+      alert("이용규칙을 입력해주세요.");
+      return;
+    }
+    if (!ground.refundRules) {
+      alert("환불규정을 입력해주세요.");
+      return;
+    }
+
     setFetching(true);
 
     putGround(gno, formData).then((data) => {
@@ -120,14 +169,55 @@ const GroundModifyComponent = ({ gno }) => {
       .catch((error) => console.error(error));
   };
 
-  const handleClickDelete = () => {
-    setFetching(true);
-    deleteGround(gno).then((data) => {
-      console.log(data)
-      setResult("Deleted");
-      setFetching(false);
-    });
+  const handleClickDelete = (e) => {
+    const confirmDelete = window.confirm("정말로 폐업신청하시겠습니까?\n폐업신청 시 구장예약이 불가능하며, 되돌릴 수 없습니다.");
+
+    if (confirmDelete) {
+      const files = uploadRef.current.files;
+      const newState = 4; 
+      const formData = new FormData();
+      for (let i = 0; i < files.length; i++) {
+        formData.append("files", files[i]);
+      }
+  
+      formData.append("name", ground.name);
+      formData.append("addr", ground.addr);
+      formData.append("inAndOut", ground.inAndOut);
+      formData.append("width", ground.width);
+      formData.append("grassInfo", ground.grassInfo);
+      formData.append("recommdMan", ground.recommdMan);
+      formData.append("usageTime", ground.usageTime);
+      formData.append("openTime", ground.openTime);
+      formData.append("closeTime", ground.closeTime);
+      formData.append("fare", ground.fare);
+      formData.append("userGuide", ground.userGuide);
+      formData.append("userRules", ground.userRules);
+      formData.append("refundRules", ground.refundRules);
+      formData.append("vestIsYn", ground.vestIsYn);
+      formData.append("footwearIsYn", ground.footwearIsYn);
+      formData.append("showerIsYn", ground.showerIsYn);
+      formData.append("ballIsYn", ground.ballIsYn);
+      formData.append("airconIsYn", ground.airconIsYn);
+      formData.append("parkareaIsYn", ground.parkareaIsYn);
+      formData.append("roopIsYn", ground.roopIsYn);
+      formData.append("state", newState);
+  
+      for (let i = 0; i < ground.uploadFileNames.length; i++) {
+        formData.append("uploadFileNames", ground.uploadFileNames[i]);
+      }
+      
+      setFetching(true);
+  
+      putGround(gno, formData)
+        .then((data) => {
+          console.log(data)
+          setResult("Deleted");
+          setFetching(false);
+        })
+        .catch((error) => console.error(error));
+    }
   };
+  
 
   const closeModal = () => {
     if (result === "Modified") {
@@ -195,9 +285,89 @@ const GroundModifyComponent = ({ gno }) => {
     autoplay: true, // 자동 슬라이드 여부
     autoplaySpeed: 3000, // 자동으로 넘어가는 시간 간격
     arrows: true, // 좌,우 버튼
+    centerMode: true,
     pauseOnFocus: true, // focus시 정지
     pauseOnHover: true, // hover시 정지
   };
+
+  // 셀렉트 라이브러리를 사용한 ground 속성의 값 변경
+  const handleSelectChange = (result, name) => {
+    if (name == "inAndOut") {
+      ground.inAndOut = result.value;
+    } else if(name == "openTime") {
+      ground.openTime = result.value;
+    } else if(name == "closeTime") {
+      ground.closeTime = result.value;
+    } else if(name == "state") {
+      ground.state = result.value;
+    }
+      
+    setGround({...ground})
+  };
+
+  const stateSelect = [
+    { value: "2", label: "오픈" },
+    { value: "3", label: "준비중" },
+  ];
+
+  const inAndOutSelect = [
+    { value: "실내", label: "실내" },
+    { value: "실외", label: "실외" },
+  ];
+
+  const openTimeSelect = [
+    { value: "1", label: "01시" },
+    { value: "2", label: "02시" },
+    { value: "3", label: "03시" },
+    { value: "4", label: "04시" },
+    { value: "5", label: "05시" },
+    { value: "6", label: "06시" },
+    { value: "7", label: "07시" },
+    { value: "8", label: "08시" },
+    { value: "9", label: "09시" },
+    { value: "10", label: "10시" },
+    { value: "11", label: "11시" },
+    { value: "12", label: "12시" },
+    { value: "13", label: "13시" },
+    { value: "14", label: "14시" },
+    { value: "15", label: "15시" },
+    { value: "16", label: "16시" },
+    { value: "17", label: "17시" },
+    { value: "18", label: "18시" },
+    { value: "19", label: "19시" },
+    { value: "20", label: "20시" },
+    { value: "21", label: "21시" },
+    { value: "22", label: "22시" },
+    { value: "23", label: "23시" },
+    { value: "24", label: "24시" },
+  ];
+
+  const closeTimeSelect = [
+    { value: "1", label: "01시" },
+    { value: "2", label: "02시" },
+    { value: "3", label: "03시" },
+    { value: "4", label: "04시" },
+    { value: "5", label: "05시" },
+    { value: "6", label: "06시" },
+    { value: "7", label: "07시" },
+    { value: "8", label: "08시" },
+    { value: "9", label: "09시" },
+    { value: "10", label: "10시" },
+    { value: "11", label: "11시" },
+    { value: "12", label: "12시" },
+    { value: "13", label: "13시" },
+    { value: "14", label: "14시" },
+    { value: "15", label: "15시" },
+    { value: "16", label: "16시" },
+    { value: "17", label: "17시" },
+    { value: "18", label: "18시" },
+    { value: "19", label: "19시" },
+    { value: "20", label: "20시" },
+    { value: "21", label: "21시" },
+    { value: "22", label: "22시" },
+    { value: "23", label: "23시" },
+    { value: "24", label: "24시" },
+  ];
 
   return (
     <div className=" flex-wrap flex-direction justify-center max-w-screen-lg h-100% bg-gray-100">
@@ -263,14 +433,16 @@ const GroundModifyComponent = ({ gno }) => {
             >
               실내외:
             </label>
-            <input
-              type={"text"}
-              name="inAndOut"
-              placeholder="실외"
-              value={ground.inAndOut}
-              onChange={handleChangeModify}
-              className="input input-bordered w-full max-w-xs"
-            />
+            <Select
+                required
+                className=" w-full max-w-xs"
+                type={"select"}
+                name="InAndOut"
+                onChange={(option) => handleSelectChange(option, "inAndOut")}
+                value={{ value: ground.inAndOut, label: ground.inAndOut }}
+                options={inAndOutSelect}
+                placeholder="유형 선택"
+              />
           </div>
 
           <div className="mb-4">
@@ -348,13 +520,14 @@ const GroundModifyComponent = ({ gno }) => {
             >
               오픈 시간:
             </label>
-            <input
-              type={"text"}
-              name="openTime"
-              placeholder="8 (24시간단위로 숫자만 입력)"
-              value={ground.openTime}
-              onChange={handleChangeModify}
-              className="input input-bordered w-full max-w-xs"
+            <Select
+              required
+              className=" w-full max-w-xs"
+              type={"select"}
+              onChange={(option) => handleSelectChange(option, "openTime")}
+              value={{ value: ground.openTime, label: ground.openTime }}
+              options={openTimeSelect}
+              placeholder="오픈시간 선택"
             />
           </div>
 
@@ -365,13 +538,14 @@ const GroundModifyComponent = ({ gno }) => {
             >
               마감 시간:
             </label>
-            <input
-              type={"text"}
-              name="closeTime"
-              placeholder="24 (24시간단위로 숫자만 입력)"
-              value={ground.closeTime}
-              onChange={handleChangeModify}
-              className="input input-bordered w-full max-w-xs"
+            <Select
+              required
+              className=" w-full max-w-xs"
+              type={"select"}
+              onChange={(option) => handleSelectChange(option, "closeTime")}
+              value={{ value: ground.closeTime, label: ground.closeTime }}
+              options={closeTimeSelect}
+              placeholder="마감시간 선택"
             />
           </div>
 
@@ -526,21 +700,15 @@ const GroundModifyComponent = ({ gno }) => {
             </h2>
             <div>
               <label className="label"></label>
-              <select
-                type={"select"}
-                name="state"
-                className="select select-bordered w-full max-w-xs"
-                onChange={handleChangeState}
-                value={ground.state}
-                disabled={!(ground.state === 2 || ground.state === 3)}
-              >
-                <option value={ground.state} disabled >
-                  {stateMapping[ground.state] || "상태 정보 없음"}
-                </option>
-                <option value={2}>오픈</option>
-                <option value={3}>준비중</option>
-                <option value={4}>폐업신청</option>
-              </select>
+              <Select
+              required
+              className=" w-full max-w-xs"
+              type={"select"}
+              onChange={(option) => handleSelectChange(option, "closeTime")}
+              options={stateSelect}
+              placeholder={stateMapping[ground.state]}
+              isDisabled={!(ground.state === 2 || ground.state === 3)}
+            />
             </div>
           </div>
         </div>
