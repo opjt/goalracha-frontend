@@ -4,7 +4,6 @@ import useCustomMove from "../../../hooks/groundCustomMove";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import GroundReadComponent from "./GroundReadComponent";
 
 const initState = {
   dtoList: [],
@@ -78,7 +77,7 @@ const GroundList = ({ groundList }) => {
         <div>
           <PageComponent
             serverData={serverData}
-            movePage={moveToList}
+            //movePage={moveToList}
           ></PageComponent>
         </div>
       </div>

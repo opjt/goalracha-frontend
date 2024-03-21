@@ -113,6 +113,7 @@ const GroundListPage = () => {
         try {
             const reqValue = initchange(req);
             const result = await getListbyFilter(reqValue);
+            console.log(result)
             return result;
         } catch (error) {
             console.error(error);
