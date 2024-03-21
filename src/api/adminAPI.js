@@ -44,3 +44,13 @@ export const fetchOwners = async () => {
     throw error;
   }
 };
+
+export const fetchReservationsForUser = async (userName) => {
+  try {
+    const response = await axios.get(`http://localhost:8080/api/reserve/v/list/${userName}`);
+    return response.data.dtoList; // 'dtoList' 프로퍼티로 배열 데이터에 접근
+  } catch (error) {
+    console.error("Fetching reservations for user failed:", error);
+    throw error;
+  }
+};

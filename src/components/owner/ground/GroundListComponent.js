@@ -3,7 +3,6 @@ import PageComponent from "../../common/pageComponent";
 import useCustomMove from "../../../hooks/groundCustomMove";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
 import GroundReadComponent from "./GroundReadComponent";
 
 const initState = {
@@ -20,8 +19,6 @@ const initState = {
 };
 
 const GroundList = ({ groundList }) => {
-  const loginState = useSelector((state) => state.loginSlice);
-
   const navigate = useNavigate();
 
   const { page, size, moveToPage, moveToRead, moveToRegister } = useCustomMove();
@@ -29,7 +26,7 @@ const GroundList = ({ groundList }) => {
   const [serverData, setServerData] = useState(initState);
 
   useEffect(() => {
-    getGroundList({ page, size }, loginState.uNo).then((data) => {
+    getGroundList({ page, size }).then((data) => {
       console.log(data);
       setServerData(data);
     });
@@ -78,7 +75,7 @@ const GroundList = ({ groundList }) => {
         <div>
           <PageComponent
             serverData={serverData}
-            movePage={moveToList}
+            // movePage={moveToList}
           ></PageComponent>
         </div>
       </div>

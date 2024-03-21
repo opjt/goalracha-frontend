@@ -13,6 +13,7 @@ const ReserveListPage = () => {
     const fetchData = async () => {
       try {
         const reserveData = await getAllReserveList({ page, size }); // 예약 목록 가져오기
+        console.log("Received reserve data:", reserveData); // API 호출을 통해 받은 데이터를 콘솔에 로그
         setReserveList(reserveData.dtoList); // 예약 목록 상태를 새로운 데이터로 업데이트
         setPageData(reserveData); // 페이지 데이터 상태 업데이트
       } catch (error) {
