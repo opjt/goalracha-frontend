@@ -68,15 +68,15 @@ export const getAllReserveList = async (pageParam) => {
 }
 
 // owner 예약 목록
-export const getOwnerReserveListSearch = async (pageParam, uNo) => {
+export const getOwnerReserveListSearch = async (pageParam, uNo,searchName) => {
     const { page, size } = pageParam
-    const res = await axios.get(`${host}/v/owner-list/${uNo}`, { params: { page: page, size: size } })
+    const res = await axios.get(`${host}/v/owner-list/${uNo}/${searchName}`, { params: { page: page, size: size } })
     return res.data
 }
 
 // admin 예약 목록(전체)
-export const getAllReserveListSearch = async (pageParam, uNo) => {
+export const getAllReserveListSearch = async (pageParam, uNo,searchName) => {
     const { page, size } = pageParam
-    const res = await axios.get(`${host}/v/list/${uNo}`, { params: { page: page, size: size } })
+    const res = await axios.get(`${host}/v/list/${uNo}/${searchName}`, { params: { page: page, size: size } })
     return res.data
 }

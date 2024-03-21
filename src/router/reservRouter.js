@@ -9,6 +9,7 @@ const UserPreviousReservations = lazy(() => import("pages/reserve/user/UserPrevi
 const UserReservationStatus = lazy(() => import("pages/reserve/user/UserReservationStatusPage"))
 const OwnerReserveList = lazy(() => import("pages/reserve/owner/OwnerReserveListPage"))
 const AdminReserveList = lazy(() => import("pages/reserve/admin/AdminReserveListPage"))
+const OwnerStatistics = lazy(() => import("pages/reserve/owner/OwnerStatisticsPage"))
 
 const reservRouter = () => {
     return [
@@ -39,6 +40,10 @@ const reservRouter = () => {
         {
             path: "list",
             element: <AdminReserveList />
+        },
+        {
+            path: "owner/statistics",
+            element: <OwnerStatistics />
         },
     ];
 };
