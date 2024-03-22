@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { getUserPreviousReservations } from "api/reserveApi";
-import PageComponent from "components/common/pageComponent";
+import PageComponent from "components/common/PageComponent";
 import { useSelector } from "react-redux";
 import BasicLayout from "layouts/BasicLayout";
 
