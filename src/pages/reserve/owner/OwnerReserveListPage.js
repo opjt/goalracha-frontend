@@ -79,7 +79,7 @@ const OwnerReserveListPage = () => {
                     </thead>
                     <tbody>
                         {reserveList.map((reserve) => (
-                            <tr key={reserve.rNO} className="border border-gray-300">
+                            <tr key={reserve.rNo} className="border border-gray-300">
                                 <td className="p-2 border border-gray-300">{reserve.groundName}</td>
                                 <td className="p-2 border border-gray-300">{reserve.addr}</td>
                                 <td className="p-2 border border-gray-300">{new Date(reserve.reserveDate).toLocaleDateString()}</td>

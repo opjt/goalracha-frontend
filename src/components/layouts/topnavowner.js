@@ -1,6 +1,6 @@
 import { NavLink } from 'react-router-dom';
 
-const Topnav = () => {
+const topnavowner = () => {
 
     return (
         <div className="max-w-screen-xl mx-auto navbar bg-base-100 px-2 py-0 min-h-1">
@@ -30,12 +30,12 @@ const Topnav = () => {
                     공지사항
                 </NavLink>
                 <NavLink
-                    to="/"
+                    to="/reserve/owner/statistics"
                     className={({ isActive }) =>
                         isActive ? "font-bold ml-5" : "ml-5"
                     }
                 >
-                    매출액조회
+                    통계관리
                 </NavLink>
             </div>
         </div>
@@ -43,4 +43,4 @@ const Topnav = () => {
 }
 
 
-export default Topnav;
+export default topnavowner;
