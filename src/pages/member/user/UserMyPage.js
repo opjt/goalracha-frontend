@@ -9,7 +9,6 @@ import Result2Modal from "components/common/Result2Modal";
 import { withdrawMember } from "api/memberApi"; // 회원 탈퇴 API 호출
 import { getUserReservationStatus } from "api/reserveApi"; // 예약 현황 API 호출
 
-// 초기 상태 정의
 const initState = {
   name: "",
   nickname: "",
@@ -18,20 +17,16 @@ const initState = {
 };
 
 const UserMyPage = () => {
-  const [member, setMember] = useState(initState); // 사용자 정보 상태
-  const [quitState, setQuitestate] = useState(null); // 회원 예약 현황 상태
-  const loginState = useSelector((state) => state.loginSlice); // 로그인 상태 가져오기
-  const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태
+  const [member, setMember] = useState(initState);
+  const loginState = useSelector((state) => state.loginSlice);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const { isLogin, moveToLogin } = useCustomLogin();
-  const [showModal, setShowModal] = useState(false); // 모달 표시 여부
-  const [modalContent, setModalContent] = useState(""); // 모달 내용
+  const [showModal, setShowModal] = useState(false);
+  const [modalContent, setModalContent] = useState("");
   const navigate = useNavigate();
 
-  // 컴포넌트가 마운트될 때 로그인 정보가 변경될 때마다 실행되는 useEffect
   useEffect(() => {
-    // 로그인 정보가 존재하는 경우
     if (isLogin) {
-      // 회원 정보 상태 업데이트
       setMember({
         ...member,
         nickname: loginState.nickname,
@@ -42,14 +37,12 @@ const UserMyPage = () => {
     } else {
       moveToLogin();
     }
-  }, [loginState]); // loginState가 변경될 때마다 실행
+  }, [loginState]);
 
-  // 모달 열기 함수
   const openModal = () => {
     setIsModalOpen(true);
   };
 
-  // 모달 닫기 함수
   const closeModal = () => {
     setIsModalOpen(false);
   };
@@ -57,19 +50,17 @@ const UserMyPage = () => {
   // 회원 탈퇴 버튼 클릭 시 처리
   const handleClickModify = async () => {
     try {
-      // 사용자 예약 현황 불러오기
       const res = await getUserReservationStatus(
         { page: 1, size: 100 },
         loginState.uNo
       );
       console.log(res);
       var totalCount = res.totalCount;
-      if (totalCount != 0) {
+      if (totalCount !== 0) {
         setModalContent("예약이 존재하여 탈퇴할 수 없습니다.");
         setShowModal(true);
         return;
       }
-      // 탈퇴 API 호출
       await withdrawMember(loginState.uNo);
       setModalContent("회원 탈퇴가 성공적으로 이루어졌습니다.");
       setShowModal(true);
@@ -82,14 +73,12 @@ const UserMyPage = () => {
   const handleModalClose = () => {
     setShowModal(false);
     if (modalContent === "회원 탈퇴가 성공적으로 이루어졌습니다.") {
-      // 탈퇴 성공시 로그아웃 후 페이지 이동
       navigate("/logout");
     }
   };
 
   return (
     <BasicLayout>
-      {/* 사용자 정보 UI */}
       <div className="container mx-auto max-w-[1080px]">
         <div className="w-full border border-gray rounded-lg p-10 mb-4 mt-4 flex flex-col items-center">
           <div className="flex justify-center">
@@ -106,78 +95,69 @@ const UserMyPage = () => {
                   <br />
                 </p>
                 <div class="card-actions justify-end">
-                  <button
-                    onClick={openModal} // 프로필 수정 모달 열기
-                    class="btn btn-"
-                  >
-                    프로필 수정
-                  </button>
+                  <div class="dropdown dropdown-hover">
+                    <div tabindex="0" role="button" class="btn m-1">
+                      계정관리
+                    </div>
+                    <ul
+                      tabindex="0"
+                      class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52"
+                    >
+                      <li>
+                        <button onClick={openModal}>프로필수정</button>
+                      </li>
+                      <li>
+                        <button onClick={handleClickModify}>회원탈퇴</button>
+                      </li>
+                      <li>
+                        <Link to={"/logout"}>
+                          <button>로그아웃</button>
+                        </Link>
+                      </li>
+                    </ul>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-
-          {/* 예약 내역 조회 및 이용 내역 조회 버튼 */}
           <div className="flex justify-center mt-8 flex-col items-center">
             <div className="mb-8">
               <Link
                 to={{
                   pathname: "/reserve/PreviousReservations",
-                  state: { uNo: loginState.uNo }, // uNo를 state로 전달
+                  state: { uNo: loginState.uNo },
                 }}
               >
-                <button className="bg-gray-400 hover:bg-gray-600 text-white font-bold py-2 px-12 rounded">
-                  이용 내역 조회
-                </button>
+                <button class="btn btn-wide">이용 내역 조회</button>
               </Link>
             </div>
             <div>
               <Link
                 to={{
                   pathname: "/reserve/ReservationStatus",
-                  state: { uNo: loginState.uNo }, // uNo를 state로 전달
+                  state: { uNo: loginState.uNo },
                 }}
               >
-                <button className="bg-gray-400 hover:bg-gray-600 text-white font-bold py-2 px-12 rounded">
-                  예약 현황 조회
-                </button>
+                <button class="btn btn-wide">예약 현황 조회</button>
               </Link>
             </div>
           </div>
-          {/* 회원탈퇴 및 로그아웃 버튼 */}
-          <div className="flex justify-end ml-auto mt-4">
-            <button
-              onClick={handleClickModify} // 회원 탈퇴 클릭 시 처리
-              className="bg-gray-400 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded mr-4"
-            >
-              회원탈퇴
-            </button>
-            <Link to={"/logout"}>
-              <button className="bg-gray-400 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded mr-4">
-                로그아웃
-              </button>
-            </Link>
-          </div>
         </div>
       </div>
-
-      {/* 프로필 수정 모달 */}
       {isModalOpen && (
         <UserModifyModal
-          closeModal={closeModal} // 모달 닫기 함수 전달
-          uNo={loginState.uNo} // 사용자 번호 전달
-          nickname={member.nickname} // 닉네임 정보 전달
-          tel={member.tel} // 전화번호 정보 전달
+          closeModal={closeModal}
+          uNo={loginState.uNo}
+          nickname={member.nickname}
+          tel={member.tel}
         />
       )}
-
-      {/* 회원 탈퇴 결과 모달 */}
       {showModal && (
         <Result2Modal
           title="알림"
           content={modalContent}
           close="확인"
-          callbackFn={handleModalClose} // 결과 모달 닫기 함수 전달
+          callbackFn={handleModalClose}
         />
       )}
     </BasicLayout>

@@ -4,6 +4,9 @@ import { useSelector } from "react-redux"; // Redux에서 상태를 가져오기
 import OwnerPwModifyModal from "components/member/owner/OwnerPwModifyModal";    // 비밀번호 수정 모달
 import OwnerModifyModal from "components/member/owner/OwnerModifyModal";    // 담당자 수정 모달
 import { Link } from "react-router-dom"; // react-router의 Link 컴포넌트 import
+import { withdrawMember } from "api/memberApi"; // 회원 탈퇴 API 호출
+import Result2Modal from "components/common/Result2Modal";
+import { useNavigate } from "react-router-dom";
 
 // 초기 상태 정의
 const initState = {
@@ -23,6 +26,10 @@ const OwnerMyPage = () => {
     const [result, setResult] = useState(); // 결과 메시지 상태
     const [isPwModalOpen, setIsPwModalOpen] = useState(false); // 비밀번호 수정 모달 열림 상태
     const [isModalOpen, setIsModalOpen] = useState(false);  // 담당자 수정 모달 열림 상태
+    const [showModal, setShowModal] = useState(false);
+    const [modalContent, setModalContent] = useState("");
+    const navigate = useNavigate();
+
 
     useEffect(() => {
         // 로그인 정보가 변경될 때마다 실행되는 부분
@@ -59,6 +66,26 @@ const OwnerMyPage = () => {
 
     const closeModifyModal = () => {
         setIsModalOpen(false);  // 담당자 수정 모달 닫기
+    };
+
+    // 회원 탈퇴 결과 모달 닫기 함수
+    const handleModalClose = () => {
+        setShowModal(false);
+        if (modalContent === "회원 탈퇴가 성공적으로 이루어졌습니다.") {
+            navigate("/logout");
+        }
+        };
+    
+
+    // 회원 탈퇴 버튼 클릭 시 처리
+    const handleClickModify = async () => {
+    try {
+        withdrawMember(loginInfo.uNo);
+        setModalContent("회원 탈퇴가 성공적으로 이루어졌습니다.");
+        setShowModal(true);
+    } catch (error) {
+        console.error("Error while handling member withdrawal:", error);
+    }
     };
 
 
@@ -135,7 +162,7 @@ const OwnerMyPage = () => {
                                 <button
                                     type="button"
                                     className="btn btn-block btn-outline mt-10
-                                    bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded"
+                                    bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-6 rounded"
                                     onClick={openPwModifyModal}
                                 >
                                     비밀번호 수정
@@ -186,19 +213,21 @@ const OwnerMyPage = () => {
 
                         <div className="flex justify-end ml-auto mt-4">
                             {/* 담당자 수정 버튼 */}
-                            <button type="button" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded mr-5 mt-5"
+                            <button type="button" className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-6 rounded mr-5 mt-5"
                                 onClick={openModifyModal}>
                                 담당자 수정
                             </button>
 
                             {/* 회원탈퇴 버튼 */}
-                            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded mr-5 mt-5">
+                            <button 
+                            onClick={handleClickModify}
+                            className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-6 rounded mr-5 mt-5">
                                 회원탈퇴
                             </button>
 
                             {/* 로그아웃 버튼 */}
-                            <Link to="/user/logout">
-                                <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded mr-5 mt-5">
+                            <Link to="/logout">
+                                <button className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-6 rounded mr-5 mt-5">
                                     로그아웃
                                 </button>
                             </Link>
@@ -226,9 +255,16 @@ const OwnerMyPage = () => {
                     tel={member.tel}
                     isOpen={isModalOpen} // isOpen prop 추가
                 />
-
-
             )}
+
+        {showModal && (
+        <Result2Modal
+            title="알림"
+            content={modalContent}
+            close="확인"
+            callbackFn={handleModalClose}
+        />
+        )}
 
         </BasicLayout >
     );

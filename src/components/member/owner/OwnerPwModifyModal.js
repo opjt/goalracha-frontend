@@ -52,32 +52,46 @@ const OwnerPwModifyModal = ({ onPwModalClose, uNo, closeModal }) => {
 
                 <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
                     <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                        <div className="sm:flex sm:items-start">
-                            <div className="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 sm:mx-0 sm:h-10 sm:w-10">
-                                <svg className="h-6 w-6 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
-                            </div>
+                        
+                            
                             <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-                                <h3 className="text-lg leading-6 font-medium text-gray-900" id="modal-title">비밀번호 수정</h3>
+                                <h3 className="text-lg leading-6 font-medium text-gray-900" id="modal-title">✔️ 비밀번호 수정</h3>
                                 {errorMessage && <div className="text-red-500 text-sm">{errorMessage}</div>}
+
                                 <div className="mt-4">
-                                    <label htmlFor="oldpw" className="block text-sm font-medium text-gray-700">기존 비밀번호</label>
-                                    <input type="password" name="oldpw" id="oldpw" className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" placeholder="기존 비밀번호를 입력하세요" onChange={handlePwChange} />
+                                    
+                                    <input type="password" name="oldpw" id="oldpw" className="input input-bordered w-full max-w-md" placeholder="기존 비밀번호를 입력하세요"  />
+                                </div>
+                                
+
+                                <div className="mt-4">
+                                    
+                                    <input type="password" name="newpw" id="newpw" className="input input-bordered w-full max-w-md" placeholder="새 비밀번호를 입력하세요."  />
                                 </div>
                                 <div className="mt-4">
-                                    <label htmlFor="newpw" className="block text-sm font-medium text-gray-700">새 비밀번호</label>
-                                    <input type="password" name="newpw" id="newpw" className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" placeholder="새 비밀번호를 입력하세요." onChange={handlePwChange} />
-                                </div>
-                                <div className="mt-4">
-                                    <label htmlFor="newpwr" className="block text-sm font-medium text-gray-700">새 비밀번호 확인</label>
-                                    <input type="password" name="newpwr" id="newpwr" className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" placeholder="새 비밀번호 한번 더 입력하세요." onChange={handlePwChange} />
+                                    
+                                    <input type="password" name="newpwr" id="newpwr" className="input input-bordered w-full max-w-md" placeholder="새 비밀번호를 다시 입력하세요."  />
                                 </div>
                             </div>
-                        </div>
+                        
                     </div>
-                    <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                        <button onClick={handleSave} type="button" className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm">저장</button>
-                        <button onClick={closeModal} type="button" className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm">취소</button>
-                    </div>
+                    {/* 모달 footer */}
+            <div className="bg-gray-50 px-4 py-3 sm:px-8 sm:flex sm:flex-row-reverse">
+            <button
+                onClick={handleSave} // 저장 버튼 클릭 시 handleSave 호출
+                type="button"
+                className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-gray-600 text-base font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 sm:ml-3 sm:w-auto sm:text-sm"
+            >
+                저장
+            </button>
+            <button
+                onClick={closeModal} // 취소 버튼 클릭 시 closeModal 호출
+                type="button"
+                className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 sm:mt-0 sm:w-auto sm:text-sm"
+            >
+                취소
+            </button>
+            </div>
                 </div>
             </div>
         </div>
