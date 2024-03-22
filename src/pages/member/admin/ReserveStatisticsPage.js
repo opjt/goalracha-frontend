@@ -1,6 +1,6 @@
-import axios from "axios";
 import React, { useState, useEffect } from "react";
 import ReserveStatistics from "./ReserveStatistics";
+import { getAllReserveList } from "api/reserveApi";
 
 const ReserveStatisticsPage = () => {
   const [dailyReserveCounts, setDailyReserveCounts] = useState([]);
@@ -8,10 +8,12 @@ const ReserveStatisticsPage = () => {
   const [filterMonth, setFilterMonth] = useState(new Date().getMonth() + 1); // 현재 월로 초기화
 
   useEffect(() => {
-    axios
-      .get("http://localhost:8080/api/reserve/v/list")
-      .then((response) => {
-        const reserves = response.data.dtoList;
+    // 수정된 fetchData 함수 사용
+    const fetchData = async () => {
+      try {
+        // getAllReserveList 함수를 사용하여 전체 예약 목록을 가져옵니다.
+        const response = await getAllReserveList({ page: 1, size: 10000 });
+        const reserves = response.dtoList;
         const reserveCounts = {};
 
         reserves.forEach((reserve) => {
@@ -19,7 +21,7 @@ const ReserveStatisticsPage = () => {
           const year = date.getFullYear();
           const month = date.getMonth() + 1; // getMonth()는 0부터 시작하므로 1을 더해줍니다.
           const day = date.getDate(); // 일자 추출
-          const dateString = `${year}-${month.toString().padStart(2, "0")}-${day.toString().padStart(2, "0")}`; // "YYYY-MM-DD" 형식
+          const dateString = `${year}-${month.toString().padStart(2, "0")}-${day.toString().padStart(2, "0")}`; // "YYYY-MM-DD" 형식으로 변환
 
           // 선택한 년도와 월에 해당하는 데이터만 집계
           if (year === filterYear && month === filterMonth) {
@@ -39,11 +41,14 @@ const ReserveStatisticsPage = () => {
         }));
 
         setDailyReserveCounts(formattedData);
-      })
-      .catch((error) => {
+      } catch (error) {
         console.error("Error fetching reservation data:", error);
-      });
-  }, [filterYear, filterMonth]); // filterYear, filterMonth가 변경될 때마다 효과 재실행
+      }
+    };
+
+    fetchData();
+  }, [filterYear, filterMonth]); // filterYear, filterMonth가 변경될 때마다 fetchData 함수 재실행
+
 
   // 년도와 월 선택 핸들러
   const handleYearChange = (event) => {
