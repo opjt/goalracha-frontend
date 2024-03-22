@@ -41,14 +41,14 @@ export const cancelReserv = async (req) => {
 // user 이전 예약 목록
 export const getUserPreviousReservations = async (pageParam, uNo) => {
     const { page, size } = pageParam
-    const res = await axios.get(`${host}/v/previous-reservations/${uNo}`, { params: { page: page, size: size } })
+    const res = await axios.get(`${host}/v/ulistprev/${uNo}`, { params: { page: page, size: size } })
     return res.data
 }
 
 // user 예약현황 목록
 export const getUserReservationStatus = async (pageParam, uNo) => {
     const { page, size } = pageParam
-    const res = await axios.get(`${host}/v/reservation-status/${uNo}`, { params: { page: page, size: size } })
+    const res = await axios.get(`${host}/v/ulist/${uNo}`, { params: { page: page, size: size } })
     return res.data
 }
 

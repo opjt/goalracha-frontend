@@ -133,7 +133,7 @@ const ReservSuccess = () => {
 					</tbody>
 				</table>
 				<div className="py-10 text-center">
-					<Link to="/"
+					<Link to="/user/mypage"
 					className="px-12 bg-indigo-600 hover:bg-indigo-500 text-white py-3"
 					>
 					예약내역 확인

@@ -4,7 +4,6 @@ const LogoutPage = () => {
     const {doLogout, moveToPath} = useCustomLogin()
     useEffect(() => {
         doLogout()
-        alert('로그아웃되었습니다')
         moveToPath('/') 
     },[])
     return (

@@ -54,12 +54,18 @@ const ReserveInfo = () => {
 
         var req = {
             header: encryptedSecretKey,
-            payKey: 'tviva20240320163049noTx9'
+            payKey: state.payKey
         }
-        cancelReserv(req).then((result) => {
-            console.log(result)
-        }).catch((error) => {
-        })
+		if (window.confirm("예약을 취소하시겠습니까??") == false){
+			return true;
+		}  
+		console.log(33) 
+		cancelReserv(req).then((result) => {
+			console.log(result)
+			navigate('/user/mypage')
+		}).catch((error) => {
+		})
+       
     }
     return (
         <BasicLayout>
@@ -108,12 +114,21 @@ const ReserveInfo = () => {
 					
 				</div>
 				<div className="py-10 text-center">
-					<Link to="/"
+					<Link to="/user/mypage"
 					className="btn btn-neutral"
 					>
 					마이페이지
 					</Link>
-					<div className="ml-2 btn btn-error">예약 취소</div>
+					{result.state == 0 ? (
+						<div className="tooltip" data-tip="이미 취소된 예약입니다">
+						<div className={`ml-2 btn btn-disabled`} onClick={handleOnClick}>예약 취소</div>
+						</div>
+					) :
+					(
+						<div className={`ml-2 btn btn-error `} onClick={handleOnClick}>예약 취소</div>
+					)
+					}
+					
 				</div>
             </div>
         </BasicLayout>
