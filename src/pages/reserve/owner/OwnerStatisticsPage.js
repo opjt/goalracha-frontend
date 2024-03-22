@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
-import { getOwnerReserveList } from "api/reserveApi";
+import React, { useEffect, useState, useRef } from "react";
+import { getOwnerStatistics } from "api/reserveApi";
 import { useSelector } from "react-redux";
 import BasicLayout from "layouts/BasicLayout";
 import { AreaChart, XAxis, YAxis, CartesianGrid, Tooltip, Area, ResponsiveContainer } from 'recharts';
-import { Calendar } from 'react-date-range';
+import { DateRangePicker } from 'react-date-range';
+import koLocal from 'date-fns/locale/ko';
 import 'react-date-range/dist/styles.css';
 import 'react-date-range/dist/theme/default.css';
 
@@ -12,57 +13,121 @@ const OwnerStatisticsPage = () => {
     const loginState = useSelector((state) => state.loginSlice);
     const [grounds, setGrounds] = useState([]);
     const [selectedGround, setSelectedGround] = useState("전체 구장");
-    const [selectedDate, setSelectedDate] = useState(new Date());
+
+    const [selectedDateRange, setSelectedDateRange] = useState([
+        {
+            startDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+            endDate: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0),
+            key: 'selection',
+        }
+    ]);
+
+    const [showDateRangeModal, setShowDateRangeModal] = useState(false);
+    const modalRef = useRef(null);
 
     useEffect(() => {
         fetchData();
     }, []);
 
-    const fetchData = async () => {
+    async function fetchData() {
         try {
-            let allReserves = [];
-            let currentPage = 1;
-            let totalPages = 1;
-
-            while (currentPage <= totalPages) {
-                const reserveData = await getOwnerReserveList({ page: currentPage, size: 10 }, loginState.uNo);
-                allReserves = [...allReserves, ...reserveData.dtoList];
-                totalPages = reserveData.totalPages;
-                currentPage++;
-            }
-
-            setReserveList(allReserves);
-            const uniqueGrounds = [...new Set(allReserves.map(reserve => reserve.groundName))];
+            const reserveData = await getOwnerStatistics(loginState.uNo);
+            setReserveList(reserveData);
+            const uniqueGrounds = [...new Set(reserveData.map(reserve => reserve.groundName))];
             setGrounds(["전체 구장", ...uniqueGrounds]);
         } catch (error) {
-            console.error("Error fetching reservation list:", error);
+            console.error("예약 목록을 가져오는 중 오류 발생:", error);
         }
-    };
+    }
 
     const prepareChartData = () => {
         const data = [];
 
+        // 필터링된 예약목록 가져오기
+        const filteredReserves = reserveList.filter(reserve => {
+            const reserveDate = new Date(reserve.reserveDate);
+            return reserveDate >= selectedDateRange[0].startDate && reserveDate <= selectedDateRange[0].endDate;
+        });
+
+        // 전체 구장인 경우
         if (selectedGround === "전체 구장") {
             grounds.forEach(ground => {
-                const filteredReserves = reserveList.filter(reserve => reserve.groundName === ground);
-                const totalRevenue = filteredReserves.reduce((acc, curr) => acc + curr.price, 0);
+                const filteredGroundReserves = filteredReserves.filter(reserve => reserve.groundName === ground);
+                const totalRevenue = filteredGroundReserves.reduce((acc, curr) => acc + curr.price, 0);
                 data.push({ groundName: ground, totalRevenue });
             });
         } else {
-            const filteredReserves = reserveList.filter(reserve => reserve.groundName === selectedGround);
-            const totalRevenue = filteredReserves.reduce((acc, curr) => acc + curr.price, 0);
-            data.push({ groundName: selectedGround, totalRevenue });
+            // 특정 구장인 경우
+            const filteredGroundReserves = filteredReserves.filter(reserve => reserve.groundName === selectedGround);
+
+            // 선택된 날짜 범위 내의 모든 날짜를 생성
+            const dateRange = getDates(selectedDateRange[0].startDate, selectedDateRange[0].endDate);
+
+            // 각 날짜별로 일일 매출 데이터가 있는지 확인하고 없으면 0으로 초기화
+            dateRange.forEach(date => {
+                const formattedDate = date.toISOString().split('T')[0]; // YYYY-MM-DD 형식으로 변환
+                const dailyRevenue = filteredGroundReserves
+                    .filter(reserve => reserve.reserveDate.split('T')[0] === formattedDate)
+                    .reduce((acc, curr) => acc + curr.price, 0);
+                data.push({ date: formattedDate, dailyRevenue });
+            });
         }
 
         return data;
+    };
+
+    // 선택된 날짜 범위 내의 모든 날짜를 생성하는 함수
+    const getDates = (startDate, endDate) => {
+        const dates = [];
+        let currentDate = new Date(startDate); // 시작일 복제
+        const lastDate = new Date(endDate); // 종료일 복제
+        while (currentDate <= lastDate) {
+            dates.push(new Date(currentDate)); // 복제된 날짜를 추가
+            currentDate.setDate(currentDate.getDate() + 1);
+        }
+        return dates;
     };
 
     const handleGroundSelect = (event) => {
         setSelectedGround(event.target.value);
     };
 
-    const handleDateChange = (date) => {
-        setSelectedDate(date);
+    const toggleDateRangeModal = () => {
+        setShowDateRangeModal(!showDateRangeModal);
+    };
+
+    useEffect(() => {
+        function handleClickOutside(event) {
+
+            if (showDateRangeModal && modalRef.current && !modalRef.current.contains(event.target)) {
+                toggleDateRangeModal(); // 모달 닫기
+            }
+        }
+
+
+        if (showDateRangeModal) {
+            document.addEventListener("mousedown", handleClickOutside);
+        } else {
+            document.removeEventListener("mousedown", handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [showDateRangeModal]);
+
+    const handleDateRangeSelect = (ranges) => {
+        const { startDate, endDate } = ranges.selection;
+        if (startDate && endDate && startDate !== endDate) {
+            setSelectedDateRange([ranges.selection]);
+            toggleDateRangeModal(); // 모달 닫기
+        } else {
+            setSelectedDateRange([ranges.selection]);
+        }
+    };
+
+    const formatRevenue = (value) => {
+        return new Intl.NumberFormat('ko-KR', { style: 'currency', currency: 'KRW' }).format(value);
     };
 
     return (
@@ -77,17 +142,38 @@ const OwnerStatisticsPage = () => {
                             <option key={index} value={ground}>{ground}</option>
                         ))}
                     </select>
+                    {selectedGround !== "전체 구장" && (
+                        <>
+                            <button className="border border-gray-300 px-2 py-1 rounded-md">
+                                일매출
+                            </button>
+                            <button className="border border-gray-300 px-2 py-1 rounded-md">
+                                월매출
+                            </button>
+                        </>
+                    )}
                 </div>
 
                 <div className="mb-4">
-                    <label className="mr-2">날짜 선택:</label>
-                    <Calendar
-                        date={selectedDate}
-                        onChange={handleDateChange}
-                    />
+                    <label className="mr-2">날짜 범위 선택:</label>
+                    <button className="border border-gray-300 px-2 py-1 rounded-md" onClick={toggleDateRangeModal}>
+                        {selectedDateRange[0].startDate ? `${selectedDateRange[0].startDate.toLocaleDateString()} - ${selectedDateRange[0].endDate ? selectedDateRange[0].endDate.toLocaleDateString() : "날짜 선택"}` : "날짜 선택"}
+                    </button>
+                    {showDateRangeModal && (
+                        <div className="absolute z-10 bg-white p-4 shadow-lg rounded-lg">
+                            <DateRangePicker
+                                dataFormat='yyyy-MM-dd'
+                                ranges={selectedDateRange}
+                                onChange={handleDateRangeSelect}
+                                locale={koLocal}
+                                editableDateInputs={true}
+                                rangeColors={["#3aafa9"]}
+                            />
+                        </div>
+                    )}
                 </div>
 
-                <div style={{ width: '100%', height: 400 }}>
+                <div style={{ width: '100%', height: 500 }}>
                     <ResponsiveContainer>
                         <AreaChart data={prepareChartData()}>
                             <defs>
@@ -96,11 +182,20 @@ const OwnerStatisticsPage = () => {
                                     <stop offset="95%" stopColor="#8884d8" stopOpacity={0} />
                                 </linearGradient>
                             </defs>
-                            <XAxis dataKey="groundName" />
-                            <YAxis />
+                            {selectedGround === "전체 구장" ? (
+                                <>
+                                    <XAxis dataKey="groundName" />
+                                    <YAxis dataKey="totalRevenue" tickFormatter={formatRevenue} />
+                                </>
+                            ) : (
+                                <>
+                                    <XAxis dataKey="date" />
+                                    <YAxis dataKey="dailyRevenue" tickFormatter={formatRevenue} />
+                                </>
+                            )}
                             <CartesianGrid strokeDasharray="3 3" />
-                            <Tooltip />
-                            <Area type="monotone" dataKey="totalRevenue" stroke="#8884d8" fillOpacity={1} fill="url(#colorReservations)" />
+                            <Tooltip formatter={(value) => formatRevenue(value)} />
+                            <Area type="monotone" dataKey={selectedGround === "전체 구장" ? "totalRevenue" : "dailyRevenue"} stroke="#8884d8" fillOpacity={1} fill="url(#colorReservations)" />
                         </AreaChart>
                     </ResponsiveContainer>
                 </div>
