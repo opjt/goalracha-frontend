@@ -21,6 +21,16 @@ const GroundListPage = () => {
     console.log('선택된 구장:', selectedGround);
   }, [selectedGround]);
   
+  // const handleUpdateGroundState = async (gno, currentState) => {
+  //   const newState = currentState === 1 ? 2 : 1;
+  //   try {
+  //     await changeGroundState(gno, newState);
+  //     await fetchGroundsData(); // 상태 변경 후 목록 새로고침을 확실하게 수행
+  //   } catch (error) {
+  //     console.error('Error updating ground state:', error);
+  //   }
+  // };
+
   const fetchGroundsData = async () => {
     setIsLoading(true);
     try {
@@ -32,11 +42,10 @@ const GroundListPage = () => {
     setIsLoading(false);
   };
 
-  const handleUpdateGroundState = async (gno, currentState) => {
-    const newState = currentState === 1 ? 2 : 1;
+  const handleUpdateGroundState = async (gno, newState) => {
     try {
       await changeGroundState(gno, newState);
-      await fetchGroundsData(); // 상태 변경 후 목록 새로고침을 확실하게 수행
+      await fetchGroundsData(); // 상태 변경 후 데이터 새로고침
     } catch (error) {
       console.error('Error updating ground state:', error);
     }
@@ -105,13 +114,14 @@ const GroundListPage = () => {
       <h2 className="text-2xl font-bold mb-5">구장 리스트(DB 연동)</h2>
 
       {/* 필터 버튼과 검색 입력 필드를 포함하는 div */}
-  <div className="flex justify-between items-center mb-4">
+    <div className="flex justify-between items-center mb-4">
     {/* 필터 버튼 그룹 */}
     <div>
       <button onClick={() => setFilter('all')} className="mr-2 px-4 py-2 bg-gray-400 text-white rounded">모든 구장</button>
-      <button onClick={() => setFilter('1')} className="mr-2 px-4 py-2 bg-red-400 text-white rounded">미승인 구장</button>
-      <button onClick={() => setFilter('2')} className="mr-2 px-4 py-2 bg-green-400 text-white rounded">승인 구장</button>
-      <button onClick={() => setFilter('3')} className="mr-2 px-4 py-2 bg-blue-400 text-white rounded">폐업 구장</button>
+      <button onClick={() => setFilter('1')} className="mr-2 px-4 py-2 bg-red-700 text-white rounded">등록신청 구장</button>
+      <button onClick={() => setFilter('2')} className="mr-2 px-4 py-2 bg-green-700 text-white rounded">오픈 구장</button>
+      <button onClick={() => setFilter('4')} className="mr-2 px-4 py-2 bg-gray-500 text-white rounded">폐업신청 구장</button>
+      <button onClick={() => setFilter('0')} className="mr-2 px-4 py-2 bg-gray-700 text-white rounded">폐업 구장</button>
     </div>
     
     {/* 검색 입력 필드 */}
@@ -172,22 +182,16 @@ const GroundListPage = () => {
               <td className="border px-4 py-2">{ground.parkareaIsYn ? '예' : '아니오'}</td>
               {/* 구장 상태(state) */}
               <td className="border px-4 py-2">
-                {}
-                <button
-                  onMouseEnter={() => handleMouseEnter(ground.gno)}
-                  onMouseLeave={() => handleMouseLeave(ground.gno)}
-                  onClick={() =>  { console.log(ground.gno); handleUpdateGroundState(ground.gno, ground.state)}} // 버튼 클릭 시 상태 변경 함수 호출
-                  className="px-4 py-2 text-white rounded"
-                  style={{
-                    backgroundColor: ground.isMouseOver
-                      ? ground.state === 1 ? 'green' : 'red' // 마우스 오버 시 미승인이면 초록색, 승인이면 빨간색으로 변경
-                      : ground.state === 1 ? 'red' : 'green', // 기본 상태에서 미승인은 빨간색, 승인은 초록색
-                  }}
+                <select
+                  value={ground.state}
+                  onChange={(e) => handleUpdateGroundState(ground.gno, parseInt(e.target.value))}
+                  className="px-4 py-2 text-gary rounded" // 스타일링 조정 필요
                 >
-                  {ground.isMouseOver
-                  ? ground.state === 1 ? '승인 변경' : '미승인 변경'
-                  : ground.state === 1 ? '미승인' : '승인'}
-                </button>
+                  <option value="0">폐업</option>
+                  <option value="1">등록신청</option>
+                  <option value="2">오픈</option>
+                  <option value="4">폐업신청</option>
+                </select>
               </td>
             </tr>
           ))}

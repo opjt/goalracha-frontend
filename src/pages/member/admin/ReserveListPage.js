@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { getAllReserveList } from "api/reserveApi";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const ReserveListPage = () => {
   const [reserveList, setReserveList] = useState([]); // 예약 목록 상태 설정
@@ -7,55 +9,95 @@ const ReserveListPage = () => {
   const [size] = useState(10); // 페이지 크기 상수 설정
   const [pageData, setPageData] = useState({}); // 페이지 데이터 상태 설정
   const [searchTerm, setSearchTerm] = useState("");
+  const [startDate, setStartDate] = useState(null); // 초기값을 null로 설정
+  const [endDate, setEndDate] = useState(null); // 초기값을 null로 설정
 
   // 페이지 로드 시 예약 목록 및 페이지 데이터 가져오기
-  useEffect(() => {
+    useEffect(() => {
     const fetchData = async () => {
       try {
-        const reserveData = await getAllReserveList({ page, size }); // 예약 목록 가져오기
-        console.log("Received reserve data:", reserveData); // API 호출을 통해 받은 데이터를 콘솔에 로그
-        setReserveList(reserveData.dtoList); // 예약 목록 상태를 새로운 데이터로 업데이트
-        setPageData(reserveData); // 페이지 데이터 상태 업데이트
+        const reserveData = await getAllReserveList({ page: 1, size: 10000 });
+        console.log("Received reserve data:", reserveData);
+        setReserveList(reserveData.dtoList);
       } catch (error) {
         console.error("Error fetching reservation list:", error);
       }
     };
-    fetchData(); // 함수 호출
+    fetchData();
+  }, []); // 페이지가 로드될 때 한 번만 데이터를 가져옴
 
-    // 페이지 이동 시 reserveList 상태 초기화
-    return () => {
-      setReserveList([]);
-    };
-  }, [page, size]); // 페이지 또는 크기 상태가 변경될 때마다 재로드
+  // 필터링된 예약 목록을 계산하는 로직
+  const filteredReserveList = reserveList.filter((reserve) => {
+    const reserveDate = new Date(reserve.reserveDate);
+    const meetsDateCriteria = (!startDate || reserveDate >= startDate) && (!endDate || reserveDate <= endDate);
+    const meetsSearchCriteria = reserve.groundName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                                reserve.businessName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                                reserve.userName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                                reserve.email.toLowerCase().includes(searchTerm.toLowerCase());
 
-  const filteredReserveList = reserveList.filter(
-    (reserve) =>
-      reserve.groundName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      reserve.businessName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      reserve.userName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      reserve.email.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+    return meetsDateCriteria && meetsSearchCriteria;
+  });
+
 
   // 예약 목록 표시
   return (
     <div className="container mx-auto mt-5">
       <div className="flex justify-between items-center mb-5">
         <h2 className="text-2xl font-bold">예약 리스트(DB 연동)</h2>
-        <input
-          type="text"
-          placeholder="예약 검색..."
-          className="input border p-2" // 스타일을 조정해 입력 필드를 눈에 띄게 만듭니다.
-          style={{
-            padding: "10px",
-            fontSize: "1rem",
-            border: "2px solid #4A90E2", // 테두리 색상 변경
-            boxShadow: "0 4px 6px rgba(32, 33, 36, 0.28)", // 그림자 효과 추가
-            borderRadius: "5px", // 테두리 둥글게
-            width: "300px", // 입력 필드 너비
-            transition: "all 0.3s", // 부드러운 전환 효과
-          }}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
+        <div className="flex items-center space-x-2">
+          {/* 상세 검색 텍스트 */}
+          <span className="text-2xl font-bold">상세검색</span>
+          {/* 시작 날짜 선택기 */}
+          <DatePicker
+            selected={startDate}
+            onChange={(date) => setStartDate(date)}
+            selectsStart
+            startDate={startDate}
+            endDate={endDate}
+            isClearable={true} // 날짜 선택 취소 가능
+            placeholderText="시작 날짜 선택"          
+            style={{
+              padding: "10px",
+              fontSize: "1rem",
+              border: "2px solid #4A90E2", // 검색창과 동일한 테두리 색상
+              boxShadow: "0 4px 6px rgba(32, 33, 36, 0.28)", // 동일한 그림자 효과
+              borderRadius: "5px", // 동일한 둥근 모서리
+              width: "auto", // 자동 너비 조정
+              cursor: "pointer", // 마우스 오버 시 포인터 커서 표시
+            }}
+          />
+          {/* 종료 날짜 선택기 */}
+          <DatePicker
+            selected={endDate}
+            onChange={(date) => setEndDate(date)}
+            selectsEnd
+            startDate={startDate}
+            endDate={endDate}
+            minDate={startDate}
+            isClearable={true} // 날짜 선택 취소 가능
+            placeholderText="종료 날짜 선택"
+            style={{
+              padding: "8px",
+              border: "2px solid #ddd", // 테두리 추가
+              borderRadius: "5px", // 둥근 테두리
+              boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)", // 그림자 효과
+            }}
+          />
+          {/* 검색창 */}
+          <input
+            type="text"
+            placeholder="예약 검색..."
+            style={{
+              padding: "10px",
+              fontSize: "1rem",
+              border: "2px solid #4A90E2",
+              boxShadow: "0 4px 6px rgba(32, 33, 36, 0.28)",
+              borderRadius: "5px",
+              transition: "all 0.3s",
+            }}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
       </div>
       <table className="w-full border-collapse border border-gray-300">
         <thead className="bg-gray-200">
