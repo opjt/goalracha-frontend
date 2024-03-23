@@ -96,7 +96,10 @@ const UserMyPage = () => {
 					</div>
 				</div>
 				<div className="mt-8">
-					<div className="font-semibold text-base mt-3">예약 내역</div>
+                    <div className="flex justify-between items-center">
+                        <div className="font-semibold text-lg ">예약 내역 </div>
+                        <div className="inline-flex text-sm" onClick={() => (navigate('/reserve/ReservationStatus'))}>더보기 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9 18l6-6-6-6"/></svg></div>
+                    </div>
 					<UserReserveListComponent />
 				</div>
   
