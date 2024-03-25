@@ -15,7 +15,7 @@ import SalesStatisticsPage from "pages/member/admin/SalesStatisticsPage.js";
 
 const AdminPage = lazy(() => import("../pages/member/admin/AdminPage"));
 
-const BoardList = lazy(() => import("../pages/board/ListPage"));
+const BoardList = lazy(() => import("../pages/board/AdminListPage"));
 const BoardRead = lazy(() => import("../pages/board/ReadPage"));
 const BoardAdd = lazy(() => import("../pages/board/AddPage"));
 const BoardModify = lazy(() => import("../pages/board/ModifyPage"));
