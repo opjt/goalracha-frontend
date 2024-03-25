@@ -5,6 +5,8 @@ const Login = lazy(() => import("../pages/member/user/LoginPage.js"));
 const Logout = lazy(() => import("../pages/member/Logout.js"));
 const GroundInfoPage = lazy(() => import("pages/reserve/user/GroundInfoPage.js"))
 const BoardList = lazy(() => import("pages/board/UserListPage.js"));
+const PrivacyPolicyPage = lazy(() => import("pages/PrivacyPolicyPage.js"))
+const TermsOfServicePage = lazy(() => import("pages/TermsOfServicePage.js"))
 
 
 const guestRouter = () => {
@@ -13,10 +15,10 @@ const guestRouter = () => {
   //     path: "login",
   //     element: <Login />
   // },
-  // {
-  //     path: "logout",
-  //     element: <Logout />
-  // },
+  {
+      path: "logout",
+      element: <Logout />
+  },
   {
     path: "ground/:gno",
     element: <GroundInfoPage />
@@ -24,6 +26,14 @@ const guestRouter = () => {
   {
     path: "notice",
     element: <BoardList />
+  },
+  {
+    path: "privacy-policy",
+    element: <PrivacyPolicyPage />
+},
+{
+    path: "terms-of-service",
+    element: <TermsOfServicePage />
 },
   ];
 };

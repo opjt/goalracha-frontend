@@ -1,12 +1,8 @@
-import Header from "components/layouts/mainHeader"; // 헤더 컴포넌트 임포트
-import Navbar from "components/layouts/topnav"; // 네비게이션 바 컴포넌트 임포트
-import Footer from "components/layouts/footerr"; // 푸터 컴포넌트 임포트
 
 const PrivacyPolicyPage = () => {
   return (
     <>
-    <Header /> {/* 헤더 추가 */}
-    <Navbar /> {/* 네비게이션 바 추가 */}
+
       <div className="max-w-screen-lg mx-auto mt-10">
         <h1 className="text-3xl font-bold mb-4">개인정보처리방침</h1>
         <p className="text-lg mb-4">
@@ -68,7 +64,7 @@ const PrivacyPolicyPage = () => {
         </ul>
       </p>
     </div>
-    <Footer /> {/* 푸터 추가 */}
+
     </>
   );
 };

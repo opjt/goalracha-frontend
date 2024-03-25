@@ -1,13 +1,9 @@
-import Header from "components/layouts/mainHeader"; // 헤더 컴포넌트 임포트
-import Navbar from "components/layouts/topnav"; // 네비게이션 바 컴포넌트 임포트
-import Footer from "components/layouts/footerr"; // 푸터 컴포넌트 임포트
 
 
 const TermsOfServicePage = () => {
   return (
     <>
-    <Header /> {/* 헤더 추가 */}
-    <Navbar /> {/* 네비게이션 바 추가 */}
+
     <div className="max-w-screen-lg mx-auto mt-10">
       <h1 className="text-3xl font-bold mb-4">이용약관</h1>
       <p className="text-lg mb-4">
@@ -38,7 +34,7 @@ const TermsOfServicePage = () => {
         서비스 이용과 관련하여 분쟁이 발생한 경우, 풋살장 예약 사이트와 이용자 간에 원만하게 해결하기 위해 노력할 것입니다.
       </p>
     </div>
-    <Footer /> {/* 푸터 추가 */}
+  
     </>
   );
 };

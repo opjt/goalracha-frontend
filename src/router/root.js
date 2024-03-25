@@ -17,8 +17,7 @@ const Login = lazy(() => import("../pages/member/user/LoginPage.js"));
 const Logout = lazy(() => import("../pages/member/Logout.js"));
 const GroundInfoPage = lazy(() => import("pages/reserve/user/GroundInfoPage.js"))
 const LoadingPage = lazy(() => import("pages/loading"))
-const PrivacyPolicyPage = lazy(() => import("pages/PrivacyPolicyPage.js"))
-const TermsOfServicePage = lazy(() => import("pages/TermsOfServicePage.js"))
+
 
 const BoardList = lazy(() => import("pages/board/UserListPage.js"));
 
@@ -58,14 +57,7 @@ const root = createBrowserRouter([
         path: "notice",
         element: <BoardList />
     },
-    {
-        path: "privacy-policy",
-        element: <PrivacyPolicyPage />
-    },
-    {
-        path: "terms-of-service",
-        element: <TermsOfServicePage />
-    },
+
     ...adminRouter(), // adminRouter 함수를 호출하여 라우트 배열을 펼침
 ]);
 

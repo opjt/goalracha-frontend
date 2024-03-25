@@ -97,7 +97,7 @@ const OwnerMyPage = () => {
   };
 
   return (
-    <BasicLayout>
+    <>
       <div className="max-w-screen-xl mx-auto mt-4 p-4 max-md:p-0">
         {" "}
         {/* 마이페이지랑 담당자 정보 사이의 간격 조절 */}

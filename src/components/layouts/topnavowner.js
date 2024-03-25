@@ -22,7 +22,7 @@ const topnavowner = () => {
                     예약관리
                 </NavLink>
                 <NavLink
-                    to="/notice"
+                    to="/owner/notice"
                     className={({ isActive }) =>
                         isActive ? "font-bold ml-5" : "ml-5"
                     }

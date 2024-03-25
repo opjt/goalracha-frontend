@@ -5,6 +5,7 @@ const Loading = <div>Loading....</div>
 const Login = lazy(() => import("pages/member/owner/LoginOwnerPage.js"))
 const Join = lazy(() => import("pages/member/owner/OwnerJoinPage.js"))
 const Mypage = lazy(() => import("../pages/member/owner/OwnerMyPage.js"))
+const BoardList = lazy(() => import("pages/board/UserListPage.js"));
 const OwnerReserveList = lazy(() => import("pages/reserve/owner/OwnerReserveListPage"))
 const OwnerStatistics = lazy(() => import("pages/reserve/owner/OwnerStatisticsPage"))
 
@@ -26,6 +27,10 @@ const ownerRouter = () => {
         {
             path: "mypage",
             element: <Mypage />
+        },
+        {
+            path: "notice",
+            element: <BoardList />
         },
         {
             path: "reserve/list",
