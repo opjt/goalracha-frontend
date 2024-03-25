@@ -219,34 +219,7 @@ const GroundRegisterPage = () => {
     { value: "실외", label: "실외" },
   ];
 
-  const openTimeSelect = [
-    { value: "1", label: "01시" },
-    { value: "2", label: "02시" },
-    { value: "3", label: "03시" },
-    { value: "4", label: "04시" },
-    { value: "5", label: "05시" },
-    { value: "6", label: "06시" },
-    { value: "7", label: "07시" },
-    { value: "8", label: "08시" },
-    { value: "9", label: "09시" },
-    { value: "10", label: "10시" },
-    { value: "11", label: "11시" },
-    { value: "12", label: "12시" },
-    { value: "13", label: "13시" },
-    { value: "14", label: "14시" },
-    { value: "15", label: "15시" },
-    { value: "16", label: "16시" },
-    { value: "17", label: "17시" },
-    { value: "18", label: "18시" },
-    { value: "19", label: "19시" },
-    { value: "20", label: "20시" },
-    { value: "21", label: "21시" },
-    { value: "22", label: "22시" },
-    { value: "23", label: "23시" },
-    { value: "24", label: "24시" },
-  ];
-
-  const closeTimeSelect = [
+  const timeSelect = [
     { value: "1", label: "01시" },
     { value: "2", label: "02시" },
     { value: "3", label: "03시" },
@@ -284,8 +257,8 @@ const GroundRegisterPage = () => {
   };
 
   return (
-    <div className=" flex-wrap flex-direction justify-center max-w-screen-lg h-100% bg-gray-100">
-      <div className="max-w-screen-lg flex mb-4">
+    <div className=" flex-wrap flex-direction justify-center">
+      <div className="max-w-screen-lg flex mb-4 w-full">
         {result ? (
           <ResultModal
             title={"구장등록 결과"}
@@ -444,7 +417,7 @@ const GroundRegisterPage = () => {
               className=" w-full max-w-xs"
               type={"select"}
               onChange={(option) => handleSelectChange(option, "openTime")}
-              options={openTimeSelect}
+              options={timeSelect}
               placeholder="오픈시간 선택"
             />
           </div>
@@ -461,7 +434,7 @@ const GroundRegisterPage = () => {
               className=" w-full max-w-xs"
               type={"select"}
               onChange={(option) => handleSelectChange(option, "closeTime")}
-              options={closeTimeSelect}
+              options={timeSelect}
               placeholder="마감시간 선택"
             />
           </div>

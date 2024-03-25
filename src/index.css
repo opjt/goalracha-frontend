@@ -12,10 +12,27 @@ body {
 }
 
 .slick-slide img {
-  object-fit: cover;
-  height: 300px;
   width: 100%;
-  box-sizing: border-box;
+  height: 400px;
+  object-fit: cover;
+}
+
+.img img {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+}
+
+.img {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+}
+
+.ImageWithCloseButton img {
+  width: 100%;
+  height: 300px;
+  object-fit: cover; 
 }
 
 code {

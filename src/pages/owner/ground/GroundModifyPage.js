@@ -1,10 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import {
-  API_SERVER_HOST,
-  getGround,
-  putGround,
-  deleteGround,
-} from "../../../api/groundApi";
+import { API_SERVER_HOST, getGround, putGround } from "../../../api/groundApi";
 import ResultModal from "components/common/ResultModal";
 import useCustomMove from "../../../hooks/groundCustomMove";
 import Slider from "react-slick";
@@ -38,7 +33,7 @@ const initState = {
 
 const GroundModifyComponent = () => {
   const [ground, setGround] = useState(initState);
-  const [imgFile, setImgFile] = useState("");
+  const [imgFile, setImgFile] = useState([]);
   const uploadRef = useRef();
   const [fetching, setFetching] = useState(false);
   const [result, setResult] = useState(null);
@@ -52,7 +47,11 @@ const GroundModifyComponent = () => {
     setFetching(true);
 
     getGround(gno).then((data) => {
+      var oldImages = data.uploadFileNames.map(
+        (fileName) => `${host}/goalracha/ground/view/${fileName}`
+      );
       setGround(data);
+      setImgFile(oldImages);
       setFetching(false);
     });
   }, [gno]);
@@ -66,7 +65,33 @@ const GroundModifyComponent = () => {
     setGround({ ...ground });
   };
 
+  // 이미지 업로드 input의 onChange
+  const saveImgFile = () => {
+    const files = uploadRef.current.files;
+    const fileArray = [...imgFile];
+
+    // 선택된 파일들을 fileArray에 추가
+    for (let i = 0; i < files.length; i++) {
+      fileArray.push(URL.createObjectURL(files[i]));
+    }
+
+    // 이미지 파일 상태를 업데이트
+    setImgFile(fileArray);
+  };
+
+  // 전체 이미지 삭제
+  const deleteAllImages = () => {
+    
+    setImgFile([]);
+    const updatedGround = { ...ground, uploadFileNames: [] };
+
+    uploadRef.current.value = null;
+
+    setGround(updatedGround);
+  };
+
   const deleteOldImages = (imageName) => {
+    console.log(3)
     const resultFilenames = ground.uploadFileNames.filter(
       (fileName) => fileName !== imageName
     );
@@ -181,6 +206,7 @@ const GroundModifyComponent = () => {
       const files = uploadRef.current.files;
       const newState = 4;
       const formData = new FormData();
+
       for (let i = 0; i < files.length; i++) {
         formData.append("files", files[i]);
       }
@@ -231,35 +257,6 @@ const GroundModifyComponent = () => {
     }
   };
 
-  // const oldNewImage = [
-    
-  // ]
-  // // 이미지 업로드 input의 onChange
-  // const saveImgFile = () => {
-  //   const files = uploadRef.current.files;
-  //   const fileArray = [...ground.uploadFileNames];
-
-  //   // 선택된 파일들을 fileArray에 추가
-  //   for (let i = 0; i < files.length; i++) {
-  //     fileArray.push(URL.createObjectURL(files[i]));
-  //   }
-
-  //   // 이미지 파일 상태를 업데이트
-  //   setImgFile(fileArray);
-  // };
-
-
-
-  const handleChangeState = (e) => {
-    const newState = e.target.value;
-    setFetching(true);
-
-    if (ground.state === 2 || ground.state === 3) {
-      setGround({ ...ground, state: newState });
-    }
-    console.log("스테이트" + ground);
-  };
-
   function DaumPostcode() {
     new window.daum.Postcode({
       oncomplete: function (data) {
@@ -290,13 +287,23 @@ const GroundModifyComponent = () => {
   };
 
   const sliderSettings = {
+    dots: true,
     infinite: true, // 마지막 이미지 이후 첫 이미지로 자동 루프 여부
     slidesToShow: 1, // 한번에 보여지는 슬라이드 수
     slidesToScroll: 1, // 한번에 넘어가는 슬라이드 수
     autoplay: true, // 자동 슬라이드 여부
     autoplaySpeed: 3000, // 자동으로 넘어가는 시간 간격
-    arrows: true, // 좌,우 버튼
+    arrows: false, // 좌,우 버튼
     pauseOnHover: true, // hover시 정지
+    appendDots: (dots) => (
+      <div
+        style={{
+          padding: "50px",
+        }}
+      >
+        <ul style={{ margin: "0px" }}> {dots} </ul>
+      </div>
+    ),
   };
 
   // 셀렉트 라이브러리를 사용한 ground 속성의 값 변경
@@ -324,34 +331,7 @@ const GroundModifyComponent = () => {
     { value: "실외", label: "실외" },
   ];
 
-  const openTimeSelect = [
-    { value: "1", label: "01시" },
-    { value: "2", label: "02시" },
-    { value: "3", label: "03시" },
-    { value: "4", label: "04시" },
-    { value: "5", label: "05시" },
-    { value: "6", label: "06시" },
-    { value: "7", label: "07시" },
-    { value: "8", label: "08시" },
-    { value: "9", label: "09시" },
-    { value: "10", label: "10시" },
-    { value: "11", label: "11시" },
-    { value: "12", label: "12시" },
-    { value: "13", label: "13시" },
-    { value: "14", label: "14시" },
-    { value: "15", label: "15시" },
-    { value: "16", label: "16시" },
-    { value: "17", label: "17시" },
-    { value: "18", label: "18시" },
-    { value: "19", label: "19시" },
-    { value: "20", label: "20시" },
-    { value: "21", label: "21시" },
-    { value: "22", label: "22시" },
-    { value: "23", label: "23시" },
-    { value: "24", label: "24시" },
-  ];
-
-  const closeTimeSelect = [
+  const timeSelect = [
     { value: "1", label: "01시" },
     { value: "2", label: "02시" },
     { value: "3", label: "03시" },
@@ -379,8 +359,8 @@ const GroundModifyComponent = () => {
   ];
 
   return (
-    <div className=" flex-wrap flex-direction justify-center max-w-screen-lg h-100% bg-gray-100">
-      <div className="max-w-screen-lg flex mb-4">
+    <div className="flex-wrap flex-direction justify-center w-full">
+      <div className="flex mb-4 justify-center w-full">
         {result ? (
           <ResultModal
             title={"구장수정 결과"}
@@ -391,7 +371,7 @@ const GroundModifyComponent = () => {
         ) : (
           <></>
         )}
-        <div className="bg-white mb-4 w-3/6 p-8">
+        <div className="mb-4 w-3/6 p-8">
           <h2 className="text-2xl font-bold mb-4 text-gray-800">구장 수정</h2>
           <div className="mb-4">
             <label
@@ -535,7 +515,7 @@ const GroundModifyComponent = () => {
               type={"select"}
               onChange={(option) => handleSelectChange(option, "openTime")}
               value={{ value: ground.openTime, label: ground.openTime }}
-              options={openTimeSelect}
+              options={timeSelect}
               placeholder="오픈시간 선택"
             />
           </div>
@@ -553,7 +533,7 @@ const GroundModifyComponent = () => {
               type={"select"}
               onChange={(option) => handleSelectChange(option, "closeTime")}
               value={{ value: ground.closeTime, label: ground.closeTime }}
-              options={closeTimeSelect}
+              options={timeSelect}
               placeholder="마감시간 선택"
             />
           </div>
@@ -576,53 +556,81 @@ const GroundModifyComponent = () => {
           </div>
         </div>
 
-        <div className="w-6/12 mb-4 bg-white p-8 ">
+        <div className="w-6/12 mb-4 p-8 ">
           <div className="text-2xl font-bold mb-4 text-gray-800">사진 수정</div>
-            {ground.uploadFileNames.length > 1 && ( // 배열의 길이가 1보다 클 때만 Slider
-              <Slider {...sliderSettings}>
-                {ground.uploadFileNames.map((imgFile, i) => (
-                  <div key={i}>
-                    <img
-                      src={`${host}/goalracha/ground/view/${imgFile}`}
-                      alt={imgFile}
-                    />
-                    <button
+          {imgFile.length > 1 && ( // 배열의 길이가 1보다 클 때만 Slider
+            <Slider {...sliderSettings}>
+              {imgFile.map((imgFile, i) => (
+                <div key={i} className="relative">
+                  <svg
+                    type={"button"}
+                    className="cursor-pointer absolute right-4 top-4 rounded-full bg-black bg-opacity-30"
+                    onClick={() => (deleteOldImages(imgFile))}
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#f0f0f0"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                  </svg>
+                  <img src={imgFile} alt="" />
+                  {/* <button
                       className="btn btn-neutral w-full mt-6"
                       onClick={() => deleteOldImages(imgFile)}
                     >
                       기존이미지 삭제
-                    </button>
-                  </div>
-                ))}
-              </Slider>
-            )}
-            {ground.uploadFileNames.length <= 1 && ( // 이미지 하나일 땐 슬라이더x
-              <div>
-                {ground.uploadFileNames.map((imgFile, i) => (
-                  <div key={i}>
-                    <img
-                      src={`${host}/goalracha/ground/view/${imgFile}`}
-                      alt={imgFile}
-                    />
-                    <button
-                      className="btn btn-neutral w-full mt-6"
-                      onClick={() => deleteOldImages(imgFile)}
-                    >
-                      기존이미지 삭제
-                    </button>
-                  </div>
-                ))}
-              </div>
-            )}
-
+                    </button> */}
+                </div>
+              ))}
+            </Slider>
+          )}
+          {imgFile.length <= 1 && ( // 이미지 하나일 땐 슬라이더x
+            <div>
+              {imgFile.map((imgFile, i) => (
+                <div key={i} className="relative">
+                  <svg
+                    className="cursor-pointer absolute right-4 top-4 rounded-full bg-black bg-opacity-30"
+                    onClick={() => (console.log(3))}
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#f0f0f0"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                  </svg>
+                  <img src={imgFile} alt={imgFile} />
+                </div>
+              ))}
+            </div>
+          )}
           <input
             ref={uploadRef}
             type={"File"}
             multiple={true}
+            onChange={saveImgFile}
             className="file-input file-input-bordered w-full max-w-xs"
           ></input>
 
-          <div className="flex-wrap bg-white pt-8 w-full ">
+          <button
+            className="btn btn-neutral w-full mt-6"
+            onClick={deleteAllImages}
+          >
+            모든 이미지 삭제
+          </button>
+
+          <div className="flex-wrap pt-8 w-full ">
             <h2 className="flex-auto text-2xl font-bold mb-4 text-gray-800">
               부대시설
             </h2>
@@ -736,7 +744,7 @@ const GroundModifyComponent = () => {
         </div>
       </div>
 
-      <div className="flex- bg-white p-8 w- h-100%">
+      <div className="fle- p-8 w- h-100%">
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-800">
             이용 안내:
