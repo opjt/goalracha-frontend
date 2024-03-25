@@ -1,6 +1,7 @@
-// src/routes/adminRouter.js
 import React, { lazy } from "react";
-import { Outlet } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
+import useCustomLogin from "../hooks/useCustomLogin"; 
+
 
 import MainHeader from "../components/layouts/mainHeader";
 import TopNavAdmin from "../components/layouts/topnavadmin";
@@ -20,14 +21,23 @@ const BoardRead = lazy(() => import("../pages/board/ReadPage"));
 const BoardAdd = lazy(() => import("../pages/board/AddPage"));
 const BoardModify = lazy(() => import("../pages/board/ModifyPage"));
 
+const AdminLayout = () => {
+  const { isLogin } = useCustomLogin();
 
-const AdminLayout = () => (
-  <>
-    <MainHeader />
-    <TopNavAdmin />
-    <Outlet />
-  </>
-);
+  if (!isLogin) {
+    // 로그인하지 않은 경우 로그인 페이지로 리다이렉트
+    return <Navigate to="/admin/login" replace />;
+  }
+
+  return (
+    <>
+      <MainHeader />
+      <TopNavAdmin />
+      <Outlet />
+    </>
+  );
+};
+
 
 // adminRouter를 함수로 변경합니다. 이렇게 하면 동적으로 라우트 설정을 생성하고 반환할 수 있습니다.
 export default function adminRouter() {
