@@ -133,7 +133,6 @@ const JoinComponent = () => {
 
     return (
         <>
-            <MainHeader />
             <div className="relative flex flex-col justify-center h-screen overflow-hidden">
                 {result ? <ResultModal title={`회원가입`} content={result.content} close={result.close}
                     callbackFn={closeModal}></ResultModal> : <></>}

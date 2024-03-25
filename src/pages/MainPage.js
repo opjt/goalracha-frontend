@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 import { getKakaoLoginLink } from "../api/kakaoAPI";
 import useCustomLogin from "hooks/useCustomLogin";
 import BasicLayout from "../layouts/BasicLayout";
@@ -46,7 +46,7 @@ const MainPage = () => {
             <Link to={'/reserve'}>구장예약목록</Link>
         </div>
             
-    
+                <Outlet/>
         
         </BasicLayout>
     );

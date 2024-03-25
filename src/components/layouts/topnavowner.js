@@ -14,7 +14,7 @@ const topnavowner = () => {
                     구장관리
                 </NavLink>
                 <NavLink
-                    to="/reserve/OwnerReserveList"
+                    to="/owner/reserve/list"
                     className={({ isActive }) =>
                         isActive ? "font-bold ml-5" : "ml-5"
                     }
@@ -30,7 +30,7 @@ const topnavowner = () => {
                     공지사항
                 </NavLink>
                 <NavLink
-                    to="/reserve/owner/statistics"
+                    to="/owner/statistics"
                     className={({ isActive }) =>
                         isActive ? "font-bold ml-5" : "ml-5"
                     }

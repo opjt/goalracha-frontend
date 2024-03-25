@@ -48,7 +48,7 @@ const OwnerReserveListPage = () => {
     };
 
     return (
-        <BasicLayout>
+        <>
             <div className="container mx-auto px-4 py-8">
                 <h2 className="text-lg font-semibold border-b border-gray-300 mb-4 pb-2">예약 내역</h2>
                 {/* 검색 창 변경 */}
@@ -96,7 +96,7 @@ const OwnerReserveListPage = () => {
                     <PageComponent serverData={pageData} movePage={movePage} />
                 )}
             </div>
-        </BasicLayout>
+        </>
     );
 };
 

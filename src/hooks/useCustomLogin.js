@@ -11,6 +11,10 @@ const useCustomLogin = () => {
         const action = await dispatch(loginPostAsync(loginParam))
         return action.payload
     }
+    const adminDoLogin = async (loginParam) => { //----------로그인 함수
+        const action = await dispatch(loginPostAsync(loginParam))
+        return action.payload
+    }
     const doLogout = () => { //---------------로그아웃 함수
         dispatch(logout())
     }

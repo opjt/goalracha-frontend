@@ -155,7 +155,7 @@ const GroundInfoPage = () => {
       
 
     return (
-        <BasicLayout>
+        <>
             {reservInfo.submit ? (
                 <ReserveModal reservInfo={reservInfo} groundInfo={groundInfo} callbackFn={closeModal}/>
             ) : (
@@ -329,7 +329,7 @@ const GroundInfoPage = () => {
             </div>
                 
             )}
-        </BasicLayout>
+        </>
     );
 }
 export default GroundInfoPage;

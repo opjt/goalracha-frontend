@@ -17,6 +17,7 @@ const initGroundInfo = {
 const ReserveInfo = () => {
     const navigate = useNavigate();
 	const [result, setResult] = useState(initGroundInfo)
+	const [cancel, setCancel] = useState(null)
 	const { state } = useLocation();
     useEffect(() => {
 		if(state == null) {
@@ -38,7 +39,13 @@ const ReserveInfo = () => {
 			reservInfoData.time =timeString
 			reservInfoData.pay = reservInfoData.pay * time.length
 			setResult(reservInfoData)
-			console.log(res.reserveInfo)
+			// console.log(res.reserveInfo)
+			if(!moment().isBefore(moment(reservInfoData.date).subtract(2,'days'))) {
+				setCancel("예약 2일전에는 환불이 불가능합니다")
+			}
+			if(reservInfoData.state == 0) {
+				setCancel("이미 취소된 예약입니다")
+			}
 		}).catch((error) => {
 			console.log(error)
 		})
@@ -51,7 +58,6 @@ const ReserveInfo = () => {
 	// })
 
     const handleOnClick = () => {
-
         var req = {
             header: encryptedSecretKey,
             payKey: state.payKey
@@ -59,11 +65,11 @@ const ReserveInfo = () => {
 		if (window.confirm("예약을 취소하시겠습니까??") == false){
 			return true;
 		}  
-		console.log(33) 
 		cancelReserv(req).then((result) => {
 			console.log(result)
 			navigate('/user/mypage')
 		}).catch((error) => {
+			alert("예약 취소에 실패하였습니다 관리자에게 문의하십시오")
 		})
        
     }
@@ -119,16 +125,20 @@ const ReserveInfo = () => {
 					>
 					마이페이지
 					</Link>
-					{result.state == 0 ? (
-						<div className="tooltip" data-tip="이미 취소된 예약입니다">
-						<div className={`ml-2 btn btn-disabled`} onClick={handleOnClick}>예약 취소</div>
-						</div>
-					) :
+					{!moment(result.date).isBefore(moment().subtract(1, "days")) ? 
 					(
-						<div className={`ml-2 btn btn-error `} onClick={handleOnClick}>예약 취소</div>
+						cancel !== null ? (
+							<div className="tooltip" data-tip={cancel}>
+							<div className={`ml-2 btn btn-disabled`} >예약 취소</div>
+							</div>
+							) :
+							(
+								<div className={`ml-2 btn btn-error `} onClick={handleOnClick}>예약 취소</div>
+							)
 					)
-					}
+					: (<></>)}
 					
+			
 				</div>
             </div>
         </BasicLayout>

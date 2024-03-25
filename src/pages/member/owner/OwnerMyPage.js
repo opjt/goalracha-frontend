@@ -90,7 +90,7 @@ const OwnerMyPage = () => {
 
 
     return (
-        <BasicLayout> {/* 기본 레이아웃 사용 */}
+        <> {/* 기본 레이아웃 사용 */}
 
             <div className="container mx-auto max-w-[1080px]">
                 <div className="w-full border border-black rounded-lg p-10 mb-4 mt-4 flex flex-col items-center">
@@ -266,7 +266,7 @@ const OwnerMyPage = () => {
         />
         )}
 
-        </BasicLayout >
+        </>
     );
 };
 

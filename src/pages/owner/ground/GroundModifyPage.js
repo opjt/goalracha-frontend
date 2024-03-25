@@ -38,7 +38,7 @@ const initState = {
 
 const GroundModifyComponent = () => {
   const [ground, setGround] = useState(initState);
-  const [imgFile, setImgFile] = useState("");
+  const [imgFile, setImgFile] = useState([]);
   const uploadRef = useRef();
   const [fetching, setFetching] = useState(false);
   const [result, setResult] = useState(null);
@@ -235,18 +235,20 @@ const GroundModifyComponent = () => {
     
   // ]
   // // 이미지 업로드 input의 onChange
-  // const saveImgFile = () => {
-  //   const files = uploadRef.current.files;
-  //   const fileArray = [...ground.uploadFileNames];
+  const saveImgFile = () => {
+    const files = uploadRef.current.files;
+    console.log(files);
+    for (let i = 0; i < files.length; i++) {
+      console.log(URL.createObjectURL(files[i]));
+    }
+    const fileArray = [...ground.uploadFileNames];
 
-  //   // 선택된 파일들을 fileArray에 추가
-  //   for (let i = 0; i < files.length; i++) {
-  //     fileArray.push(URL.createObjectURL(files[i]));
-  //   }
-
-  //   // 이미지 파일 상태를 업데이트
-  //   setImgFile(fileArray);
-  // };
+    // 선택된 파일들을 fileArray에 추가
+    
+    console.log(fileArray)
+    // 이미지 파일 상태를 업데이트
+    
+  };
 
 
 
@@ -579,9 +581,12 @@ const GroundModifyComponent = () => {
         <div className="w-6/12 mb-4 bg-white p-8 ">
           <div className="text-2xl font-bold mb-4 text-gray-800">사진 수정</div>
             {ground.uploadFileNames.length > 1 && ( // 배열의 길이가 1보다 클 때만 Slider
-              <Slider {...sliderSettings}>
+              <Slider {...sliderSettings} className="">
                 {ground.uploadFileNames.map((imgFile, i) => (
-                  <div key={i}>
+                  <div key={i} className="relative">
+                    
+                    <svg className="absolute right-0" onClick={()=>(console.log(3))}
+                      xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#898989" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                     <img
                       src={`${host}/goalracha/ground/view/${imgFile}`}
                       alt={imgFile}
@@ -619,6 +624,7 @@ const GroundModifyComponent = () => {
             ref={uploadRef}
             type={"File"}
             multiple={true}
+            onChange={saveImgFile}
             className="file-input file-input-bordered w-full max-w-xs"
           ></input>
 

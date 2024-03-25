@@ -15,8 +15,7 @@ import 'react-date-range/dist/theme/default.css'; // theme css file
 
 const UserReservationStatusPage = () => {
   const [reserveList, setReserveList] = useState([]);
-  const [page, setPage] = useState(1);
-  const [size] = useState(10);
+  const [stateFilter, setStateFilter] = useState("전체");
   const [pageData, setPageData] = useState({});
   const { loginState } = useCustomLogin();
   const [datePicker, setDatePicker] = useState([
@@ -34,9 +33,10 @@ const UserReservationStatusPage = () => {
     { value: '이용완료', label: '이용완료' }
   ]
 
-  const movePage = async ({ page }) => {
-    setPage(page);
-  };
+
+  const handleSelectChange = (e) => {
+    setStateFilter(e.value)
+  }
 
   useEffect(() => {
     const fetchData = async () => {
@@ -44,16 +44,42 @@ const UserReservationStatusPage = () => {
         // 로그인 상태에 따라 API 요청을 보내거나 보내지 않음
         if (loginState.uNo) {
           const reserveData = await getUserReservationStatus(
-            { page, size },
+            { page:1, size:99999 },
             loginState.uNo
           );
           
           // console.log(datePicker[0])
           var resDTOlist = reserveData.dtoList
+          for(var key in resDTOlist) {
+            resDTOlist[key].showState = "결제완료"
+
+            if(moment(resDTOlist[key].reserveDate).isBefore(moment().subtract(1, "days"))) {
+              resDTOlist[key].showState = "이용완료";
+            }
+            
+            if(resDTOlist[key].state === 0) {
+              resDTOlist[key].showState = "예약취소";
+            } 
+          }
+          
           var filteredData = resDTOlist.filter(item => {
             var reserveDate = moment(item.reserveDate);
-            return reserveDate.isSameOrAfter(datePicker[0].startDate) && reserveDate.isSameOrBefore(datePicker[0].endDate);
-        });
+            
+            return reserveDate.isBetween(datePicker[0].startDate, datePicker[0].endDate, 'day', '[]');
+          });
+          
+          filteredData = filteredData.filter(item => {
+            if(stateFilter === "전체") {
+              return item;
+            } else if (stateFilter === "예약취소") {
+              return item.showState === "예약취소";
+            } else if(stateFilter === "이용완료") {
+              return item.showState === "이용완료"
+            } else if(stateFilter === "결제완료") {
+              return item.showState === "결제완료"
+            }
+          })
+          
           setReserveList(filteredData);
           setPageData(reserveData);
         }
@@ -66,7 +92,7 @@ const UserReservationStatusPage = () => {
     return () => {
       setReserveList([]);
     };
-  }, [page, size, loginState.uNo,datePicker]);
+  }, [ loginState.uNo,datePicker,stateFilter]);
 
   // useEffect(() => {
   //   console.log(datePicker)
@@ -112,6 +138,7 @@ const UserReservationStatusPage = () => {
             />
           </div>
           <div className="w-full">
+            <Select options={options} defaultValue={options[0]} onChange={handleSelectChange}/>
           {reserveList.length == 0 && (
           <div className="p-2 text-center"> 예약 정보가 없습니다</div>
           )}
@@ -136,15 +163,7 @@ const UserReservationStatusPage = () => {
                   {moment(reserve.reserveDate).format("YYYY-MM-DD")}
                 </div>
                 <div className="text-nowrap ">
-                  {reserve.state === 0 ? (
-                    <p className="text-red-500">예약취소</p>
-                  ) : moment(reserve.reserveDate).isBefore(
-                      moment().subtract(1, "days")
-                    ) == true ? (
-                    <p className="">이용완료</p>
-                  ) : (
-                    <p className="text-green-500">결제완료</p>
-                  )}
+                  <p className={reserve.showState === "결제완료" ? 'text-green-400' : '' || reserve.showState === "예약취소" ? 'text-red-500' : '' }>{reserve.showState}</p>
                 </div>
               </div>
             </div>

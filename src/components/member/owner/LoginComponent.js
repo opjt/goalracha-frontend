@@ -39,7 +39,6 @@ const LoginComponent = () => {
     }
     return (
         <>
-        <MainHeader/>
         <div className="relative flex flex-col justify-center p-14 overflow-hidden">
 
         <div className="w-full p-6 m-auto bg-white rounded-md shadow-md ring-2 ring-gray-800/50 lg:max-w-xl">

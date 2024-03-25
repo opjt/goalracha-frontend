@@ -131,7 +131,7 @@ const OwnerStatisticsPage = () => {
     };
 
     return (
-        <BasicLayout>
+        <>
             <div className="container mx-auto px-4 py-8">
                 <h2 className="text-lg font-semibold border-b border-gray-300 mb-4 pb-2">통계 관리</h2>
 
@@ -200,7 +200,7 @@ const OwnerStatisticsPage = () => {
                     </ResponsiveContainer>
                 </div>
             </div>
-        </BasicLayout>
+        </>
     );
 };
 

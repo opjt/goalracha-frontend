@@ -33,6 +33,11 @@ const LoginComponent = () => {
                 if (data.error) {
                     alert("이메일과 패스워드를 다시 확인하세요")
                 } else {
+                    if(data.type=="OWNER") {
+                        moveToPath('/logout')
+                        alert("잘못된 권한 접근입니다")
+                        return;
+                    }
                     alert("관리자 로그인 성공")
                     moveToPath('/adminPage')
                 }
