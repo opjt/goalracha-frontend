@@ -1,5 +1,5 @@
 import { getGroundList } from "api/groundApi";
-import PageComponent from "components/common/PageComponent";
+import PageComponent from "components/common/pageComPonent";
 import useCustomMove from "../../../hooks/groundCustomMove";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";

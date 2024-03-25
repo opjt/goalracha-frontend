@@ -101,17 +101,32 @@ const OwnerManagePage = () => {
 
       {/* 모달 구현 */}
       {modalShow && (
-        <div className="fixed top-0 left-0 right-0 bottom-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
-          <div className="bg-white p-5 rounded-lg">
-            <h3 className="text-xl font-bold mb-4">{currentUser.businessName} 의 예약상세 정보</h3>
-            <ul>
-              {currentUserReservations.map((reservation, index) => (
-                <li key={index}>
-                  장소: {reservation.groundName}, 예약 날짜: {new Date(reservation.reserveDate).toLocaleDateString()}, 시간: {reservation.time}, 가격: {reservation.price}
-                </li>
-             ))}
-            </ul>
-            <button onClick={handleCloseModal} className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700">
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
+          <div className="bg-white p-5 rounded-lg w-3/4 max-w-4xl">
+            <h3 className="text-xl font-bold mb-4">{currentUser.businessName}의 예약상세 정보</h3>
+            <div className="overflow-x-auto">
+              <table className="min-w-full leading-normal">
+                <thead>
+                  <tr className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+                    <th className="py-3 px-6 text-left">장소</th>
+                    <th className="py-3 px-6 text-left">예약 날짜</th>
+                    <th className="py-3 px-6 text-left">시간</th>
+                    <th className="py-3 px-6 text-left">가격</th>
+                  </tr>
+                </thead>
+                <tbody className="text-gray-600 text-sm font-light">
+                  {currentUserReservations.map((reservation, index) => (
+                    <tr key={index} className="border-b border-gray-200 hover:bg-gray-100">
+                      <td className="py-3 px-6 text-left whitespace-nowrap">{reservation.groundName}</td>
+                      <td className="py-3 px-6 text-left">{new Date(reservation.reserveDate).toLocaleDateString()}</td>
+                      <td className="py-3 px-6 text-left">{reservation.time}</td>
+                      <td className="py-3 px-6 text-left">{reservation.price}원</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <button onClick={handleCloseModal} className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700 transition-colors">
               닫기
             </button>
           </div>
