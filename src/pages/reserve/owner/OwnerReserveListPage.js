@@ -3,7 +3,16 @@ import { getOwnerReserveListSearch } from "api/reserveApi";
 import { getOwnerReserveList } from "api/reserveApi";
 import PageComponent from "components/common/PageComponent";
 import { useSelector } from "react-redux";
-import BasicLayout from "layouts/BasicLayout";
+import BasicLayout from "layouts/OwnerLayout";
+import {
+    AreaChart,
+    XAxis,
+    YAxis,
+    CartesianGrid,
+    Tooltip,
+    Area,
+    ResponsiveContainer,
+} from "recharts";
 
 const OwnerReserveListPage = () => {
     const [reserveList, setReserveList] = useState([]);
@@ -20,7 +29,11 @@ const OwnerReserveListPage = () => {
     const handleSearch = async () => {
         try {
             if (loginState.uNo) {
-                const reserveData = await getOwnerReserveListSearch({ page, size, searchName }, loginState.uNo, searchName); // 변경: 검색어를 함께 전달
+                const reserveData = await getOwnerReserveListSearch(
+                    { page, size, searchName },
+                    loginState.uNo,
+                    searchName
+                );
                 setReserveList(reserveData.dtoList);
                 setPageData(reserveData);
                 window.scrollTo(0, 0);
@@ -32,12 +45,15 @@ const OwnerReserveListPage = () => {
 
     useEffect(() => {
         fetchData();
-    }, [page, size, loginState.uNo, searchName]); // 변경: searchName도 useEffect 의존성 배열에 추가
+    }, [page, size, loginState.uNo, searchName]);
 
     const fetchData = async () => {
         try {
             if (loginState.uNo) {
-                const reserveData = await getOwnerReserveList({ page, size }, loginState.uNo);
+                const reserveData = await getOwnerReserveList(
+                    { page, size },
+                    loginState.uNo
+                );
                 setReserveList(reserveData.dtoList);
                 setPageData(reserveData);
                 window.scrollTo(0, 0);
@@ -50,8 +66,9 @@ const OwnerReserveListPage = () => {
     return (
         <BasicLayout>
             <div className="container mx-auto px-4 py-8">
-                <h2 className="text-lg font-semibold border-b border-gray-300 mb-4 pb-2">예약 내역</h2>
-                {/* 검색 창 변경 */}
+                <h2 className="text-lg font-semibold border-b border-gray-300 mb-4 pb-2">
+                    예약 내역
+                </h2>
                 <div className="mb-4">
                     <input
                         type="text"
@@ -60,7 +77,10 @@ const OwnerReserveListPage = () => {
                         placeholder="검색어를 입력하세요"
                         className="border border-gray-300 px-2 py-1 rounded-md"
                     />
-                    <button onClick={handleSearch} className="ml-2 bg-blue-500 text-white px-4 py-1 rounded-md">
+                    <button
+                        onClick={handleSearch}
+                        className="ml-2 bg-blue-500 text-white px-4 py-1 rounded-md"
+                    >
                         검색
                     </button>
                 </div>
@@ -79,21 +99,49 @@ const OwnerReserveListPage = () => {
                     </thead>
                     <tbody>
                         {reserveList.map((reserve) => (
-                            <tr key={reserve.rNo} className="border border-gray-300">
-                                <td className="p-2 border border-gray-300">{reserve.groundName}</td>
-                                <td className="p-2 border border-gray-300">{reserve.addr}</td>
-                                <td className="p-2 border border-gray-300">{new Date(reserve.reserveDate).toLocaleDateString()}</td>
-                                <td className="p-2 border border-gray-300">{reserve.time}</td>
-                                <td className="p-2 border border-gray-300">{new Date(reserve.createDate).toLocaleDateString()}</td>
-                                <td className="p-2 border border-gray-300">{reserve.price}</td>
-                                <td className="p-2 border border-gray-300">{reserve.userName}</td>
-                                <td className="p-2 border border-gray-300">{reserve.email}</td>
+                            <tr
+                                key={reserve.rNo}
+                                className="border border-gray-300"
+                            >
+                                <td className="p-2 border border-gray-300">
+                                    {reserve.groundName}
+                                </td>
+                                <td className="p-2 border border-gray-300">
+                                    {reserve.addr}
+                                </td>
+                                <td className="p-2 border border-gray-300">
+                                    {new Date(
+                                        reserve.reserveDate
+                                    ).toLocaleDateString()}
+                                </td>
+                                <td className="p-2 border border-gray-300">
+                                    {reserve.time}
+                                </td>
+                                <td className="p-2 border border-gray-300">
+                                    {new Date(
+                                        reserve.createDate
+                                    ).toLocaleDateString()}
+                                </td>
+                                <td className="p-2 border border-gray-300">
+                                    {reserve.price}
+                                </td>
+                                <td className="p-2 border border-gray-300">
+                                    {reserve.userName}
+                                </td>
+                                <td className="p-2 border border-gray-300">
+                                    {reserve.email}
+                                </td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
-                {pageData && pageData.pageNumList && pageData.pageNumList.length > 0 && (
-                    <PageComponent serverData={pageData} movePage={movePage} />
+                {pageData &&
+                pageData.pageNumList &&
+                pageData.pageNumList.length > 0 && (
+                    <PageComponent
+                        serverData={pageData}
+                        movePage={movePage}
+                    />
                 )}
             </div>
         </BasicLayout>
