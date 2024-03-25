@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 const initState = [];
 
-const ListComponent = () => {
+const AdminListComponent = () => {
   const navigate = useNavigate();
   const { page, size, refresh } = useCustomMove();
   const [serverData, setServerData] = useState(initState);
@@ -60,4 +60,4 @@ const ListComponent = () => {
 
 };
 
-export default ListComponent;
+export default AdminListComponent;

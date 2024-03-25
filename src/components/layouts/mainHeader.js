@@ -56,7 +56,7 @@ const MainHeader = ({ children }) => {
 		<div className="max-w-screen-xl mx-auto navbar bg-base-100 p-2 ">
 		<div className="flex-1">
 			<Link to={"/"} className="btn btn-ghost text-xl p-0">
-			<img src="/goalracha_logo.png" alt="골라차" className="h-10" />
+			<img src="/goalracha_logo.png" alt="골라차" className="h-14" />
 			</Link>
 		</div>
 		<div className="flex-none gap-2">

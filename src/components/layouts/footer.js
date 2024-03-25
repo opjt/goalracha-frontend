@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { NavLink } from 'react-router-dom';
 
 class Footer extends Component {
   render() {
@@ -14,8 +15,8 @@ class Footer extends Component {
             </div>
             <div className="col-span-4 sm:col-span-1">
               <ul>
-                <li><a href="/privacy-policy" className="text-blue-500 hover:underline">개인정보처리방침</a></li>
-                <li><a href="/terms-of-service" className="text-blue-500 hover:underline">이용약관</a></li>
+                <li><NavLink to="/privacy-policy" className="text-blue-500 hover:underline">개인정보처리방침</NavLink></li>
+                <li><NavLink to="/terms-of-service" className="text-blue-500 hover:underline">이용약관</NavLink></li>
                 <li><a href="/company-info" className="text-blue-500 hover:underline">회사소개/광고문의</a></li>
               </ul>
             </div>
