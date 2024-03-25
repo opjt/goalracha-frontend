@@ -14,20 +14,21 @@ export const getGround = async (gno) => {
   return res.data
 }
 
+// 구장 사업자 구장목록
 export const getOwnerGroundList = async (pageParam, uNo) => {
-    const { page, size } = pageParam
-    const res = await axios.get(`${prefix}/${uNo}`, { params: { page: page, size: size } })
+  const { page, size } = pageParam
+  const res = await axios.get(`${prefix}/${uNo}`, { params: { page: page, size: size } })
   
-    return res.data
-  }
+  return res.data
+}
 
+// 구장 목록
+export const getGroundList = async (pageParam) => {
+  const { page, size } = pageParam
+  const res = await axios.get(`${prefix}/`, { params: { page: page, size: size } })
 
-  export const getGroundList = async (pageParam) => {
-    const { page, size } = pageParam
-    const res = await axios.get(`${prefix}/`, { params: { page: page, size: size } })
-  
     return res.data
-  }
+}
   
 
 // 구장등록
