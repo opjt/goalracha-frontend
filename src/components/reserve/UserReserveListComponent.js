@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { getUserReservationStatus, reserveInfo } from "api/reserveApi";
-import PageComponent from "components/common/pageComPonent";
+import PageComponent from "components/common/PageComponent";
 import useCustomLogin from "hooks/useCustomLogin";
 import BasicLayout from "layouts/BasicLayout";
 import moment from "moment";

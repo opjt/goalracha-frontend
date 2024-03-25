@@ -13,7 +13,7 @@ const ReserveListPage = () => {
   const [endDate, setEndDate] = useState(null); // 초기값을 null로 설정
 
   // 페이지 로드 시 예약 목록 및 페이지 데이터 가져오기
-    useEffect(() => {
+  useEffect(() => {
     const fetchData = async () => {
       try {
         const reserveData = await getAllReserveList({ page: 1, size: 10000 });
@@ -31,9 +31,9 @@ const ReserveListPage = () => {
     const reserveDate = new Date(reserve.reserveDate);
     const meetsDateCriteria = (!startDate || reserveDate >= startDate) && (!endDate || reserveDate <= endDate);
     const meetsSearchCriteria = reserve.groundName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                                reserve.businessName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                                reserve.userName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                                reserve.email.toLowerCase().includes(searchTerm.toLowerCase());
+      reserve.businessName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      reserve.userName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      reserve.email.toLowerCase().includes(searchTerm.toLowerCase());
 
     return meetsDateCriteria && meetsSearchCriteria;
   });
@@ -55,7 +55,7 @@ const ReserveListPage = () => {
             startDate={startDate}
             endDate={endDate}
             isClearable={true} // 날짜 선택 취소 가능
-            placeholderText="시작 날짜 선택"          
+            placeholderText="시작 날짜 선택"
             style={{
               padding: "10px",
               fontSize: "1rem",
@@ -128,11 +128,13 @@ const ReserveListPage = () => {
                 {reserve.businessName}
               </td>
               <td className="p-2 border border-gray-300">
-                {new Date(reserve.reserveDate).toLocaleDateString()}
+                {new Date(reserve.reserveDate).toISOString().split('T')[0]}
               </td>
-              <td className="p-2 border border-gray-300">{reserve.time}</td>
               <td className="p-2 border border-gray-300">
-                {new Date(reserve.createDate).toLocaleDateString()}
+                {`${reserve.time < 10 ? '0' + reserve.time : reserve.time}:00 ~ ${reserve.time + reserve.usageTime < 10 ? '0' + (reserve.time + reserve.usageTime) : reserve.time + reserve.usageTime}:00`}
+              </td>
+              <td className="p-2 border border-gray-300">
+                {new Date(reserve.createDate).toISOString().split('T')[0]}
               </td>
               <td className="p-2 border border-gray-300">{reserve.price}</td>
               <td className="p-2 border border-gray-300">{reserve.userName}</td>

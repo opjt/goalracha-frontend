@@ -87,7 +87,9 @@ const AdminReserveListPage = () => {
                                 <td className="p-2 border border-gray-300">{reserve.businessId}</td>
                                 <td className="p-2 border border-gray-300">{reserve.businessName}</td>
                                 <td className="p-2 border border-gray-300">{new Date(reserve.reserveDate).toLocaleDateString('ko-KR')}</td>
-                                <td className="p-2 border border-gray-300">{reserve.time}</td>
+                                <td className="p-2 border border-gray-300">
+                                    {`${reserve.time < 10 ? '0' + reserve.time : reserve.time}:00 ~ ${reserve.time + reserve.usageTime < 10 ? '0' + (reserve.time + reserve.usageTime) : reserve.time + reserve.usageTime}:00`}
+                                </td>
                                 <td className="p-2 border border-gray-300">{new Date(reserve.createDate).toLocaleDateString('ko-KR')}</td>
                                 <td className="p-2 border border-gray-300">{reserve.price}</td>
                                 <td className="p-2 border border-gray-300">{reserve.userName}</td>
