@@ -2,7 +2,7 @@ import { Suspense, lazy } from "react";
 import groundRouter from "./groundRouter.js";
 
 const Loading = <div>Loading....</div>
-const Login = lazy(() => import("pages/member/owner/LoginOwnerPage.js"))
+const Login = lazy(() => import("pages/member/user/LoginPage.js"))
 const Join = lazy(() => import("pages/member/owner/OwnerJoinPage.js"))
 const Mypage = lazy(() => import("../pages/member/owner/OwnerMyPage.js"))
 const BoardList = lazy(() => import("pages/board/UserListPage.js"));

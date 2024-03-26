@@ -102,7 +102,7 @@ const OwnerMyPage = () => {
         {" "}
         {/* 마이페이지랑 담당자 정보 사이의 간격 조절 */}
         <div className="flex items-center mb-4 gap-2">
-          <div className="font-bold text-xl ">마이페이지</div>
+          <div className="font-bold text-xl">마이페이지</div>
         </div>
         <div className="border-2 rounded-md border-gray-100 p-5">
           <div className="flex justify-between">
@@ -199,6 +199,7 @@ const OwnerMyPage = () => {
           content={modalContent}
           close="확인"
           callbackFn={handleModalClose}
+          closeButton="닫기"
         />
         )}
 

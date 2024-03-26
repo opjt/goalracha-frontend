@@ -1,72 +1,55 @@
-
 const PrivacyPolicyPage = () => {
   return (
-    <>
+    
+    <div className="max-w-screen-lg mx-auto mt-10 border border-gray-400 p-8 mb-10">
+      <h1 className="text-3xl font-bold mb-4">📋 개인정보 이용 동의약관</h1>
+      <p className="text-lg mb-4">
+        풋살 예약플랫폼 골라차(이하 골라차)에서는 회원 서비스 제공을 위해 다음의 개인정보를 수집하고 이를 수집/이용하며, 정보주체는 이에 동의하고 제공하는 개인정보에 대해 동의합니다.
+      </p>
 
-      <div className="max-w-screen-lg mx-auto mt-10">
-        <h1 className="text-3xl font-bold mb-4">개인정보처리방침</h1>
-        <p className="text-lg mb-4">
-          본 서비스는 사용자의 개인정보를 중요시하며, 이를 보호하기 위해 최선의 노력을 다하고 있습니다. 이에 관한 상세한 내용은 아래에서 확인하실 수 있습니다.
-        </p>
-        <h2 className="text-2xl font-bold mb-2">1. 수집하는 개인정보 항목</h2>
-      <ul className="list-disc pl-6 mb-4">
-        <li>이용자의 성명</li>
-        <li>이용자의 연락처 (전화번호 또는 이메일 주소)</li>
-        <li>예약 일시 및 시간</li>
-      </ul>
-      <h2 className="text-2xl font-bold mb-2">2. 개인정보의 수집 및 이용목적</h2>
+      <div className="max-w-screen-lg mx-auto mt-10 border border-gray-400 p-8">
+      <h2 className="text-2xl font-bold mb-2">1. 개인정보의 수집항목 및 수집방법</h2>
       <p className="mb-4">
-        이 서비스는 풋살장 예약을 위해 최소한의 개인정보를 수집하고 있습니다. 수집된 개인정보는 다음과 같은 목적으로 이용됩니다:
+        골라차는 실명인증정보와 가입정보를 수집합니다. 이는 홈페이지 회원가입을 통해 수집됩니다.
+        <br />
+        수집하는 개인정보의 항목은 다음과 같습니다:
       </p>
       <ul className="list-disc pl-6 mb-4">
-        <li>풋살장 예약 관리</li>
-        <li>이용자와의 연락</li>
+        <li>실명인증정보: 이름, 휴대전화번호, 카카오프로필, 사업자등록번호</li>
+        <li>가입정보: 아이디, 비밀번호, 사업자명, 이메일, 전화번호, 휴대전화번호, 담당자명, 카카오프로필</li>
       </ul>
-      <h2 className="text-2xl font-bold mb-2">3. 개인정보의 보유 및 이용기간</h2>
       <p className="mb-4">
-        수집된 개인정보는 이용자의 예약 정보를 관리하고 서비스 제공에 필요한 기간 동안 보유됩니다. 예약 정보가 더 이상 필요하지 않은 경우 즉시 파기됩니다.
+        또한 인터넷 서비스 이용과정에서 IP주소, 서비스 이용기록, 방문기록 등이 자동으로 생성되어 수집될 수 있습니다.
       </p>
-      <h2 className="text-2xl font-bold mb-2">4. 개인정보의 제공 및 공유</h2>
-      <p className="mb-4">
-        이 서비스는 이용자의 개인정보를 본래의 목적 이외에는 제3자에게 제공하지 않습니다.
-      </p>
-      <h2 className="text-2xl font-bold mb-2">5. 개인정보의 안전성 확보 조치</h2>
-      <p className="mb-4">
-        이 서비스는 이용자의 개인정보를 안전하게 관리하기 위해 다음과 같은 조치를 취하고 있습니다:
-      </p>
-      <ul className="list-disc pl-6 mb-4">
-        <li>개인정보 암호화</li>
-        <li>접근 제어를 위한 시스템 구축</li>
-        <li>보안 프로그램 설치 및 주기적인 업데이트</li>
-      </ul>
-      <h2 className="text-2xl font-bold mb-2">6. 개인정보 관련 권리</h2>
-      <p className="mb-4">
-        이용자는 본인의 개인정보에 대해 다음과 같은 권리를 행사할 수 있습니다:
-      </p>
-      <ul className="list-disc pl-6 mb-4">
-        <li>개인정보 열람 요청</li>
-        <li>개인정보 수정 요청</li>
-        <li>개인정보 삭제 요청</li>
-        <li>개인정보 처리 일시 중단 요청</li>
-      </ul>
-      <p className="mb-4">위의 권리 행사는 해당 서비스의 고객센터를 통해 가능합니다.</p>
-      <h2 className="text-2xl font-bold mb-2">7. 개인정보 처리방침 변경</h2>
-      <p className="mb-4">
-        이 개인정보 처리 방침은 법령, 정책 또는 보안 기술의 변경에 따라 변경될 수 있습니다. 변경 사항이 있는 경우 사전에 공지할 것입니다.
-      </p>
-      <h2 className="text-2xl font-bold mb-2">8. 개인정보 관리책임자</h2>
-      <p className="mb-4">
-        이 서비스의 개인정보 관리책임자는 다음과 같습니다:
-        <ul className="list-disc pl-6 mb-4">
-          <li>성명: [관리책임자 성명]</li>
-          <li>이메일: [관리책임자 이메일 주소]</li>
-          <li>전화번호: [관리책임자 연락처]</li>
-        </ul>
-      </p>
-    </div>
 
-    </>
-  );
+      <h2 className="text-2xl font-bold mb-2">2. 개인정보의 수집/이용 목적 및 보유/이용 기간</h2>
+      <p className="mb-4">
+        골라차는 회원 가입일로부터 서비스 제공하는 기간 동안 최소한의 개인정보를 보유하고 이용합니다.
+        회원가입 등을 통해 동의한 내용은 언제든지 철회할 수 있습니다.
+        수집한 개인정보는 수집/이용 목적이 달성되거나 보유/이용기간이 종료된 경우 지체 없이 파기됩니다.
+      </p>
+      <p className="mb-4">
+        보유/이용기간 및 목적은 다음과 같습니다:
+      </p>
+      <ul className="list-disc pl-6 mb-4">
+        <li>실명인증정보: 홈페이지 이용에 따른 본인 식별/인증절차에 이용, 보유 및 이용기간: 카카오(프로필)API는 별도로 저장하지 않으며 실명인증용으로만 이용</li>
+        <li>가입정보: 홈페이지 서비스 이용 및 회원관리, 불량회원의 부정 이용방지, 민원신청 및 처리 등, 보유 및 이용기간: 2년 또는 회원탈퇴시</li>
+      </ul>
+
+      <h2 className="text-2xl font-bold mb-2">3. 수집한 개인정보 제3자 제공</h2>
+      <p className="mb-4">
+        골라차는 정보주체의 동의나 법률의 특별한 규정에 따라 개인정보를 제3자에게 제공합니다.
+      </p>
+
+      <h2 className="text-2xl font-bold mb-2">4. 개인정보 처리업무 안내</h2>
+      <p className="mb-4">
+        골라차는 개인정보의 취급위탁을 하지 않으며, 아래의 API와 자체 DB를 통해 실명인증 및 로그인인증을 합니다.
+      </p>
+      <p className="mb-4">수탁업체:</p>
+      <ul className="list-disc pl-6 mb-4">
+        <li>카카오로그인API: 카카오ID 및 프로필을 통한 개인인증</li>
+      </ul></div></div>
+);
 };
 
 export default PrivacyPolicyPage;

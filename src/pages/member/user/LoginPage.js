@@ -1,36 +1,47 @@
+import React, { useState } from "react";
 import MainHeader from "components/layouts/mainHeader";
-import { getKakaoLoginLink } from "api/kakaoAPI";
-import { Link } from "react-router-dom"
+import { Link } from "react-router-dom";
+import IndividualLoginComponent from "components/member/OwnerLoginComponent";
+import BusinessLoginComponent from "components/member/UserLoginComponent";
 
 const LoginPage = () => {
-    const link = getKakaoLoginLink()
+    const [isIndividual, setIsIndividual] = useState(true); // 개인회원 로그인인지 여부를 나타내는 상태
+
+    const toggleLoginType = () => {
+        setIsIndividual(prevState => !prevState);
+    };
+
     return (
         <>
-
             <MainHeader />
-            <div className="max-w-screen-xl  mx-auto p-14">
-
-            <div className="relative flex flex-col justify-center overflow-hidden p-4">
-                <div className="w-full p-6 m-auto bg-white rounded-md shadow-md ring-2 ring-gray-800/50 lg:max-w-lg">
-                    <h1 className="text-3xl font-semibold text-center text-gray-700">Login</h1>
-                    <form className="space-y-4">
-                        <div className="w-full pt-6">
-                            <Link to ={link} className="btn btn-warning w-full border-inherit bg-yellow-300 text-base font-bold text-opacity-70" style={{backgroundcolor: '#fee500'}}>카카오 로그인</Link>
-                        </div>
-                        <Link to={'/owner/login'} className="text-xs text-gray-600 hover:underline hover:text-blue-600 grid justify-end">사업자 회원이십니까?</Link>
-                 
-                    </form>
-                </div>
-            </div>
+            <div className="max-w-screen-xl mx-auto p-14">
+                <div className="relative flex flex-col justify-center overflow-hidden p-4">
+                    <div className="flex justify-center items-center mb-6">
+                        <button onClick={toggleLoginType}>
+                            <div className="grid h-12 w-60 card bg-base-300 rounded-box place-items-center">
+                                <span className={`text-lg ${isIndividual ? 'font-bold' : ''} ${isIndividual ? 'text-black' : 'text-gray-600'}`}>개인회원</span>
+                            </div>
+                        </button>
+                        <div className="divider divider-horizontal"></div>
+                        <button onClick={toggleLoginType}>
+                            <div className="grid h-12 w-60 card bg-base-300 rounded-box place-items-center">   
+                                <span className={`text-lg ${!isIndividual ? 'font-bold' : ''} ${!isIndividual ? 'text-black' : 'text-gray-600'}`}>사업자회원</span>
+                            </div>
+                        </button>
+                    </div>
     
-                <div className="mx-auto w-fit">
-                    
+                    {/* 개인회원 혹은 사업자회원에 따라 로그인 컴포넌트를 렌더링합니다 */}
+                    {isIndividual ? (
+                        <BusinessLoginComponent />
+                    ) : (
+                        <IndividualLoginComponent />
+                    )}
                 </div>
             </div>
-
-          
-
         </>
     );
-}
+    
+    
+};
+
 export default LoginPage;
