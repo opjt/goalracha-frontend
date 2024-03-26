@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { getOwnerReserveListSearch, getOwnerReserveList } from "api/reserveApi";
 import { useSelector } from "react-redux";
 import moment from "moment";
-import PageComponent from "components/common/PageComponent";
+import PageComponent from "components/common/pagination";
 
 const OwnerReserveListPage = () => {
     const [reserveList, setReserveList] = useState([]);

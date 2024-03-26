@@ -26,11 +26,11 @@ const useCustomLogin = () => {
         navigate({ pathname: path }, { replace: true })
     }
     const moveToLogin = () => { //----------------------로그인 페이지로 이동
-        navigate({ pathname: '/user/login' }, { replace: true })
+        navigate({ pathname: '/login' }, { replace: true })
     }
     const moveToLoginWithCookie = (path) => { //----------------------로그인 페이지로 이동
         setCookie("loginurl", path, 1) //1 일
-        navigate({ pathname: '/user/login' }, { replace: true })
+        navigate({ pathname: '/login' }, { replace: true })
     }
     const moveToDefault = () => { //----------------------일반 유저가 로그인할 시 메인페이지로 이동
         navigate({ pathname: '/' }, { replace: true })
@@ -47,11 +47,11 @@ const useCustomLogin = () => {
         
     }
     const moveToLoginReturn = () => { //--------------------로그인 페이지로 이동 컴포넌트
-        return <Navigate replace to="/user/login" />
+        return <Navigate replace to="/login" />
     }
 
     const moveToOwnerLoginReturn = () => { //--------------------로그인 페이지로 이동 컴포넌트
-        return <Navigate replace to="/owner/login" />
+        return <Navigate replace to="/login" />
     }
 
     const exceptionHandle = (ex) => {

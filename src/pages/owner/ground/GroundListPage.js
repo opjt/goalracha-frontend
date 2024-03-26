@@ -1,10 +1,10 @@
 import { getOwnerGroundList } from "api/groundApi";
-import PageComponent from "components/common/PageComponent";
+import PageComponent from "components/common/pagination";
 import useCustomMove from "hooks/groundCustomMove";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useCustomLogin from "hooks/useCustomLogin";
-
+import { getGroundList } from "api/groundApi";
 const initState = {
   dtoList: [],
   pageNumList: [],
@@ -29,7 +29,8 @@ const GroundListPage = ({ groundList }) => {
     // 패이지 네이션
     getGroundList({ page, size }).then((data) => {
     getOwnerGroundList({ page, size },loginState.uNo).then((data) => {
-      setServerData(data);
+        setServerData(data);
+        })
     });
   }, [page, size]);
 
@@ -115,7 +116,7 @@ const GroundListPage = ({ groundList }) => {
         )}
       </div>
     </div>
-  );
+  )
 };
 
 export default GroundListPage;

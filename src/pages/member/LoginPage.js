@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import MainHeader from "components/layouts/mainHeader";
 import { Link } from "react-router-dom";
-import IndividualLoginComponent from "components/member/OwnerLoginComponent";
-import BusinessLoginComponent from "components/member/UserLoginComponent";
+import IndividualLoginComponent from "components/member/owner/OwnerLoginComponent";
+import BusinessLoginComponent from "components/member/user/UserLoginComponent";
 
 const LoginPage = () => {
     const [isIndividual, setIsIndividual] = useState(true); // 개인회원 로그인인지 여부를 나타내는 상태
@@ -13,7 +13,6 @@ const LoginPage = () => {
 
     return (
         <>
-            <MainHeader />
             <div className="max-w-screen-xl mx-auto p-14">
                 <div className="relative flex flex-col justify-center overflow-hidden p-4">
                     <div className="flex justify-center items-center mb-6">

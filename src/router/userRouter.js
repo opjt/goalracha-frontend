@@ -1,7 +1,7 @@
 import useCustomLogin from "hooks/useCustomLogin";
 import { Suspense, lazy } from "react";
 import { Navigate } from "react-router-dom";
-const Login = lazy(() => import("../pages/member/user/LoginPage"))
+
 const Logout = lazy(() => import("../pages/member/user/UserLogoutPage"))
 const KakaoRedirect = lazy(() => import("../pages/member/user/KakaoRedirectPage"))
 const Join = lazy(() => import("../pages/member/user/UserJoinPage"))
@@ -13,10 +13,7 @@ const ReserveInfo = lazy(() => import("../pages/reserve/user/ReserveInfo"))
 const MemberRouter = () => {
 
     return [
-        {
-            path: "login",
-            element: <Login />
-        },
+
         {
             path: "logout",
             element: <Logout />

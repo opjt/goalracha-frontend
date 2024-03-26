@@ -13,7 +13,7 @@ import AdminLogin from "../components/member/admin/AdminLoginComponent"; //admin
 
 const Main = lazy(() => import("../pages/MainPage"));
 const Test = lazy(() => import("../pages/test"));
-const Login = lazy(() => import("../pages/member/user/LoginPage.js"));
+const Login = lazy(() => import("../pages/member/LoginPage.js"));
 const Logout = lazy(() => import("../pages/member/Logout.js"));
 const GroundInfoPage = lazy(() => import("pages/reserve/user/GroundInfoPage.js"))
 const LoadingPage = lazy(() => import("pages/loading"))
