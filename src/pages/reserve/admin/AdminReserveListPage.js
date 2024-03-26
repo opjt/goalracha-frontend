@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { getAllReserveList } from "api/reserveApi";
 import { getAllReserveListSearch } from "api/reserveApi";
-import PageComponent from "components/common/PageComponent";
+import PageComponent from "components/common/pageComponent";
 import BasicLayout from "layouts/BasicLayout";
 
 const AdminReserveListPage = () => {

@@ -30,7 +30,7 @@ const LoginComponent = () => {
                 // 로그인 성공 후 반환된 데이터에서 사용자 타입 검사
                 if (data.error) {
                     // 로그인 실패 처리
-                    alert("이메일과 패스워드를 다시 확인하세요");
+                    alert("아이디, 비밀번호를 다시 확인하세요");
                 } else if (data.type === 'ADMIN') {
                     // 사용자 타입이 'admin'인 경우에만 로그인 성공 처리
                     alert("관리자 로그인 성공");
