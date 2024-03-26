@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { getOwnerReserveListSearch } from "api/reserveApi";
 import { getOwnerReserveList } from "api/reserveApi";
-import PageComponent from "components/common/PageComponent";
+import PageComponent from "components/common/pageComponent";
 import { useSelector } from "react-redux";
 import BasicLayout from "layouts/OwnerLayout";
 import {
