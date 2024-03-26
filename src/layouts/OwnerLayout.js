@@ -1,7 +1,6 @@
-import Userheader from "../components/layouts/userheader";
-import MainHeader from "../components/layouts/mainHeader";
-import Footer from "../components/layouts/footerr";
-import Topnav from "components/layouts/topnavowner";
+import MainHeader from "../components/layouts/ownerHeader";
+import Footer from "../components/layouts/footer";
+import Topnav from "components/layouts/ownerNav";
 
 const BasicLayout = ({ children }) => {
 

@@ -9,7 +9,7 @@ const prefix = `${API_SERVER_HOST}/goalracha/ground`
 
 // 상세정보 불러오기
 export const getGround = async (gno) => {
-  const res = await axios.get(`${prefix}/read/${gno}`)
+  const res = await jwtAxios.get(`${prefix}/read/${gno}`)
 
   return res.data
 }
@@ -17,7 +17,7 @@ export const getGround = async (gno) => {
 // 구장 사업자 구장목록
 export const getOwnerGroundList = async (pageParam, uNo) => {
   const { page, size } = pageParam
-  const res = await axios.get(`${prefix}/${uNo}`, { params: { page: page, size: size } })
+  const res = await jwtAxios.get(`${prefix}/${uNo}`, { params: { page: page, size: size } })
   
   return res.data
 }
@@ -25,7 +25,7 @@ export const getOwnerGroundList = async (pageParam, uNo) => {
 // 구장 목록
 export const getGroundList = async (pageParam) => {
   const { page, size } = pageParam
-  const res = await axios.get(`${prefix}/`, { params: { page: page, size: size } })
+  const res = await jwtAxios.get(`${prefix}/`, { params: { page: page, size: size } })
 
     return res.data
 }
@@ -41,7 +41,7 @@ export const postGroundRegister = async (groundInfo) => {
 
 // 구장삭제
 export const deleteGround = async (gno) => {
-  const res = await axios.delete(`${prefix}/delete/${gno}`)
+  const res = await jwtAxios.delete(`${prefix}/delete/${gno}`)
 
   return res.data
 }

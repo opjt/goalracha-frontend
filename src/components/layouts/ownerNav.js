@@ -1,6 +1,6 @@
 import { NavLink } from 'react-router-dom';
 
-const topnavowner = () => {
+const ownerNav = () => {
 
     return (
         <div className="max-w-screen-xl mx-auto navbar bg-base-100 px-2 py-0 min-h-1">
@@ -43,4 +43,4 @@ const topnavowner = () => {
 }
 
 
-export default topnavowner;
+export default ownerNav;

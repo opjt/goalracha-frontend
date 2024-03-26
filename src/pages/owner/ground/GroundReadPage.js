@@ -32,15 +32,12 @@ const initState = {
   roopIsYn: false,
   state: 0,
   uno: 0,
-  uploadFileNames: [],
 };
-
-
 
 const GroundReadPage = () => {
   
   const [ground, setGround] = useState(initState);
-  const { moveToList, moveToModify, moveToDelete } = useCustomMove();
+  const { moveToList, moveToModify } = useCustomMove();
   const { gno } = useParams();
 
   const host = API_SERVER_HOST;
@@ -61,14 +58,23 @@ const GroundReadPage = () => {
   };
 
   const sliderSettings = {
-    dots: false, // 아래 점 (dots) 표시 여부
-    infinite: true, // 마지막 이미지 이후 첫 이미지로 자동 루프 여부
+    dots: true,
+    infinite: ground.uploadFileNames && ground.uploadFileNames.length  > 1 ? true : false, // 마지막 이미지 이후 첫 이미지로 자동 루프 여부
     slidesToShow: 1, // 한번에 보여지는 슬라이드 수
     slidesToScroll: 1, // 한번에 넘어가는 슬라이드 수
     autoplay: true, // 자동 슬라이드 여부
     autoplaySpeed: 3000, // 자동으로 넘어가는 시간 간격
-    arrows: true, // 좌,우 버튼
+    arrows: false, // 좌,우 버튼
     pauseOnHover: true, // hover시 정지
+    appendDots: (dots) => (
+      <div
+        style={{
+          padding: "50px",
+        }}
+      >
+        <ul style={{ margin: "0px" }}> {dots} </ul>
+      </div>
+    ),
   };
 
   return (
