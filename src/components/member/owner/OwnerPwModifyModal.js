@@ -23,6 +23,7 @@ const OwnerPwModifyModal = ({ onPwModalClose, uNo, closeModal }) => {
         const { oldpw, newpw, newpwr } = pw;
 
         if (newpw !== newpwr) {
+            console.log(oldpw)
             setErrorMessage("새 비밀번호와 새 비밀번호 확인이 일치하지 않습니다.");
             return;
         }

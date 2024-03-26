@@ -3,7 +3,7 @@ import { getOwnerStatistics } from "api/reserveApi";
 import { useSelector } from "react-redux";
 import BasicLayout from "layouts/OwnerLayout";
 import { AreaChart, XAxis, YAxis, CartesianGrid, Tooltip, Area, ResponsiveContainer } from 'recharts';
-import { DateRangePicker } from 'react-date-range';
+import { DateRange } from "react-date-range";
 import ko from 'date-fns/locale/ko';	     // 날짜 포맷 라이브러리 (한국어 기능을 임포트)
 import 'react-date-range/dist/styles.css'; // main style file
 import 'react-date-range/dist/theme/default.css'; // theme css file
@@ -33,8 +33,6 @@ const OwnerStatisticsPage = () => {
     const handleGroundSelect = (event) => {
         setSelectedGround(event.target.value);
         fetchData(); // 구장이 변경될 때마다 데이터 다시 가져오기
-
-
     };
 
     useEffect(() => {
@@ -99,11 +97,8 @@ const OwnerStatisticsPage = () => {
                 data.push({ date: formattedDate, dailyRevenue }); // 날짜 대신에 년월일을 그래프에 추가
             });
         }
-
         return data;
     };
-
-
 
     const toggleDateRangeModal = () => {
         setShowDateRangeModal(!showDateRangeModal);
@@ -116,7 +111,6 @@ const OwnerStatisticsPage = () => {
                 toggleDateRangeModal(); // 모달 닫기
             }
         }
-
         // 모달이 열려 있을 때만 외부 클릭 이벤트를 추가합니다.
         if (showDateRangeModal) {
             document.addEventListener("mousedown", handleClickOutside);
@@ -130,7 +124,6 @@ const OwnerStatisticsPage = () => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
     }, [showDateRangeModal]);
-
 
     const handleDateRangeSelect = (ranges) => {
         const { startDate, endDate } = ranges.selection;
@@ -170,7 +163,6 @@ const OwnerStatisticsPage = () => {
 
     const prepareTimeSlotChartData = () => {
         const data = [];
-
         // 필터링된 예약목록 가져오기
         const filteredReserves = reserveList.filter(reserve => {
             const reserveDate = new Date(reserve.reserveDate);
@@ -180,8 +172,8 @@ const OwnerStatisticsPage = () => {
         // 전체 구장인 경우
         if (selectedGround === "전체 구장") {
             // 모든 시간대를 초기화하여 0으로 설정
-            const allTimes = Array.from({ length: 24 }, (_, index) => {
-                const hour = (index + 6) % 24; // 06부터 시작하고 24 넘어가면 다시 00부터 시작하도록 설정
+            const allTimes = Array.from({ length: 30 }, (_, index) => {
+                const hour = (index + 6) % 24; // 06부터 시작하고 24 넘어가면 다시 06부터 시작하도록 설정
                 const formattedHour = hour < 10 ? '0' + hour : hour; // 두 자리로 표현
                 return { time: `${formattedHour}:00`, reservationCount: 0 }; // 시간대 표시를 변경
             });
@@ -191,10 +183,9 @@ const OwnerStatisticsPage = () => {
                 const reserveTime = reserve.time; // 시간만 추출
                 const usageTime = reserve.usageTime; // 사용 시간 가져오기
                 for (let i = reserveTime; i < reserveTime + usageTime; i++) {
-                    allTimes[i % 24].reservationCount += 1; // 시간이 24를 넘어가는 경우를 고려하여 나머지 연산
+                    allTimes[i % 30].reservationCount += 1; // 시간이 30을 넘어가는 경우를 고려하여 나머지 연산
                 }
             });
-
             data.push(...allTimes);
         } else {
             // 특정 구장인 경우
@@ -202,17 +193,6 @@ const OwnerStatisticsPage = () => {
 
             // 각 시간대별로 예약된 횟수를 계산하여 저장
             for (let hour = 6; hour <= 29; hour++) {
-                const reservationCount = filteredGroundReserves.filter(reserve => {
-                    const reserveTime = parseInt(reserve.time); // 시간만 추출
-                    const usageTime = reserve.usageTime;
-                    return reserveTime <= hour && hour < reserveTime + usageTime;
-                }).length;
-                const formattedHour = hour < 10 ? '0' + hour : hour; // 두 자리로 표현
-                data.push({ time: `${formattedHour}:00`, reservationCount }); // 시간대 표시를 변경
-            }
-
-            // 30부터 다시 시작
-            for (let hour = 6; hour < 24; hour++) {
                 const reservationCount = filteredGroundReserves.filter(reserve => {
                     const reserveTime = parseInt(reserve.time); // 시간만 추출
                     const usageTime = reserve.usageTime;
@@ -261,6 +241,9 @@ const OwnerStatisticsPage = () => {
 
         return data;
     };
+
+
+
     const handleDailyRevenue = () => {
         setViewMode("daily"); // 일매출 모드로 변경
         const currentDate = new Date(); // 현재 날짜 가져오기
@@ -292,19 +275,31 @@ const OwnerStatisticsPage = () => {
                             <option key={index} value={ground}>{ground}</option>
                         ))}
                     </select>
-                    <button className="border border-gray-300 px-2 py-1 ml-4 rounded-md" onClick={handleTimeSlotRevenue}>
-                        시간대별
-                    </button>
+
                     {selectedGround !== "전체 구장" && (
                         <>
-                            <button className="border border-gray-300 px-2 py-1 ml-4 rounded-md" onClick={handleDailyRevenue}>
+                            <button className={`border border-gray-300 px-2 py-1 ml-4 rounded-md ${viewMode === 'daily' && 'bg-gray-300'}`} onClick={handleDailyRevenue}>
                                 일매출
                             </button>
-                            <button className="border border-gray-300 px-2 py-1 ml-4 rounded-md" onClick={handleMonthlyRevenue}>
+                            <button className={`border border-gray-300 px-2 py-1 ml-4 rounded-md ${viewMode === 'monthly' && 'bg-gray-300'}`} onClick={handleMonthlyRevenue}>
                                 월매출
                             </button>
-
-
+                            <button className={`border border-gray-300 px-2 py-1 ml-4 rounded-md ${viewMode === 'timeSlot' && 'bg-gray-300'}`} onClick={handleTimeSlotRevenue}>
+                                시간대별
+                            </button>
+                        </>
+                    )}
+                    {selectedGround == "전체 구장" && (
+                        <>
+                            <button className={`border border-gray-300 px-2 py-1 ml-4 rounded-md ${viewMode === 'daily' && 'bg-gray-300'}`} onClick={handleDailyRevenue}>
+                                구장별매출
+                            </button>
+                            <button className={`border border-gray-300 px-2 py-1 ml-4 rounded-md ${viewMode === 'monthly' && 'bg-gray-300'}`} onClick={handleMonthlyRevenue}>
+                                구장총매출
+                            </button>
+                            <button className={`border border-gray-300 px-2 py-1 ml-4 rounded-md ${viewMode === 'timeSlot' && 'bg-gray-300'}`} onClick={handleTimeSlotRevenue}>
+                                시간대별
+                            </button>
                         </>
                     )}
                 </div>
@@ -316,13 +311,14 @@ const OwnerStatisticsPage = () => {
                     </button>
                     {showDateRangeModal && (
                         <div className="absolute z-10 bg-white p-4 shadow-lg rounded-lg">
-                            <DateRangePicker
+                            <DateRange
                                 dateDisplayFormat="yyyy-mm.dd" // 날짜 포맷값
                                 ranges={selectedDateRange}
                                 onChange={handleDateRangeSelect}
                                 locale={ko}
                                 editableDateInputs={true}
                                 rangeColors={["#3aafa9"]}
+                                moveRangeOnFirstSelection={false}
                             />
                         </div>
                     )}
