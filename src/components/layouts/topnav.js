@@ -17,7 +17,7 @@ const Topnav = () => {
                 구장예약
               </NavLink>
             </button>
-            <button className="btn btn-ghost text-xl ml-5 font-medium">
+            <button className="btn btn-ghost text-xl font-medium ml-5">
               <NavLink
                 to="/notice"
                 className={({ isActive }) =>

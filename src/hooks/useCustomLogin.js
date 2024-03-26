@@ -4,7 +4,7 @@ import { getCookie, setCookie, removeCookie } from "../util/cookieUtil";
 import { loginPostAsync, logout, update } from "../slices/loginSlice"
 const useCustomLogin = () => {
     const navigate = useNavigate()
-    const dispatch = useDispatch()
+    const dispatch = useDispatch()  
     const loginState = useSelector(state => state.loginSlice) //-------로그인 상태
     const isLogin = loginState.userId ? true : false //----------로그인 여부
     const doLogin = async (loginParam) => { //----------로그인 함수
