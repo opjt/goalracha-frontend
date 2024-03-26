@@ -32,7 +32,7 @@ const customStyle = {
   `
 const JoinComponent = () => {
     const [member, setMember] = useState(initState)
-    const [idcheck, setIdcheck] = useState(false)
+    const [idcheck, setIdcheck] = useState()
     const loginInfo = useSelector(state => state.loginSlice)
     const [result, setResult] = useState()
     const { moveToPath, isLogin, doUpdate } = useCustomLogin()
@@ -93,9 +93,9 @@ const JoinComponent = () => {
 
     const checkValidate = (member) => {
         var regex_business = /^\d{3}-\d{2}-\d{5}$/;
-        var regex_email = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         var regex_tel = /^\d{3}-\d{3,4}-\d{4}$/; 
         var regex_id = /^(?=.*[a-zA-Z\d])[a-zA-Z\d]{6,20}$/;
+        var regex_email = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
         console.log(member)
         if(!regex_business.test(member.business_id)) {
@@ -110,14 +110,14 @@ const JoinComponent = () => {
         if(!idcheck) {
             return "아이디 중복을 확인해주세요"
         }
-        if(!regex_email.test(member.email)) {
-            return "잘못된 이메일 형식입니다"
-        }
         if(!regex_id.test(member.id)) {
             return "잘못된 아이디 형식입니다"
         }
         if(!regex_tel.test(member.tel)) {
             return "잘못된 전화번호 형식입니다"
+        }
+        if(!regex_email.test(member.email)) {
+            return "잘못된 이메일 형식입니다"
         }
         if(!member.check2) {
             return "이용약관에 동의하지 않았습니다"
@@ -168,6 +168,13 @@ const JoinComponent = () => {
                                 <input className="w-4/5 input input-bordered" name="id" type={'text'} placeholder="6~20자 영문(특수문자 불가능)" value={member.id} onChange={handleChange} />
                                 <button type="button" onClick={handleClickcheckId} className={`btn btn-neutral ${idcheck ? 'btn-disabled' : ''} w-1/5 ml-1 text-ellipsis min-w-24`}>중복확인</button>
                             </div>
+                            {idcheck  && (
+                                <div className={idcheck ? "text-green-500" : "text-red-500"}>
+                                    {idcheck
+                                    ? "사용 가능한 닉네임입니다."
+                                    : "이미 사용 중인 닉네임입니다."}
+                                </div>
+                            )}
                         </div>
                         <div className="flex justify-between">
                             <div className="w-1/2 mr-1">

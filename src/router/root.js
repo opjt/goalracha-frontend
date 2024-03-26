@@ -19,7 +19,6 @@ const GroundInfoPage = lazy(() => import("pages/reserve/user/GroundInfoPage.js")
 const LoadingPage = lazy(() => import("pages/loading"))
 
 
-const BoardList = lazy(() => import("pages/board/UserListPage.js"));
 
 
 const root = createBrowserRouter([
@@ -53,10 +52,7 @@ const root = createBrowserRouter([
         path: "/admin/login",
         element: <AdminLogin />,
     },
-    {
-        path: "notice",
-        element: <BoardList />
-    },
+
 
     ...adminRouter(), // adminRouter 함수를 호출하여 라우트 배열을 펼침
 ]);

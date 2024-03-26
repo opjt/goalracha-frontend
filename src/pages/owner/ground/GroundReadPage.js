@@ -208,7 +208,7 @@ const GroundReadPage = () => {
                 >
                   <img
                     key={i}
-                    src={`${host}/goalracha/ground/view/${imgFile}`}
+                    src={`${host}/api/ground/g/view/${imgFile}`}
                     alt={imgFile}
                   />
                 </div>

@@ -28,40 +28,40 @@ export const checkMemberId = async (member) => {
             'Content-Type': 'text/plain; charset=UTF-8'
         }
     };
-    const res = await axios.post(`${host}/checkid`, member, config)
+    const res = await axios.post(`${host}/g/checkid`, member, config)
     return res.data
 }
 
 // 닉네임 중복검사
 export const checkNickname = async (nickname) => {
-    const res = await axios.get(`${host}/checkNickname/${nickname}`);
+    const res = await axios.get(`${host}/g/checkNickname/${nickname}`);
     return res.data;
 };
 
 
 //사업자회원 회원가입
 export const joinOwner = async (member) => {
-    const res = await axios.post(`${host}/owner`, member)
+    const res = await axios.post(`${host}/g/owner`, member)
     return res.data
 }
 
 // 사용자 정보 수정 API 호출 함수
 export const putUserModify = async (member, uNo) => {
-    const res = await axios.put(`${host}/user/modify/${uNo}`, member);
+    const res = await jwtAxios.put(`${host}/user/modify/${uNo}`, member);
 
     return res.data;
 };
 
 // 사업자 정보 수정 API 호출 함수
 export const putOwnerModify = async (member, uNo) => {
-    const res = await axios.put(`${host}/owner/modify/${uNo}`, member);
+    const res = await jwtAxios.put(`${host}/owner/modify/${uNo}`, member);
 
     return res.data;
 };
 
 export const putOwnerPwModify = async (member, uNo) => {
     try {
-        const res = await axios.put(`${host}/owner/pwmodify/${uNo}`, member);
+        const res = await jwtAxios.put(`${host}/owner/pwmodify/${uNo}`, member);
         return res.data; // 정상적으로 처리되었을 경우 응답 데이터 반환
     } catch (error) {
         throw error; // 오류 발생 시 오류를 호출한 곳으로 반환
@@ -71,7 +71,7 @@ export const putOwnerPwModify = async (member, uNo) => {
 // 회원 탈퇴 API 호출 함수
 export const withdrawMember = async (uNo) => {
     try {
-        const res = await axios.delete(`${host}/${uNo}`);
+        const res = await jwtAxios.delete(`${host}/${uNo}`);
         return res.data; // 성공적으로 처리되었을 경우 응답 데이터 반환
     } catch (error) {
         throw error; // 오류 발생 시 오류를 호출한 곳으로 반환

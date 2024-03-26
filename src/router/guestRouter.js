@@ -34,7 +34,8 @@ const guestRouter = () => {
 {
     path: "terms-of-service",
     element: <TermsOfServicePage />
-},
+}
+
   ];
 };
 

@@ -1,8 +1,9 @@
-import { getGroundList } from "api/groundApi";
+import { getOwnerGroundList } from "api/groundApi";
 import PageComponent from "components/common/PageComponent";
 import useCustomMove from "hooks/groundCustomMove";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import useCustomLogin from "hooks/useCustomLogin";
 
 const initState = {
   dtoList: [],
@@ -23,9 +24,10 @@ const GroundListPage = ({ groundList }) => {
   const { page, size, moveToPage, moveToRead, moveToRegister } = useCustomMove();
 
   const [serverData, setServerData] = useState(initState);
+  const {loginState} = useCustomLogin()
 
   useEffect(() => {
-    getGroundList({ page, size }).then((data) => {
+    getOwnerGroundList({ page, size },loginState.uNo).then((data) => {
       console.log(data);
       setServerData(data);
     });

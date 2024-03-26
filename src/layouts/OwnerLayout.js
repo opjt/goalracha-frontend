@@ -12,7 +12,7 @@ const BasicLayout = ({ children }) => {
                 <Topnav />
             </div>
             <div>
-                <div className="max-w-screen-xl mx-auto p-2">
+                <div className="max-w-screen-xl mx-auto p-2 min-h-screen">
                     {children}
 
                 </div>

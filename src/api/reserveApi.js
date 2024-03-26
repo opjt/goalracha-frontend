@@ -2,16 +2,15 @@ import axios from "axios"
 import jwtAxios from "../util/jwtUtil"
 const host = `${process.env.REACT_APP_SERVER}/api/reserve`
 
-
-//아이디 중복검사
+//필터별 구장 전체검색
 export const getListbyFilter = async (req) => {
     // console.log(req)
-    const res = await axios.post(`${host}/v/date/`, req)
+    const res = await axios.post(`${host}/g/list/`, req)
     return res.data
 }
-
+//구장상세정보페이지
 export const getInfoByGno = async (req) => {
-    const res = await axios.get(`${host}/v/ground/${req.gno}/${req.date}`)
+    const res = await axios.get(`${host}/ㅎ/ground/${req.gno}/${req.date}`)
     return res.data
 }
 
@@ -27,10 +26,6 @@ export const reserveInfo = async (req) => {
     return res.data
 }
 
-export const reserveListUser = async (req) => {
-    const res = await axios.get(`${host}/v/ground/${req.gno}/${req.date}`)
-    return res.data
-}
 
 //user 예약 취소
 export const cancelReserv = async (req) => {
@@ -38,24 +33,17 @@ export const cancelReserv = async (req) => {
     return res.data
 }
 
-// user 이전 예약 목록
-export const getUserPreviousReservations = async (pageParam, uNo) => {
-    const { page, size } = pageParam
-    const res = await axios.get(`${host}/v/ulistprev/${uNo}`, { params: { page: page, size: size } })
-    return res.data
-}
-
-// user 예약현황 목록
+// user 예약 목록
 export const getUserReservationStatus = async (pageParam, uNo) => {
     const { page, size } = pageParam
-    const res = await axios.get(`${host}/v/ulist/${uNo}`, { params: { page: page, size: size } })
+    const res = await jwtAxios.get(`${host}/ulist/${uNo}`, { params: { page: page, size: size } })
     return res.data
 }
 
 // owner 예약 목록
 export const getOwnerReserveList = async (pageParam, uNo) => {
     const { page, size } = pageParam
-    const res = await axios.get(`${host}/v/owner-list/${uNo}`, { params: { page: page, size: size } })
+    const res = await jwtAxios.get(`${host}/owner-list/${uNo}`, { params: { page: page, size: size } })
     return res.data
 }
 
@@ -63,26 +51,26 @@ export const getOwnerReserveList = async (pageParam, uNo) => {
 // admin 예약 목록(전체)
 export const getAllReserveList = async (pageParam) => {
     const { page, size } = pageParam
-    const res = await axios.get(`${host}/v/list`, { params: { page: page, size: size } })
+    const res = await jwtAxios.get(`${host}/admin-list`, { params: { page: page, size: size } })
     return res.data
 }
 
 // owner 예약 목록
 export const getOwnerReserveListSearch = async (pageParam, uNo, searchName) => {
     const { page, size } = pageParam
-    const res = await axios.get(`${host}/v/owner-list/${uNo}/${searchName}`, { params: { page: page, size: size } })
+    const res = await jwtAxios.get(`${host}/owner-list/${uNo}/${searchName}`, { params: { page: page, size: size } })
     return res.data
 }
 
 // admin 예약 목록(전체)
 export const getAllReserveListSearch = async (pageParam, uNo, searchName) => {
     const { page, size } = pageParam
-    const res = await axios.get(`${host}/v/list/${uNo}/${searchName}`, { params: { page: page, size: size } })
+    const res = await jwtAxios.get(`${host}/admin-list/${uNo}/${searchName}`, { params: { page: page, size: size } })
     return res.data
 }
 
 // owner 예약 목록(리스트 출력)
 export const getOwnerStatistics = async (uNo) => {
-    const res = await axios.get(`${host}/v/owner/statistics/${uNo}`)
+    const res = await jwtAxios.get(`${host}/owner/statistics/${uNo}`)
     return res.data
 }

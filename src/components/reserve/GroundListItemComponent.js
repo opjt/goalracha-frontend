@@ -50,7 +50,7 @@ const GroundListItem = ({ groundInfo, date, callbackFn }) => {
                     </div>
                     <div>
                     {(groundInfo.uploadFileNames &&  groundInfo.uploadFileNames.length !== 0 ) ? (
-                        <img src={`http://localhost:8080/goalracha/ground/view/${groundInfo.uploadFileNames[0]}`} className="w-32 h-20 object-cover rounded-lg"></img>
+                        <img src={`${process.env.REACT_APP_SERVER}/api/ground/g/view/${groundInfo.uploadFileNames[0]}`} className="w-32 h-20 object-cover rounded-lg"></img>
                     ) : 
                     <div className="skeleton w-32 h-20"></div>
                     }

@@ -36,17 +36,18 @@ const selector = "#payment-widget";
 const clientKey = `${process.env.REACT_APP_TOSS_CK}`;
 const customerKey = "ANONYMOUS";
 
+const customStyle = {
+    cursor: 'initial',
+    background: 'initial',
+    color: 'black'
+  };
 const ReserveModal = ({ reservInfo ,groundInfo, callbackFn}) => {
     const { moveToPath, isLogin, loginState} = useCustomLogin()
     const paymentWidgetRef = useRef(null);
     const paymentMethodsWidgetRef = useRef(null);
     const [times, setTimes ] = useState(null);
     const [boxcheck, setBoxcheck] = useState({check1: false,check2:false})
-    const customStyle = {
-        cursor: 'initial',
-        background: 'initial',
-        color: 'black'
-      };
+    
       const handleChange = (e) => {
         boxcheck[e.target.name] = e.target.checked;
         
@@ -147,7 +148,7 @@ const ReserveModal = ({ reservInfo ,groundInfo, callbackFn}) => {
                                 <tr className="">
                                     <td>{reservInfo.date}</td>
                                     <td>{times}</td>
-                                    <td>{reservInfo.value}</td>
+                                    <td>{reservInfo.value.toLocaleString('ko-KR')}</td>
                                 </tr>
               
                                 </tbody>

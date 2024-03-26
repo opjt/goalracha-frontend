@@ -48,9 +48,10 @@ const GroundModifyComponent = () => {
 
     getGround(gno).then((data) => {
       var oldImages = data.uploadFileNames.map(
-        (fileName) => `${host}/goalracha/ground/view/${fileName}`
+        (fileName) => `${fileName}`
       );
       setGround(data);
+      console.log(data.uploadFileNames);
       setImgFile(oldImages);
       setFetching(false);
     });
@@ -89,14 +90,18 @@ const GroundModifyComponent = () => {
 
     setGround(updatedGround);
   };
-
+  // 한개 이미지 삭제
   const deleteOldImages = (imageName) => {
-    console.log(3)
-    const resultFilenames = ground.uploadFileNames.filter(
-      (fileName) => fileName !== imageName
-    );
-    ground.uploadFileNames = resultFilenames;
-    setGround({ ...ground, uploadFileNames: resultFilenames });
+    
+    // 삭제 버튼 눌린 이미지 지우기
+    const updatedImgFile = imgFile.filter((img) => img !== imageName);
+    console.log(imgFile)
+    console.log(imageName)
+    // imgFile 최신화
+    setImgFile(updatedImgFile)
+    var uploadFiles = ground.uploadFileNames.filter((img ) => img !== imageName);
+    ground.uploadFileNames = uploadFiles;
+    setGround({...ground, uploadFileNames: updatedImgFile });
   };
 
   const handleClickModify = (e) => {
@@ -288,7 +293,7 @@ const GroundModifyComponent = () => {
 
   const sliderSettings = {
     dots: true,
-    infinite: true, // 마지막 이미지 이후 첫 이미지로 자동 루프 여부
+    infinite: imgFile && imgFile.length  > 1 ? true : false, // 마지막 이미지 이후 첫 이미지로 자동 루프 여부
     slidesToShow: 1, // 한번에 보여지는 슬라이드 수
     slidesToScroll: 1, // 한번에 넘어가는 슬라이드 수
     autoplay: true, // 자동 슬라이드 여부
@@ -558,7 +563,7 @@ const GroundModifyComponent = () => {
 
         <div className="w-6/12 mb-4 p-8 ">
           <div className="text-2xl font-bold mb-4 text-gray-800">사진 수정</div>
-          {imgFile.length > 1 && ( // 배열의 길이가 1보다 클 때만 Slider
+          
             <Slider {...sliderSettings}>
               {imgFile.map((imgFile, i) => (
                 <div key={i} className="relative">
@@ -579,7 +584,7 @@ const GroundModifyComponent = () => {
                     <line x1="18" y1="6" x2="6" y2="18"></line>
                     <line x1="6" y1="6" x2="18" y2="18"></line>
                   </svg>
-                  <img src={imgFile} alt="" />
+                  <img src={imgFile.includes('blob:http') ? imgFile : `${host}/api/ground/g/view/${imgFile}`} alt="" />
                   {/* <button
                       className="btn btn-neutral w-full mt-6"
                       onClick={() => deleteOldImages(imgFile)}
@@ -589,8 +594,7 @@ const GroundModifyComponent = () => {
                 </div>
               ))}
             </Slider>
-          )}
-          {imgFile.length <= 1 && ( // 이미지 하나일 땐 슬라이더x
+          {/* {imgFile.length <= 1 && ( // 이미지 하나일 땐 슬라이더x
             <div>
               {imgFile.map((imgFile, i) => (
                 <div key={i} className="relative">
@@ -614,7 +618,7 @@ const GroundModifyComponent = () => {
                 </div>
               ))}
             </div>
-          )}
+          )} */}
           <input
             ref={uploadRef}
             type={"File"}

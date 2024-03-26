@@ -22,12 +22,13 @@ const BoardAdd = lazy(() => import("../pages/board/AddPage"));
 const BoardModify = lazy(() => import("../pages/board/ModifyPage"));
 
 const AdminLayout = () => {
-  const { isLogin } = useCustomLogin();
+  const { isLogin,loginState } = useCustomLogin();
 
-  if (!isLogin) {
     // 로그인하지 않은 경우 로그인 페이지로 리다이렉트
-    return <Navigate to="/admin/login" replace />;
-  }
+    if(loginState.type != "ADMIN") {
+      return <Navigate to="/admin/login" replace />;
+    }
+    
 
   return (
     <>

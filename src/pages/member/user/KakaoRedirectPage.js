@@ -4,6 +4,7 @@ import { getAccessToken, getMemberWithAccessToken } from "../../../api/kakaoAPI"
 import { useDispatch } from "react-redux";
 import { login } from "../../../slices/loginSlice";
 import useCustomLogin from "../../../hooks/useCustomLogin";
+import LoadingPage from "pages/loading";
 const KakaoRedirectPage = () => {
     const [searchParams] = useSearchParams()
     const authCode = searchParams.get("code")
@@ -30,8 +31,7 @@ const KakaoRedirectPage = () => {
     }, [authCode])
     return (
         <div>
-            <div>Kakao Login Redirect</div>
-            <div>{authCode}</div>
+            <LoadingPage/>
         </div>
     )
 }

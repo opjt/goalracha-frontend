@@ -6,15 +6,12 @@ const useCustomLogin = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const loginState = useSelector(state => state.loginSlice) //-------로그인 상태
-    const isLogin = loginState.email ? true : false //----------로그인 여부
+    const isLogin = loginState.userId ? true : false //----------로그인 여부
     const doLogin = async (loginParam) => { //----------로그인 함수
         const action = await dispatch(loginPostAsync(loginParam))
         return action.payload
     }
-    const adminDoLogin = async (loginParam) => { //----------로그인 함수
-        const action = await dispatch(loginPostAsync(loginParam))
-        return action.payload
-    }
+
     const doLogout = () => { //---------------로그아웃 함수
         dispatch(logout())
     }

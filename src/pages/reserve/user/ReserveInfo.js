@@ -108,7 +108,7 @@ const ReserveInfo = () => {
 							</tr>
 							<tr>
 								<th className="bg-slate-200 border-b-2 mx-0 border-white text-center w-fit">결제 금액</th>
-								<td colSpan={2}>{result.pay}</td>
+								<td colSpan={2}>{result.pay.toLocaleString('ko-KR')}</td>
 							</tr>
 							<tr>
 								<th className="bg-slate-200  mx-0 border-white text-center w-fit">결제 수단</th>

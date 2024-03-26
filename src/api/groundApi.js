@@ -1,15 +1,13 @@
 import axios from "axios"
 import jwtAxios from "util/jwtUtil";
 
-export const API_SERVER_HOST = 'http://localhost:8080';  // 백엔드 서버주소
 
-const host = `${process.env.REACT_APP_SERVER}/goalracha/ground`
-
-const prefix = `${API_SERVER_HOST}/goalracha/ground`
+const prefix = `${process.env.REACT_APP_SERVER}/api/ground`
+export const API_SERVER_HOST = `${process.env.REACT_APP_SERVER}`
 
 // 상세정보 불러오기
 export const getGround = async (gno) => {
-  const res = await axios.get(`${prefix}/read/${gno}`)
+  const res = await jwtAxios.get(`${prefix}/${gno}`)
 
   return res.data
 }
@@ -17,7 +15,7 @@ export const getGround = async (gno) => {
 // 구장 사업자 구장목록
 export const getOwnerGroundList = async (pageParam, uNo) => {
   const { page, size } = pageParam
-  const res = await axios.get(`${prefix}/${uNo}`, { params: { page: page, size: size } })
+  const res = await jwtAxios.get(`${prefix}/list/${uNo}`, { params: { page: page, size: size } })
   
   return res.data
 }
@@ -25,7 +23,7 @@ export const getOwnerGroundList = async (pageParam, uNo) => {
 // 구장 목록
 export const getGroundList = async (pageParam) => {
   const { page, size } = pageParam
-  const res = await axios.get(`${prefix}/`, { params: { page: page, size: size } })
+  const res = await jwtAxios.get(`${prefix}/list`, { params: { page: page, size: size } })
 
     return res.data
 }
@@ -34,14 +32,14 @@ export const getGroundList = async (pageParam) => {
 // 구장등록
 export const postGroundRegister = async (groundInfo) => {
   const header = { headers: { "Content-Type": "multipart/form-data" } }
-  const res = await jwtAxios.post(`${prefix}/register`, groundInfo, header)
+  const res = await jwtAxios.post(`${prefix}/`, groundInfo, header)
 
   return res.data
 };
 
 // 구장삭제
 export const deleteGround = async (gno) => {
-  const res = await axios.delete(`${prefix}/delete/${gno}`)
+  const res = await jwtAxios.delete(`${prefix}/${gno}`)
 
   return res.data
 }
@@ -49,7 +47,7 @@ export const deleteGround = async (gno) => {
 // 구장수정
 export const putGround = async (gno, ground) => {
   const header = { headers: { "Content-Type": "multipart/form-data" } }
-  const res = await jwtAxios.put(`${prefix}/modify/${gno}`, ground, header)
+  const res = await jwtAxios.put(`${prefix}/${gno}`, ground, header)
 
   return res.data
 }

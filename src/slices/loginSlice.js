@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { loginPost } from "../api/memberApi";
 import { getCookie, setCookie, removeCookie } from "../util/cookieUtil";
 const initState = {
-    email: ''
+    userId: ''
 }
 
 const loadMemberCookie = () => { //쿠키에서 로그인 정보 로딩

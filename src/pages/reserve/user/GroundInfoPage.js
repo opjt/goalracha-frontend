@@ -95,19 +95,8 @@ const GroundInfoPage = () => {
         getInfoByGno(req).then((result) => {
             console.log(result)
             setGroundInfo(result.groundInfo)
-            // const geocoder = new kakao.maps.services.Geocoder();
-  
-            // let callback = function(result, status) {
-            //     if (status === kakao.maps.services.Status.OK) {
-            //     const newSearch = result[0]
-            //     setState({
-            //         center: { lat: newSearch.y, lng: newSearch.x }
-            //     })
-            //     }
-            // };
-            // geocoder.addressSearch(`${searchAddress}`, callback);
-            
-        
+
+                
             var openTime = result.groundInfo.openTime;
             var closeTime = result.groundInfo.closeTime;
             if(closeTime <= openTime) {
@@ -189,7 +178,7 @@ const GroundInfoPage = () => {
                     )}
                     {groundInfo.uploadFileNames.map((imgFile, i) =>
                         <div id={`slide${i}`} className="carousel-item relative w-full overflow-hidden" key={i}>
-                            <img src={`http://localhost:8080/goalracha/ground/view/${imgFile}`} className="w-full h-full object-cover" />
+                            <img src={`${process.env.REACT_APP_SERVER}/api/ground/g/view/${imgFile}`} className="w-full h-full object-cover" />
                             
                             <div className="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
                                 <button onClick={() => scrollCarousel(i == 0 ? groundInfo.uploadFileNames.length-1 : i-1)} className="btn btn-circle">❮</button> 

@@ -209,7 +209,7 @@ const GroundListPage = () => {
           <Slider {...sliderSettings}>
           {selectedGround.uploadFileNames && selectedGround.uploadFileNames.map((fileName, index) => (
             <div className="mx-auto" style={{ width: '100%', maxHeight: '300px', overflow: 'hidden' }}> {/* 이미지 컨테이너 크기 조정 */}
-            <img key={index} src={`http://localhost:8080/goalracha/ground/view/${fileName}`} alt={`Ground Image ${index}`} className="max-w-full h-auto mx-auto"/>
+            <img key={index} src={`${process.env.REACT_APP_SERVER}/api/ground/g/view/${fileName}`} alt={`Ground Image ${index}`} className="max-w-full h-auto mx-auto"/>
           </div>
           ))}
           </Slider>

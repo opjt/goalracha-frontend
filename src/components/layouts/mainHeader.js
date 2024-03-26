@@ -25,6 +25,7 @@ const MainHeader = ({ children }) => {
 
 	useEffect(() => {
         if(isLogin) {
+			console.log(loginState)
             if(loginState.email === loginState.nickname) {
                moveToPath("/user/join")
             }
@@ -46,7 +47,7 @@ const MainHeader = ({ children }) => {
 		dispatch(update(searchInput)); // Redux 상태 업데이트
 		setSearchInput("");
 		console.log("Current Path:", location.pathname); // 현재 경로 출력
-		if (!location.pathname.startsWith("/reserve")) {
+		if (!location.pathname !== "reserve") {
 			navigate({ pathname: "/reserve" });
 		}
 		}
@@ -64,7 +65,7 @@ const MainHeader = ({ children }) => {
 			<input
 				type="text"
 				placeholder="지역, 구장명으로 찾기"
-				className="input input-bordered w-24 md:w-auto"
+				className="input input-bordered w-auto max-md:w-36"
 				value={searchInput} // 입력된 값 바인딩
 				onChange={handleInputChange} // 값이 변경될 때마다 호출
 				onKeyDown={handleKeyPress} // 키 눌릴 때 호출

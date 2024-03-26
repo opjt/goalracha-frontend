@@ -59,18 +59,13 @@ const OwnerPwModifyModal = ({ onPwModalClose, uNo, closeModal }) => {
                                 {errorMessage && <div className="text-red-500 text-sm">{errorMessage}</div>}
 
                                 <div className="mt-4">
-                                    
-                                    <input type="password" name="oldpw" id="oldpw" className="input input-bordered w-full max-w-md" placeholder="기존 비밀번호를 입력하세요"  />
-                                </div>
-                                
-
-                                <div className="mt-4">
-                                    
-                                    <input type="password" name="newpw" id="newpw" className="input input-bordered w-full max-w-md" placeholder="새 비밀번호를 입력하세요."  />
+                                    <input type="password" name="oldpw" id="oldpw" className="input input-bordered w-full max-w-md" placeholder="기존 비밀번호를 입력하세요"  onChange={handlePwChange}/>
                                 </div>
                                 <div className="mt-4">
-                                    
-                                    <input type="password" name="newpwr" id="newpwr" className="input input-bordered w-full max-w-md" placeholder="새 비밀번호를 다시 입력하세요."  />
+                                    <input type="password" name="newpw" id="newpw" className="input input-bordered w-full max-w-md" placeholder="새 비밀번호를 입력하세요." onChange={handlePwChange} />
+                                </div>
+                                <div className="mt-4">
+                                    <input type="password" name="newpwr" id="newpwr" className="input input-bordered w-full max-w-md" placeholder="새 비밀번호를 다시 입력하세요." onChange={handlePwChange} />
                                 </div>
                             </div>
                         
