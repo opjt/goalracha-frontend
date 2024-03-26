@@ -2,11 +2,15 @@ import { useDispatch, useSelector } from "react-redux"
 import { Navigate, createSearchParams, useNavigate } from "react-router-dom"
 import { getCookie, setCookie, removeCookie } from "../util/cookieUtil";
 import { loginPostAsync, logout, update } from "../slices/loginSlice"
+
 const useCustomLogin = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch()  
     const loginState = useSelector(state => state.loginSlice) //-------로그인 상태
-    const isLogin = loginState.userId ? true : false //----------로그인 여부
+    const isLogin = loginState.email ? true : false //----------로그인 여부
+
+    const isOwnerLogin = loginState.businessId ? true : false //----------사업자로그인 여부
+
     const doLogin = async (loginParam) => { //----------로그인 함수
         const action = await dispatch(loginPostAsync(loginParam))
         return action.payload
@@ -28,6 +32,9 @@ const useCustomLogin = () => {
         setCookie("loginurl", path, 1) //1 일
         navigate({ pathname: '/user/login' }, { replace: true })
     }
+    const moveToDefault = () => { //----------------------일반 유저가 로그인할 시 메인페이지로 이동
+        navigate({ pathname: '/' }, { replace: true })
+    }
     const afterLogin = () => {
         var url = getCookie("loginurl")
         //닉네임 처리
@@ -42,6 +49,11 @@ const useCustomLogin = () => {
     const moveToLoginReturn = () => { //--------------------로그인 페이지로 이동 컴포넌트
         return <Navigate replace to="/user/login" />
     }
+
+    const moveToOwnerLoginReturn = () => { //--------------------로그인 페이지로 이동 컴포넌트
+        return <Navigate replace to="/owner/login" />
+    }
+
     const exceptionHandle = (ex) => {
         console.log("Exception------------------------")
         console.log(ex)
@@ -59,8 +71,8 @@ const useCustomLogin = () => {
         }
     }
     return {
-        loginState, isLogin, doLogin, doLogout, doUpdate,moveToPath, moveToLogin,
-        moveToLoginReturn, exceptionHandle, moveToLoginWithCookie,afterLogin
+        loginState, isLogin, isOwnerLogin, doLogin, doLogout, doUpdate,moveToPath, moveToLogin,
+        moveToLoginReturn, exceptionHandle, moveToLoginWithCookie,afterLogin,moveToOwnerLoginReturn, moveToDefault
     }
 }
 

@@ -14,10 +14,10 @@ const loadMemberCookie = () => { //쿠키에서 로그인 정보 로딩
     return memberInfo
 }
 
-
 export const loginPostAsync = createAsyncThunk('loginPostAsync', (param) => {
     return loginPost(param);
 })
+
 const loginSlice = createSlice({
     name: 'LoginSlice',
     initialState: loadMemberCookie() || initState,
@@ -61,5 +61,5 @@ const loginSlice = createSlice({
     }
 
 })
-export const { login, logout,update } = loginSlice.actions
+export const { login, logout, update } = loginSlice.actions
 export default loginSlice.reducer

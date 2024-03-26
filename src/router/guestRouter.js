@@ -7,6 +7,8 @@ const GroundInfoPage = lazy(() => import("pages/reserve/user/GroundInfoPage.js")
 const BoardList = lazy(() => import("pages/board/UserListPage.js"));
 const PrivacyPolicyPage = lazy(() => import("pages/PrivacyPolicyPage.js"))
 const TermsOfServicePage = lazy(() => import("pages/TermsOfServicePage.js"))
+const OwnerJoin = lazy(() => import("pages/member/owner/OwnerJoinPage.js"))
+const OwnerLogin = lazy(() => import("pages/member/owner/LoginOwnerPage.js"))
 
 
 const guestRouter = () => {
@@ -34,8 +36,15 @@ const guestRouter = () => {
 {
     path: "terms-of-service",
     element: <TermsOfServicePage />
-}
-
+},
+{
+  path: "owner/login",
+  element: <OwnerLogin />
+},
+{
+  path: "owner/join",
+  element: <OwnerJoin />
+},
   ];
 };
 

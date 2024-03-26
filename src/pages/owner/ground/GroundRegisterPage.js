@@ -17,9 +17,9 @@ const initState = {
   openTime: "",
   closeTime: "",
   fare: "",
-  userGuide: "",
-  userRules: "",
-  refundRules: "",
+  userGuide: "[ 주차 상세 ]\n- 사업자회원 작성 \n [ 구장 출입문 안내 ]\n -사업자회원 작성 \n[ 구장이용 안내 ]\n -사업자회원 작성) \n[ 대여 상세 ]\n -사업자회원 작성 \n[ 물, 음료 ]\n -사업자회원 작성",
+  userRules: "- 풋살장 예약시간 준수\n- 풋살장 내 취사, 흡연 및 음주행위, 지나친 소음행위 금지(적발 시 이용불가)\n- 시설 사용 후 정리정돈 ( 쓰레기 반드시 처리 )\n- 고의 및 과실로 인한 시설물 훼손 및 파손시 사용자가 배상하며 경기중 부상은 본인이 책임집니다.\n- 잔디보호와 부상방지를 위하여 스터드가 있는 축구화(SG, FG, HG, AG)는 착용이 금지되며 풋살화(TF)만 착용 가능 합니다.\n- 위 내용이 지켜지지 않을 경우 무환불 퇴장조치 될 수 있으니 예약시 꼭 참고부탁드립니다.\n- 위 내용을 지키지 않아 발생하는 문제는 예약자 본인에게 있습니다. ",
+  refundRules: "- 이용3일 전까지 : 100% 환불\n- 2일 전 ~ 대관 당일 : 환불 불가\n- 다음과 같은 경우에는 상단 규정대로 처리\n- 고객의 사정으로 예약된 날짜에 구장 이용을 못하는 경우\n- 구장, 날짜, 시간 등을 실수로 잘못 선택했을 경우\n- 단순 변심으로 인해 환불이나 변경을 요청하는 경우",
   vestIsYn: false,
   footwearIsYn: false,
   showerIsYn: false,
@@ -247,18 +247,28 @@ const GroundRegisterPage = () => {
   ];
 
   const sliderSettings = {
-    infinite: true, // 마지막 이미지 이후 첫 이미지로 자동 루프 여부
+    dots: true,
+    infinite: imgFile && imgFile.length  > 1 ? true : false, // 마지막 이미지 이후 첫 이미지로 자동 루프 여부
     slidesToShow: 1, // 한번에 보여지는 슬라이드 수
     slidesToScroll: 1, // 한번에 넘어가는 슬라이드 수
     autoplay: true, // 자동 슬라이드 여부
     autoplaySpeed: 3000, // 자동으로 넘어가는 시간 간격
-    arrows: true, // 좌,우 버튼
+    arrows: false, // 좌,우 버튼
     pauseOnHover: true, // hover시 정지
+    appendDots: (dots) => (
+      <div
+        style={{
+          padding: "50px",
+        }}
+      >
+        <ul style={{ margin: "0px" }}> {dots} </ul>
+      </div>
+    ),
   };
 
   return (
     <div className=" flex-wrap flex-direction justify-center">
-      <div className="max-w-screen-lg flex mb-4 w-full">
+      <div className="flex mb-4 w-full">
         {result ? (
           <ResultModal
             title={"구장등록 결과"}
@@ -461,7 +471,6 @@ const GroundRegisterPage = () => {
 
         <div className="w-6/12 mb-4 bg-white p-8 ">
           <div className="text-2xl font-bold mb-4 text-gray-800">사진 등록</div>
-         {imgFile.length > 1 && ( // 배열의 길이가 1보다 클 때만 Slider
               <Slider {...sliderSettings}>
                 {imgFile.map((imgFile, i) => (
                   <div key={i}>
@@ -472,19 +481,6 @@ const GroundRegisterPage = () => {
                   </div>
                 ))}
               </Slider>
-            )}
-            {imgFile.length <= 1 && ( // 이미지 하나일 땐 슬라이더xx
-              <div>
-                {imgFile.map((imgFile, i) => (
-                  <div key={i}>
-                    <img
-                      src={imgFile}
-                      alt={imgFile}
-                    />
-                  </div>
-                ))}
-              </div>
-            )}
           <input
             required
             ref={uploadRef}
@@ -493,6 +489,7 @@ const GroundRegisterPage = () => {
             multiple={true}
             className="file-input file-input-bordered w-full max-w-xs"
           ></input>
+
           <div className="flex-wrap bg-white pt-8 w-full ">
             <h2 className="flex-auto text-2xl font-bold mb-4 text-gray-800">
               부대시설

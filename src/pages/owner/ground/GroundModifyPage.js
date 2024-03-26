@@ -32,6 +32,7 @@ const initState = {
 };
 
 const GroundModifyComponent = () => {
+
   const [ground, setGround] = useState(initState);
   const [imgFile, setImgFile] = useState([]);
   const uploadRef = useRef();
@@ -43,6 +44,7 @@ const GroundModifyComponent = () => {
 
   const host = API_SERVER_HOST;
 
+  // 구장 정보에 기존구장정보 값 설정
   useEffect(() => {
     setFetching(true);
 
@@ -57,6 +59,7 @@ const GroundModifyComponent = () => {
     });
   }, [gno]);
 
+  // 정보입력
   const handleChangeModify = (e) => {
     ground[e.target.name] = e.target.value;
 
@@ -66,7 +69,7 @@ const GroundModifyComponent = () => {
     setGround({ ...ground });
   };
 
-  // 이미지 업로드 input의 onChange
+  // 업로드된 이미지 imgFile에 업데이트
   const saveImgFile = () => {
     const files = uploadRef.current.files;
     const fileArray = [...imgFile];
@@ -83,35 +86,46 @@ const GroundModifyComponent = () => {
   // 전체 이미지 삭제
   const deleteAllImages = () => {
     
+    // imgFile 비우기
     setImgFile([]);
-    const updatedGround = { ...ground, uploadFileNames: [] };
+    const deletImgFile = { ...ground, uploadFileNames: [] };
 
+    // uploadRef 비우기
     uploadRef.current.value = null;
 
-    setGround(updatedGround);
-  };
-  // 한개 이미지 삭제
-  const deleteOldImages = (imageName) => {
-    
-    // 삭제 버튼 눌린 이미지 지우기
-    const updatedImgFile = imgFile.filter((img) => img !== imageName);
-    console.log(imgFile)
-    console.log(imageName)
-    // imgFile 최신화
-    setImgFile(updatedImgFile)
-    var uploadFiles = ground.uploadFileNames.filter((img ) => img !== imageName);
-    ground.uploadFileNames = uploadFiles;
-    setGround({...ground, uploadFileNames: updatedImgFile });
+    setGround(deletImgFile);
   };
 
+// 한개 이미지 삭제
+const deleteOldImages = (imageName) => {
+
+  // 삭제 버튼 눌린 이미지 지우기
+  const deletImgFile = imgFile.filter((img) => img !== imageName);
+
+  // 삭제 버튼 눌린 이미지 구장 정보에서 지우기
+  const deleteOldFileNames = ground.uploadFileNames.filter((img) => img !== imageName);
+
+  // 새로 추가된 이미지 삭제
+  //const newFiles = Array.from(uploadRef.current.files).filter(file => URL.createObjectURL(file) !== imageName);
+
+  // imgFile 최신화 및 이미지 삭제에 대한 구장정보 최신화
+  setImgFile(deletImgFile);
+  //uploadRef.current.files = newFiles.map(file => file);
+  setGround({ ...ground, uploadFileNames: deleteOldFileNames });
+};
+
+
+  // 수정 버튼 함수
   const handleClickModify = (e) => {
     const files = uploadRef.current.files;
     const formData = new FormData();
 
+    // 새로운 파일 폼데이터로 변경
     for (let i = 0; i < files.length; i++) {
       formData.append("files", files[i]);
     }
 
+    // 구장정보 폼데이터로 변경
     formData.append("name", ground.name);
     formData.append("addr", ground.addr);
     formData.append("inAndOut", ground.inAndOut);
@@ -134,10 +148,12 @@ const GroundModifyComponent = () => {
     formData.append("roopIsYn", ground.roopIsYn);
     formData.append("state", ground.state);
 
+    // 기존이미지 폼데이터로 변경
     for (let i = 0; i < ground.uploadFileNames.length; i++) {
       formData.append("uploadFileNames", ground.uploadFileNames[i]);
     }
 
+    // 수정버튼 클릭시 입력되지 않은 값 경고
     if (!ground.name) {
       alert("구장이름을 입력해주세요.");
       return;
@@ -193,6 +209,7 @@ const GroundModifyComponent = () => {
 
     setFetching(true);
 
+    // 구장정보 수정
     putGround(gno, formData)
       .then((data) => {
         console.log(data);
@@ -202,6 +219,7 @@ const GroundModifyComponent = () => {
       .catch((error) => console.error(error));
   };
 
+  // 삭제버튼 모든 정보값은 그대로, 구장상태만 폐업신청(state 4, 사장에겐 폐업으로 표출, 관리가자 폐업승인시 삭제된구장(state 0)으로 표출)으로 변경
   const handleClickDelete = (e) => {
     const confirmDelete = window.confirm(
       "정말로 폐업신청하시겠습니까?\n폐업신청 시 구장예약이 불가능하며, 되돌릴 수 없습니다."
@@ -254,6 +272,7 @@ const GroundModifyComponent = () => {
     }
   };
 
+  // 모달 종류
   const closeModal = () => {
     if (result === "Modified") {
       moveToModifyRead(gno);
@@ -262,6 +281,7 @@ const GroundModifyComponent = () => {
     }
   };
 
+  // 다음 우편주소 api
   function DaumPostcode() {
     new window.daum.Postcode({
       oncomplete: function (data) {
@@ -283,6 +303,7 @@ const GroundModifyComponent = () => {
     }).open();
   }
 
+  // 구장 상태 매핑
   const stateMapping = {
     0: "삭제된 구장입니다",
     1: "등록신청",
@@ -291,8 +312,9 @@ const GroundModifyComponent = () => {
     4: "폐업",
   };
 
+  // 이미지 슬라이더 값 세팅
   const sliderSettings = {
-    dots: true,
+    dots: true, // 이미지 개수 표출 점
     infinite: imgFile && imgFile.length  > 1 ? true : false, // 마지막 이미지 이후 첫 이미지로 자동 루프 여부
     slidesToShow: 1, // 한번에 보여지는 슬라이드 수
     slidesToScroll: 1, // 한번에 넘어가는 슬라이드 수
@@ -326,16 +348,19 @@ const GroundModifyComponent = () => {
     setGround({ ...ground });
   };
 
+  // 사장이 변경 가능한 구장 상태값 셀렉트
   const stateSelect = [
     { value: "2", label: "오픈" },
     { value: "3", label: "준비중" },
   ];
 
+  // 실내 실외 셀렉트
   const inAndOutSelect = [
     { value: "실내", label: "실내" },
     { value: "실외", label: "실외" },
   ];
 
+  // 오픈, 마감시간 셀렉트
   const timeSelect = [
     { value: "1", label: "01시" },
     { value: "2", label: "02시" },
@@ -563,7 +588,6 @@ const GroundModifyComponent = () => {
 
         <div className="w-6/12 mb-4 p-8 ">
           <div className="text-2xl font-bold mb-4 text-gray-800">사진 수정</div>
-          
             <Slider {...sliderSettings}>
               {imgFile.map((imgFile, i) => (
                 <div key={i} className="relative">
@@ -584,41 +608,12 @@ const GroundModifyComponent = () => {
                     <line x1="18" y1="6" x2="6" y2="18"></line>
                     <line x1="6" y1="6" x2="18" y2="18"></line>
                   </svg>
-                  <img src={imgFile.includes('blob:http') ? imgFile : `${host}/api/ground/g/view/${imgFile}`} alt="" />
-                  {/* <button
-                      className="btn btn-neutral w-full mt-6"
-                      onClick={() => deleteOldImages(imgFile)}
-                    >
-                      기존이미지 삭제
-                    </button> */}
+                  
+                  <img src={imgFile.includes('blob:http') ? imgFile : `${host}/api/ground/g/view/${imgFile}`} alt={imgFile} />
+  
                 </div>
               ))}
             </Slider>
-          {/* {imgFile.length <= 1 && ( // 이미지 하나일 땐 슬라이더x
-            <div>
-              {imgFile.map((imgFile, i) => (
-                <div key={i} className="relative">
-                  <svg
-                    className="cursor-pointer absolute right-4 top-4 rounded-full bg-black bg-opacity-30"
-                    onClick={() => (console.log(3))}
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="#f0f0f0"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <line x1="18" y1="6" x2="6" y2="18"></line>
-                    <line x1="6" y1="6" x2="18" y2="18"></line>
-                  </svg>
-                  <img src={imgFile} alt={imgFile} />
-                </div>
-              ))}
-            </div>
-          )} */}
           <input
             ref={uploadRef}
             type={"File"}
@@ -797,21 +792,21 @@ const GroundModifyComponent = () => {
         <div className="mt-8 flex justify-center">
           <button
             type="button"
-            className="m-2 w-3/12 btn btn-neutral text-xl"
+            className="m-2 w-4/12 btn btn-neutral text-xl"
             onClick={moveToGroundList}
           >
             목록
           </button>
           <button
             type="button"
-            className="m-2 w-5/12 btn btn-neutral text-xl"
+            className="m-2 w-4/12 btn btn-neutral text-xl"
             onClick={handleClickModify}
           >
             수정
           </button>
           <button
             type="button"
-            className="m-2 w-3/12 btn btn-error text-xl"
+            className="m-2 w-4/12 btn btn-error text-xl"
             onClick={handleClickDelete}
           >
             삭제

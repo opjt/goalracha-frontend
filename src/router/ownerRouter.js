@@ -13,14 +13,6 @@ const OwnerStatistics = lazy(() => import("pages/reserve/owner/OwnerStatisticsPa
 const ownerRouter = () => {
     return [
         {
-            path: "login",
-            element: <Login />
-        },
-        {
-            path: "join",
-            element: <Join />
-        },
-        {
             path: "ground",
             children: groundRouter()
         }, 
