@@ -18,7 +18,7 @@ export const changeGroundState = async (gno, newState) => {
 export const fetchImagesByGno = async (gno) => {
   try {
     const response = await jwtAxios.get(`${API_BASE_URL}/images/${gno}`);
-    return response.json();
+    return response.data;
   } catch (error) {
     console.error('Error fetching images:', error);
   }
@@ -53,6 +53,16 @@ export const fetchReservationsForUser = async (userName) => {
     return response.data.dtoList; // 'dtoList' 프로퍼티로 배열 데이터에 접근
   } catch (error) {
     console.error("Fetching reservations for user failed:", error);
+    throw error;
+  }
+};
+
+export const fetchUserReservationsWithUserInfo = async (uNo, pageRequest = { page: 1, size: 10 }) => {
+  try {
+    const response = await axios.get(`${process.env.REACT_APP_SERVER}/api/reserve/g/user-reservations/${uNo}`, { params: pageRequest });
+    return response.data;
+  } catch (error) {
+    console.error("Fetching user reservations with user info failed:", error);
     throw error;
   }
 };

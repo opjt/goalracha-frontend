@@ -20,16 +20,6 @@ const GroundListPage = () => {
   useEffect(() => {
     console.log('선택된 구장:', selectedGround);
   }, [selectedGround]);
-  
-  // const handleUpdateGroundState = async (gno, currentState) => {
-  //   const newState = currentState === 1 ? 2 : 1;
-  //   try {
-  //     await changeGroundState(gno, newState);
-  //     await fetchGroundsData(); // 상태 변경 후 목록 새로고침을 확실하게 수행
-  //   } catch (error) {
-  //     console.error('Error updating ground state:', error);
-  //   }
-  // };
 
   const fetchGroundsData = async () => {
     setIsLoading(true);
@@ -62,23 +52,6 @@ const GroundListPage = () => {
     } finally {
       setIsLoading(false);
     }
-  };
-
-  // 마우스 이벤트 핸들러
-  const handleMouseEnter = (id) => {
-    setGrounds(grounds =>
-      grounds.map(ground =>
-        ground.gno === id ? { ...ground, isMouseOver: true } : ground
-      )
-    );
-  };
-
-  const handleMouseLeave = (id) => {
-    setGrounds(grounds =>
-      grounds.map(ground =>
-        ground.gno === id ? { ...ground, isMouseOver: false } : ground
-      )
-    );
   };
 
    // 모달 닫기 함수
