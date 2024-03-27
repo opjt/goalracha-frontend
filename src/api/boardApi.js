@@ -1,5 +1,4 @@
 import axios from "axios";
-import boardRouter from "../router/boardRouter";
 import jwtAxios from "util/jwtUtil";
 
 // 서버주소
@@ -12,9 +11,10 @@ export const getOne = async (bno) => {  //localhost:8080/board/1
   return res.data
 }
 
+// 페이지 네이션 삭제 ...?
 export const getList = async (pageParam) => {
-  const {page, size} = pageParam
-  const res = await axios.get(`${prefix}/g/list`, {params : {page : page, size : size}})
+  const {} = pageParam
+  const res = await axios.get(`${prefix}/g/list`, {params : {}})
 
   return res.data
 }

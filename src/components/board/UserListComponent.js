@@ -1,22 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { getList } from "../../api/boardApi";
-import useCustomMove from "../../hooks/useCustomMoveboard";
-import { useNavigate } from "react-router-dom";
+
 
 const initState = [];
 
 const UserListComponent = () => {
-  const navigate = useNavigate();
-  const { page, size, refresh } = useCustomMove();
   const [serverData, setServerData] = useState(initState);
   const [expandedBno, setExpandedBno] = useState(null);
 
   useEffect(() => {
-    getList({ page, size }).then((data) => {
+    getList({}).then((data) => {
       setServerData(data.map((board) => ({ ...board })));
       console.log(serverData)
     });
-  }, [page, size, refresh]);
+  }, []);
 
   const handleTitleClick = (bno) => {
     setExpandedBno((prevExpandedBno) => (prevExpandedBno === bno ? null : bno));

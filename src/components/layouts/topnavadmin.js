@@ -26,7 +26,7 @@ const TopnavAdmin = () => {
 
   return (
     <div className="max-w-screen-xl mx-auto navbar bg-base-100 px-2 py-0 min-h-1">
-      <div className="navbar flex font-normal text-lg p-0 min-h-1">
+      <div className="navbar flex font-normal text-lg p-0 min-h-1 gap-x-4">
         {/* 구장관리 메뉴 */}
         <div 
           onMouseEnter={() => setShowStadiumSubMenu(true)} 
@@ -35,13 +35,13 @@ const TopnavAdmin = () => {
         >
           <button className="font-bold btn btn-ghost">구장관리</button>
           {showStadiumSubMenu && (
-            <div className="absolute left-0 w-full mt-px py-2 bg-white shadow-xl flex flex-col">
-              <button onClick={goToSubmenu2} className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-200 hover:shadow-lg">구장 리스트</button>
-              <button onClick={goToSubmenu3} className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-200 hover:shadow-lg">예약 내역</button>
+            <div className="absolute left-0 w-full mt-px bg-white shadow-xl flex flex-col rounded-md">
+              <button onClick={goToSubmenu2} className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-200 hover:shadow-lg rounded-md">구장<br />리스트</button>
+              <button onClick={goToSubmenu3} className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-200 hover:shadow-lg rounded-md">예약<br />내역</button>
             </div>
           )}
         </div>
-
+  
         {/* 유저관리 메뉴 */}
         <div 
           onMouseEnter={() => setShowUserSubMenu(true)} 
@@ -50,13 +50,13 @@ const TopnavAdmin = () => {
         >
           <button className="font-bold btn btn-ghost">유저관리</button>
           {showUserSubMenu && (
-            <div className="absolute left-0 w-full mt-px py-2 bg-white shadow-xl flex flex-col">
-              <button onClick={goToUserSubmenu1} className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-200 hover:shadow-lg">사업자 관리</button>
-              <button onClick={goToUserSubmenu2} className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-200 hover:shadow-lg">사용자 관리</button>
+            <div className="absolute left-0 w-full mt-px bg-white shadow-xl flex flex-col rounded-md">
+              <button onClick={goToUserSubmenu1} className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-200 hover:shadow-lg rounded-md">사업자 관리</button>
+              <button onClick={goToUserSubmenu2} className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-200 hover:shadow-lg rounded-md">사용자 관리</button>
             </div>
           )}
         </div>
-
+  
         {/* 통계관리 메뉴 */}
         <div 
           onMouseEnter={() => setShowStatsSubMenu(true)} 
@@ -65,20 +65,20 @@ const TopnavAdmin = () => {
         >
           <button className="font-bold btn btn-ghost">통계관리</button>
           {showStatsSubMenu && (
-            <div className="absolute left-0 w-full mt-px py-2 bg-white shadow-xl flex flex-col">
-              <button onClick={goToStatsSubmenu1} className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-200 hover:shadow-lg">예약 통계</button>
-              <button onClick={goToStatsSubmenu2} className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-200 hover:shadow-lg">회원 통계</button>
-              <button onClick={goToStatsSubmenu3} className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-200 hover:shadow-lg">매출 통계</button>
+            <div className="absolute left-0 w-full mt-px bg-white shadow-xl flex flex-col rounded-md">
+              <button onClick={goToStatsSubmenu1} className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-200 hover:shadow-lg rounded-md">예약<br />통계</button>
+              <button onClick={goToStatsSubmenu2} className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-200 hover:shadow-lg rounded-md">회원<br />통계</button>
+              <button onClick={goToStatsSubmenu3} className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-200 hover:shadow-lg rounded-md">매출<br />통계</button>
             </div>
           )}
         </div>
-
-        {/* 나머지 메뉴 항목들 */}
-        <button onClick={goToDashBoard} className="ml-7 btn btn-ghost">공지사항</button>
-        <button onClick={goToMyPage} className="ml-7 btn btn-ghost">마이페이지</button>
+  
+        {/* 공지관리 메뉴 */}
+        <button onClick={goToDashBoard} className="btn btn-ghost font-bold">공지관리</button>
       </div>
     </div>
   );
+  
 }
 
 export default TopnavAdmin;
