@@ -11,7 +11,8 @@ const AdminPage = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const handleLogout = () => {
-    navigate("/user/logout");
+    navigate("/logout");
+    alert("로그아웃 성공")
   };
 
   const toggleChangePasswordForm = () => {

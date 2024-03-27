@@ -1,20 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { getList } from "../../api/boardApi";
-import useCustomMove from "../../hooks/useCustomMoveboard";
 import { useNavigate } from "react-router-dom";
 
 const initState = [];
 
 const AdminListComponent = () => {
   const navigate = useNavigate();
-  const { page, size, refresh } = useCustomMove();
   const [serverData, setServerData] = useState(initState);
 
   useEffect(() => {
-    getList({ page, size }).then((data) => {
+    getList({}).then((data) => {
       setServerData(data.map(board => ({ ...board})));
     });
-  }, [page, size, refresh]);
+  }, []);
 
   const handleTitleClick = (bno) => {
     navigate(`${bno}`);
