@@ -422,7 +422,6 @@ const OwnerStatisticsPage = () => {
                     </ResponsiveContainer>
                 </div>
             </div>
-        </div>
         </>
     );
 };
