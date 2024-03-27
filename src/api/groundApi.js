@@ -20,6 +20,14 @@ export const getOwnerGroundList = async (pageParam, uNo) => {
   return res.data
 }
 
+// 구장 사업자 구장목록
+export const getOwnerGroundListSearch = async (pageParam, uNo, searchName) => {
+  const { page, size } = pageParam
+  const res = await jwtAxios.get(`${prefix}/list/${uNo}/${searchName}`, { params: { page: page, size: size } })
+  
+ return res.data
+}
+
 // 구장 목록
 export const getGroundList = async (pageParam) => {
   const { page, size } = pageParam

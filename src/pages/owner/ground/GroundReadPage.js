@@ -4,7 +4,8 @@ import useCustomMove from "hooks/groundCustomMove";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+import useCustomLogin from "hooks/useCustomLogin";
 
 const initState = {
   uploadFileNames: [],
@@ -39,15 +40,21 @@ const GroundReadPage = () => {
   const [ground, setGround] = useState(initState);
   const { moveToList, moveToModify } = useCustomMove();
   const { gno } = useParams();
+  const { loginState } = useCustomLogin();
+  const navigate = useNavigate();
 
   const host = API_SERVER_HOST;
   
   useEffect(() => {
     getGround(gno).then((data) => {
-      console.log(data);
+      console.log(data.uno);
+      if (loginState.uNo !== parseInt(data.uno)) { // 유저값이 다를경우 뒤로가기
+        alert("잘못된 접근입니다.");
+        navigate(-1);
+      }
       setGround(data);
     });
-  }, [gno]);
+  }, [gno,navigate]);
 
   const stateMapping = {
     0: "삭제된 구장입니다",

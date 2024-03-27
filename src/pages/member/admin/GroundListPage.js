@@ -116,7 +116,7 @@ const GroundListPage = () => {
       </div >
 
       {/* 테이블 */}
-      < table className="table-auto w-full" >
+      <table className="table-auto w-full">
         <thead className="bg-gray-200 w-full">
           <tr>
             {["구장이름", "구장주소", "실내외", "구장크기", "잔디정보", "추천인원", "기본이용시간", "오픈시간", "마감시간", "요금", "구장상태"].map((header, index) => (
@@ -125,7 +125,7 @@ const GroundListPage = () => {
           </tr>
         </thead>
         <tbody className="w-full text-sm">
-          {filteredGrounds.map((ground, index) => (
+          {filteredGrounds.map((ground, index) => (            
             <tr key={index} className={`${index % 2 === 0 ? 'bg-gray-100' : 'bg-white'}`}>
               {/* 구장 이름에 onClick 이벤트 추가 */}
               <td className="border px-4 py-2 cursor-pointer hover:bg-gray-100" onClick={() => handleSelectGround(ground)}>
@@ -139,7 +139,7 @@ const GroundListPage = () => {
               <td className="border px-4 py-2">{ground.usageTime}</td>
               <td className="border px-4 py-2">{ground.openTime}</td>
               <td className="border px-4 py-2">{ground.closeTime}</td>
-              <td className="border px-4 py-2">{ground.fare}</td>
+                <td className="border px-4 py-2">{ground.fare}</td>
               {/* 구장 상태(state) */}
               <td className="border px-4 py-2">
                 <select

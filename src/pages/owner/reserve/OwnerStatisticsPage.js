@@ -264,8 +264,10 @@ const OwnerStatisticsPage = () => {
 
 
     return (
-        <>  <div className="border mx-auto mt-10 mb-10 border-gray-300 rounded-box p-5">
-            <div className="container mx-auto px-4 py-8">
+        <>
+            <div className="w-full bg-white mt-6 p-8 rounded-lg shadow-lg mb-2">
+                <h2 className="font-extrabold text-3xl border-gray-300 mb-4 pb-2"><span className="mr-2">&nbsp;&nbsp;&nbsp;📊</span>매출관리</h2>
+
                 <div className="flex items-center mb-4">
                     <label className="mr-2">구장 이름:</label>
                     <select className="border border-gray-300 px-2 py-1 rounded-md" onChange={handleGroundSelect}>
