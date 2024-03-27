@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { fetchOwners, fetchReservationsForUser } from "../../../api/adminAPI";
+import { fetchOwners, fetchUserReservationsWithUserInfo } from "../../../api/adminAPI";
 
 const OwnerManagePage = () => {
   const [owners, setOwners] = useState([]);
@@ -31,15 +31,23 @@ const OwnerManagePage = () => {
 
 
   const handleUserClick = async (owner) => {
-    setCurrentUser(owner); // 선택된 사용자 정보 설정
-    const reservations = await fetchReservationsForUser(owner.businessName); // 예약 정보 가져오기
-    setCurrentUserReservations(reservations); // 가져온 예약 정보 저장
-    setModalShow(true); // 모달 표시
+    console.log('Selected owner:', owner); // 전체 owner 객체 확인
+    console.log('Selected owner uno:', owner.uno); // owner의 uNo 값 확인
+
+    try {
+      const response = await fetchUserReservationsWithUserInfo(owner.uno);
+      console.log(response); // 응답 출력
+      setCurrentUserReservations(response.dtoList); // 가져온 데이터 저장
+      setModalShow(true); // 모달 표시
+    } catch (error) {
+      console.error("Fetching user reservations with user info failed:", error);
+    }
   };
 
   const handleCloseModal = () => {
     setModalShow(false); // 모달 숨김
   };
+
 
 
   return (
@@ -101,37 +109,41 @@ const OwnerManagePage = () => {
 
       {/* 모달 구현 */}
       {modalShow && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
-          <div className="bg-white p-5 rounded-lg w-3/4 max-w-4xl">
-            <h3 className="text-xl font-bold mb-4">{currentUser.businessName}의 예약상세 정보</h3>
-            <div className="overflow-x-auto">
-              <table className="min-w-full leading-normal">
-                <thead>
-                  <tr className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
-                    <th className="py-3 px-6 text-left">장소</th>
-                    <th className="py-3 px-6 text-left">예약 날짜</th>
-                    <th className="py-3 px-6 text-left">시간</th>
-                    <th className="py-3 px-6 text-left">가격</th>
-                  </tr>
-                </thead>
-                <tbody className="text-gray-600 text-sm font-light">
-                  {currentUserReservations.map((reservation, index) => (
-                    <tr key={index} className="border-b border-gray-200 hover:bg-gray-100">
-                      <td className="py-3 px-6 text-left whitespace-nowrap">{reservation.groundName}</td>
-                      <td className="py-3 px-6 text-left">{new Date(reservation.reserveDate).toLocaleDateString()}</td>
-                      <td className="py-3 px-6 text-left">{reservation.time}</td>
-                      <td className="py-3 px-6 text-left">{reservation.price}원</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-            <button onClick={handleCloseModal} className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700 transition-colors">
+      <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
+        <div className="bg-white p-5 rounded-lg w-3/4 max-w-4xl">
+          {/* <h3 className="text-xl font-bold mb-4">{currentUser.name}님의 예약상세 정보</h3> */}
+          <table className="min-w-full leading-normal">
+            <thead>
+              <tr>
+                <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100">장소</th>
+                <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100">예약 날짜</th>
+                <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100">시간</th>
+                <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100">가격</th>
+                <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100">사용자 이름</th>
+                <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100">사용자 이메일</th>
+              </tr>
+            </thead>
+            <tbody>
+              {currentUserReservations.map((reservation) => (
+                <tr key={reservation.reserveId}>
+                  <td className="px-5 py-5 border-b border-gray-200">{reservation.groundName}</td>
+                  <td className="px-5 py-5 border-b border-gray-200">{reservation.reserveDate}</td>
+                  <td className="px-5 py-5 border-b border-gray-200">{reservation.time}</td>
+                  <td className="px-5 py-5 border-b border-gray-200">{reservation.price}</td>
+                  <td className="px-5 py-5 border-b border-gray-200">{reservation.userName}</td>
+                  <td className="px-5 py-5 border-b border-gray-200">{reservation.userEmail}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <div className="flex justify-end mt-4">
+            <button onClick={() => setModalShow(false)} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
               닫기
             </button>
           </div>
         </div>
-      )}          
+      </div>
+    )}          
     </div>
   );
 };
