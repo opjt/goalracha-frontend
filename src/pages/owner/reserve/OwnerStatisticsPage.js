@@ -264,10 +264,8 @@ const OwnerStatisticsPage = () => {
 
 
     return (
-        <>
+        <>  <div className="border mx-auto mt-10 mb-10 border-gray-300 rounded-box p-5">
             <div className="container mx-auto px-4 py-8">
-                <h2 className="text-lg font-semibold border-b border-gray-300 mb-4 pb-2">통계 관리</h2>
-
                 <div className="flex items-center mb-4">
                     <label className="mr-2">구장 이름:</label>
                     <select className="border border-gray-300 px-2 py-1 rounded-md" onChange={handleGroundSelect}>
@@ -324,13 +322,13 @@ const OwnerStatisticsPage = () => {
                     )}
                 </div>
 
-                <div style={{ width: '100%', height: 500 }}>
+                <div style={{ width: '100%', height: 650 }}>
                     <ResponsiveContainer>
                         {viewMode === "monthly" ? (
                             <AreaChart data={prepareMonthlyChartData()}>
-                                <XAxis dataKey="month" tick={{ fontSize: 10 }} />
+                                <XAxis dataKey="month" tick={{ fontSize: 12 }} />
                                 <YAxis dataKey="totalRevenue" tickFormatter={formatRevenue} domain={[0, maxRevenue * 1.2]}
-                                    tick={{ fontSize: 10 }} />
+                                    tick={{ fontSize: 12 }} />
                                 <CartesianGrid strokeDasharray="0" />
                                 <Tooltip
                                     formatter={(value, name, props) => {
@@ -351,9 +349,9 @@ const OwnerStatisticsPage = () => {
                         ) : (
                             viewMode === "timeSlot" ? (
                                 <AreaChart data={prepareTimeSlotChartData()}>
-                                    <XAxis dataKey="time" tick={{ fontSize: 10 }} />
+                                    <XAxis dataKey="time" tick={{ fontSize: 12 }} />
                                     <YAxis dataKey="reservationCount" domain={[0, maxReservationCountCeiled]}
-                                        tick={{ fontSize: 10 }} />                                    <CartesianGrid strokeDasharray="0" />
+                                        tick={{ fontSize: 12 }} />                                    <CartesianGrid strokeDasharray="0" />
                                     <Tooltip
                                         formatter={(value, name, props) => {
                                             return [`예약 횟수: ${value}`];
@@ -373,9 +371,9 @@ const OwnerStatisticsPage = () => {
                             ) : (
                                 selectedGround === "전체 구장" ? (
                                     <AreaChart data={prepareChartData()}>
-                                        <XAxis dataKey="groundName" tick={{ fontSize: 10 }} />
+                                        <XAxis dataKey="groundName" tick={{ fontSize: 12 }} />
                                         <YAxis dataKey="totalRevenue" tickFormatter={formatRevenue}
-                                            tick={{ fontSize: 10 }} /*domain={[0, maxRevenue * 1.2] }*/ />
+                                            tick={{ fontSize: 12 }} /*domain={[0, maxRevenue * 1.2] }*/ />
                                         <CartesianGrid strokeDasharray="0" />
                                         <Tooltip
                                             formatter={(value, name, props) => {
@@ -395,9 +393,9 @@ const OwnerStatisticsPage = () => {
                                     </AreaChart>
                                 ) : (
                                     <AreaChart data={prepareChartData()}>
-                                        <XAxis dataKey="date" tick={{ fontSize: 10 }} />
+                                        <XAxis dataKey="date" tick={{ fontSize: 12 }} />
                                         <YAxis dataKey="dailyRevenue" tickFormatter={formatRevenue} domain={[0, maxRevenue * 1.2]}
-                                            tick={{ fontSize: 10 }} />
+                                            tick={{ fontSize: 12 }} />
                                         <CartesianGrid strokeDasharray="0" />
                                         <Tooltip
                                             formatter={(value, name, props) => {
@@ -422,6 +420,7 @@ const OwnerStatisticsPage = () => {
                     </ResponsiveContainer>
                 </div>
             </div>
+        </div>
         </>
     );
 };

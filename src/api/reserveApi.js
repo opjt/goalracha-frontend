@@ -10,7 +10,7 @@ export const getListbyFilter = async (req) => {
 }
 //구장상세정보페이지
 export const getInfoByGno = async (req) => {
-    const res = await axios.get(`${host}/ㅎ/ground/${req.gno}/${req.date}`)
+    const res = await axios.get(`${host}/g/ground/${req.gno}/${req.date}`)
     return res.data
 }
 
