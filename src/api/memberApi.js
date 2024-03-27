@@ -17,7 +17,7 @@ export const loginPost = async (loginParam) => {
 }
 
 export const modifyMember = async (member) => {
-    const res = await jwtAxios.put(`${host}/${member.uNo}`, member)
+    const res = await jwtAxios.post(`${host}/${member.uNo}`, member)
     return res.data
 }
 //아이디 중복검사
@@ -47,21 +47,21 @@ export const joinOwner = async (member) => {
 
 // 사용자 정보 수정 API 호출 함수
 export const putUserModify = async (member, uNo) => {
-    const res = await jwtAxios.put(`${host}/user/modify/${uNo}`, member);
+    const res = await jwtAxios.put(`${host}/user/${uNo}`, member);
 
     return res.data;
 };
 
 // 사업자 정보 수정 API 호출 함수
 export const putOwnerModify = async (member, uNo) => {
-    const res = await jwtAxios.put(`${host}/owner/modify/${uNo}`, member);
+    const res = await jwtAxios.put(`${host}/owner/${uNo}`, member);
 
     return res.data;
 };
 
 export const putOwnerPwModify = async (member, uNo) => {
     try {
-        const res = await jwtAxios.put(`${host}/owner/pwmodify/${uNo}`, member);
+        const res = await jwtAxios.put(`${host}/owner/pw/${uNo}`, member);
         return res.data; // 정상적으로 처리되었을 경우 응답 데이터 반환
     } catch (error) {
         throw error; // 오류 발생 시 오류를 호출한 곳으로 반환

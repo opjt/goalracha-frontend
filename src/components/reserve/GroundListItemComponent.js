@@ -4,33 +4,34 @@ import { useNavigate } from "react-router-dom";
 const GroundListItem = ({ groundInfo, date, callbackFn }) => {
     var timeArray = {} // 6부터29까지 29는 5시 
     const navigate = useNavigate();
+   
     var openTime = groundInfo.openTime
     var closeTime = groundInfo.closeTime
     if(closeTime <= openTime) {
         closeTime +=24;
     }
-    for(let i = 6; i<= 29; i++) {
-        if(openTime<= i && i <= closeTime-groundInfo.usageTime) {
-            timeArray[i] = true;
-        } else {
-            timeArray[i] = false;
-        }
+     for(let i = 6; i<= 29; i++) {
+        timeArray[i] = false;
     }
-    if(groundInfo.reserveTime != null) {
-        var split = groundInfo.reserveTime.split(',')
-        for(var e of split) {
-            e = parseInt(e);
-            timeArray[e] = false;
-            for(var i= 1; i<parseInt(groundInfo.usageTime); i++) {
-                e++;
-                timeArray[e] = false;
-            }
-        }
-
+    var split = [];
+    if( groundInfo.reserveTime != null) {
+        split = groundInfo.reserveTime.split(',')
     } 
+    for(let i = openTime; i<= closeTime; i+=parseInt(groundInfo.usageTime)) {
+        if(i+parseInt(groundInfo.usageTime) > closeTime) {
+            break;
+        }
+        if(split.includes(`${i}`)) {
+            continue;
+        }
+        for(var i2= 0; i2<parseInt(groundInfo.usageTime); i2++) {
+            timeArray[i+i2] = true;
+         }
+    }
+
 
     useEffect(() => {
-        // console.log(groundInfo);
+       
     }, [groundInfo])
     const clickGround = (gno) => {
         navigate(`/ground/${gno}`, { state: {date:date} });
@@ -68,7 +69,7 @@ const GroundListItem = ({ groundInfo, date, callbackFn }) => {
                     ))}
                 </div>
                 <div className="w-full flex">
-                    <div className="w-1/4 text-sm text-gray-400">06시</div>
+                    <div className="w-1/4 text-sm text-gray-400 ">06시</div>
                     <div className="w-1/4 text-sm text-gray-400">12시</div>
                     <div className="w-1/4 text-sm text-gray-400">18시</div>
                     <div className="w-1/4 text-sm text-gray-400">00시</div>

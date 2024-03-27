@@ -48,17 +48,6 @@ const GroundInfoPage = () => {
         setReservInfo({...reservInfo})
         
     }
-    const handleClickCarousel = (e) => { //날짜버튼 클릭 핸들러
-        let imgno = imgslide;
-        if(e.target.id == "left") {
-            imgno = (imgno == 0 ? groundInfo.uploadFileNames.length-1 : imgno-1)
-        } else if (e.target.id=="right") {
-            imgno = (imgno == groundInfo.uploadFileNames.length-1 ? 0 : imgno+1)
-        }
-        setImgslide(imgno)
-            
-        
-    }
 
     const handleClickTime = (e) => { //시간버튼 클릭 핸들러
         
@@ -117,6 +106,9 @@ const GroundInfoPage = () => {
             console.log(newTimeArray);
             setTimeArray(newTimeArray)
    
+        }).catch((error) => {
+            alert(error.response.data.msg)
+            moveToPath("/reserve")
         })
     }, [reservInfo.date])
     const closeModal = () => {
@@ -153,26 +145,10 @@ const GroundInfoPage = () => {
             {modal ? <ResultModal title={`예약`} content={modal} close={`닫기`}
                     callbackFn={closeModal}></ResultModal> : <></>}
             {groundInfo != null && (
-
             
             <div className="p-2">
                 
                 <div className="carousel w-full h-80" ref={carouselElement}>
-                        {/* <div id={`slide${imgslide}`} className="carousel-item relative w-full overflow-hidden " style={{ transition: 'transform 2s ease-in-out' }}>
-                            {(groundInfo.uploadFileNames &&  groundInfo.uploadFileNames.length !== 0 ) ? (
-                                <img src={`http://localhost:8080/goalracha/ground/view/${groundInfo.uploadFileNames[imgslide]}`} className="w-full h-full object-cover" /> 
-                            ) : 
-                              <div className="skeleton w-full h-full"></div>
-                            }
-                            
-                            <div className="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
-                                <div id="left" className="btn btn-circle" onClick={handleClickCarousel}>❮</div> 
-                                <div id="right" className="btn btn-circle" onClick={handleClickCarousel}>❯</div> 
-                                
-                            </div>
-                        </div> */} 
-                        
-                        
                     {groundInfo.uploadFileNames.length === 0 && (
                         <div className="skeleton w-full h-full"></div>
                     )}
@@ -186,8 +162,6 @@ const GroundInfoPage = () => {
                             </div>
                         </div>
                     )}
-
-                
                 </div>
 
                 <div className="grid md:grid-flow-col mt-6 gap-y-5">

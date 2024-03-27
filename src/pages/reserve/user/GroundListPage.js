@@ -43,6 +43,7 @@ const GroundListPage = () => {
     const dispatch = useDispatch()
 
     useEffect(() => {
+        console.log(3)
         showFilter.search = searchState;
         setShowFilter({...showFilter})
     }, [searchState])

@@ -18,7 +18,8 @@ export const changeGroundState = async (gno, newState) => {
 export const fetchImagesByGno = async (gno) => {
   try {
     const response = await jwtAxios.get(`${API_BASE_URL}/images/${gno}`);
-    return response.json();
+    console.log(response)
+    return response.data;
   } catch (error) {
     console.error('Error fetching images:', error);
   }

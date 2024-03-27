@@ -21,7 +21,7 @@ const MainHeader = ({ children }) => {
 
 	useEffect(() => {
         if(isLogin) {
-			console.log(loginState)
+			// console.log(loginState)
             if(loginState.email === loginState.nickname) {
                moveToPath("/user/join")
             }

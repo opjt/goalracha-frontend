@@ -71,7 +71,7 @@ const JoinComponent = () => {
         setResult(null)
         console.log(msg)
         if(msg.content == "회원가입이 완료되었습니다") {
-            moveToPath("/owner/login")
+            moveToPath("/login")
         }
         
     }
@@ -133,7 +133,7 @@ const JoinComponent = () => {
 
     return (
         <>
-            <div className="relative flex flex-col justify-center h-screen overflow-hidden">
+            <div className="relative flex flex-col justify-center ">
                 {result ? <ResultModal title={`회원가입`} content={result.content} close={result.close}
                     callbackFn={closeModal}></ResultModal> : <></>}
 

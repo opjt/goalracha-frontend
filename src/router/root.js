@@ -10,7 +10,7 @@ import adminRouter from "./adminRouter"; // adminRouter를 불러옵니다.
 import OwnerIndex from "pages/owner/IndexPage.js"
 import GuestIndex from "pages/GuestIndex.js"
 import AdminLogin from "../components/member/admin/AdminLoginComponent"; //admin 로그인 페이지
-
+import NotFound from "pages/404page.js";
 const Main = lazy(() => import("../pages/MainPage"));
 const Test = lazy(() => import("../pages/test"));
 const Login = lazy(() => import("../pages/member/LoginPage.js"));
@@ -26,6 +26,10 @@ const root = createBrowserRouter([
     //     path: "test",
     //     element: <Test/>,
     // },
+    {
+        path: "/*",
+        element: <NotFound />
+    },
     {
         path: "/",
         element: <Main />

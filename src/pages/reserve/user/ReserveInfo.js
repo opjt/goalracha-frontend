@@ -67,6 +67,7 @@ const ReserveInfo = () => {
 		}  
 		cancelReserv(req).then((result) => {
 			console.log(result)
+			alert("정상적으로 취소되었습니다")
 			navigate('/user/mypage')
 		}).catch((error) => {
 			alert("예약 취소에 실패하였습니다 관리자에게 문의하십시오")
