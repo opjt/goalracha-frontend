@@ -4,7 +4,8 @@ import ResultModal from "components/common/ResultModal";
 import useCustomMove from "../../../hooks/groundCustomMove";
 import Slider from "react-slick";
 import Select from "react-select";
-import { useParams } from "react-router-dom";
+import { useParams,useNavigate } from "react-router-dom";
+import useCustomLogin from "hooks/useCustomLogin";
 
 const initState = {
   name: "",
@@ -39,6 +40,8 @@ const GroundModifyComponent = () => {
   const [fetching, setFetching] = useState(false);
   const [result, setResult] = useState(null);
   const { gno } = useParams();
+  const navigate = useNavigate();
+  const { loginState } = useCustomLogin();
 
   const { moveToGroundList, moveToModifyRead } = useCustomMove();
 
@@ -46,9 +49,14 @@ const GroundModifyComponent = () => {
 
   // 구장 정보에 기존구장정보 값 설정
   useEffect(() => {
+    console.log(loginState)
     setFetching(true);
-
+    
     getGround(gno).then((data) => {
+      if (loginState.uNo !== parseInt(data.uno)) { // 유저값이 다를경우 뒤로가기
+        alert("잘못된 접근입니다.");
+        navigate(-1);
+      }
       var oldImages = data.uploadFileNames.map(
         (fileName) => `${fileName}`
       );
@@ -388,6 +396,10 @@ const deleteOldImages = (imageName) => {
     { value: "24", label: "24시" },
   ];
 
+  const formatRevenue = (value) => {
+    return new Intl.NumberFormat('ko-KR', { style: 'currency', currency: 'KRW' }).format(value);
+};
+
   return (
     <div className="flex-wrap flex-direction justify-center w-full">
       <div className="flex mb-4 justify-center w-full">
@@ -578,8 +590,8 @@ const deleteOldImages = (imageName) => {
             <input
               type={"number"}
               name="fare"
-              placeholder="35000 (원단위로 숫자만 입력)"
-              value={ground.fare}
+              placeholder="35,000 (원단위로 숫자만 입력)"
+              value={formatRevenue(ground.fare)}
               onChange={handleChangeModify}
               className="input input-bordered w-full max-w-xs"
             />

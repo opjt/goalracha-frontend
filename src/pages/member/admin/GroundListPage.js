@@ -118,8 +118,8 @@ const GroundListPage = () => {
     {/* 필터 버튼 그룹 */}
     <div>
       <button onClick={() => setFilter('all')} className="mr-2 px-4 py-2 bg-gray-400 text-white rounded">모든 구장</button>
-      <button onClick={() => setFilter('1')} className="mr-2 px-4 py-2 bg-red-700 text-white rounded">등록신청 구장</button>
-      <button onClick={() => setFilter('2')} className="mr-2 px-4 py-2 bg-green-700 text-white rounded">오픈 구장</button>
+      <button onClick={() => setFilter('1')} className="mr-2 px-4 py-2 bg-red-500 text-white rounded">등록신청 구장</button>
+      <button onClick={() => setFilter('2')} className="mr-2 px-4 py-2 bg-green-500 text-white rounded">오픈 구장</button>
       <button onClick={() => setFilter('4')} className="mr-2 px-4 py-2 bg-gray-500 text-white rounded">폐업신청 구장</button>
       <button onClick={() => setFilter('0')} className="mr-2 px-4 py-2 bg-gray-700 text-white rounded">폐업 구장</button>
     </div>
@@ -146,16 +146,15 @@ const GroundListPage = () => {
 
       {/* 테이블 */}
       <table className="table-auto w-full">
-        <thead className="bg-gray-200">
+        <thead className="bg-gray-200 w-full">
           <tr>
-            {["구장이름", "구장주소", "실내외", "구장크기", "잔디정보", "추천인원", "기본이용시간", "오픈시간", "마감시간", "요금", "이용안내", "이용규칙", "환불규정", "팀조끼대여여부", "풋살화대여여부", "샤워실여부", "공대여여부", "지붕여부", "냉난방시설여부", "주차장여부", "구장상태"].map((header, index) => (
+            {["구장이름", "구장주소", "실내외", "구장크기", "잔디정보", "추천인원", "기본이용시간", "오픈시간", "마감시간", "요금", "구장상태"].map((header, index) => (
               <th key={index} className="px-4 py-2">{header}</th>
             ))}
           </tr>
         </thead>
-        <tbody className="text-sm">
-          {filteredGrounds.map((ground, index) => (
-            
+        <tbody className="w-full text-sm">
+          {filteredGrounds.map((ground, index) => (            
             <tr key={index} className={`${index % 2 === 0 ? 'bg-gray-100' : 'bg-white'}`}>
               {/* 구장 이름에 onClick 이벤트 추가 */}
               <td className="border px-4 py-2 cursor-pointer hover:bg-gray-100" onClick={() => handleSelectGround(ground)}>
@@ -169,17 +168,7 @@ const GroundListPage = () => {
               <td className="border px-4 py-2">{ground.usageTime}</td>
               <td className="border px-4 py-2">{ground.openTime}</td>
               <td className="border px-4 py-2">{ground.closeTime}</td>
-              <td className="border px-4 py-2">{ground.fare}</td>
-              <td className="border px-4 py-2">{ground.userGuide}</td>
-              <td className="border px-4 py-2">{ground.userRules}</td>
-              <td className="border px-4 py-2">{ground.refundRules}</td>
-              <td className="border px-4 py-2">{ground.vestIsYn ? '예' : '아니오'}</td>
-              <td className="border px-4 py-2">{ground.footwearIsYn ? '예' : '아니오'}</td>
-              <td className="border px-4 py-2">{ground.showerIsYn ? '예' : '아니오'}</td>
-              <td className="border px-4 py-2">{ground.ballIsYn ? '예' : '아니오'}</td>
-              <td className="border px-4 py-2">{ground.roopIsYn ? '예' : '아니오'}</td>
-              <td className="border px-4 py-2">{ground.airconIsYn ? '예' : '아니오'}</td>
-              <td className="border px-4 py-2">{ground.parkareaIsYn ? '예' : '아니오'}</td>
+                <td className="border px-4 py-2">{ground.fare}</td>
               {/* 구장 상태(state) */}
               <td className="border px-4 py-2">
                 <select

@@ -1,10 +1,9 @@
-import { getOwnerGroundList } from "api/groundApi";
+import { getOwnerGroundList, getOwnerGroundListSearch } from "api/groundApi";
 import PageComponent from "components/common/pagination";
 import useCustomMove from "hooks/groundCustomMove";
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import useCustomLogin from "hooks/useCustomLogin";
-import { getGroundList } from "api/groundApi";
+
 const initState = {
   dtoList: [],
   pageNumList: [],
@@ -16,23 +15,44 @@ const initState = {
   nextPage: 0,
   totalPage: 0,
   current: 0,
+  searchName: "",
 };
 
 const GroundListPage = ({ groundList }) => {
   const { page, size, moveToPage, moveToRead, moveToRegister } =
     useCustomMove();
   const [serverData, setServerData] = useState(initState);
-  const {loginState} = useCustomLogin()
+  const { loginState } = useCustomLogin();
+  const [searchName, setSearchName] = useState("");
 
-  // 구장리스트 값 호출
+  // // 구장리스트 값 호출
+  // useEffect(() => {
+  //   getGroundList({ page, size }).then((data) => {
+  //     if(searchName) {
+  //       getOwnerGroundListSearch({ page, size }, loginState.uNo, searchName).then((date) => {
+  //         setServerData(data);
+  //       })
+  //     }
+  //   getOwnerGroundList({ page, size },loginState.uNo).then((data) => {
+  //       setServerData(data);
+  //       })
+  //   });
+  // }, [page, size]);
+
+  // 구장리스트 호출 로그인 스테이트의 유저값을 받아옴
   useEffect(() => {
-    // 패이지 네이션
-    getGroundList({ page, size }).then((data) => {
-    getOwnerGroundList({ page, size },loginState.uNo).then((data) => {
+    if (searchName) { // 검색어가 있을 때
+      getOwnerGroundListSearch({ page, size }, loginState.uNo, searchName).then(
+        (data) => {
+          setServerData(data);
+        }
+      );
+    } else {  // 없을 때 전체 리스트
+      getOwnerGroundList({ page, size }, loginState.uNo).then((data) => {
         setServerData(data);
-        })
-    });
-  }, [page, size]);
+      });
+    }
+  }, [page, size, searchName, loginState.uNo]);
 
   // 구장 상태 매핑
   const stateMapping = {
@@ -52,10 +72,36 @@ const GroundListPage = ({ groundList }) => {
     4: "text-red-500",
   };
 
+  const formatRevenue = (value) => {
+    return new Intl.NumberFormat('ko-KR', { style: 'currency', currency: 'KRW' }).format(value);
+};
+
   return (
     <div className="flex w-full h-full">
       <div className="p-4 w-full">
-        <div className="text-3xl font-extrabold font-sans mb-8">구장 목록</div>
+        <div className="flex items-center">
+          <label className="input input-bordered flex items-center gap-2 w-full h-10 flex-grow">
+            <input
+              type="text"
+              value={searchName}
+              onChange={(e) => setSearchName(e.target.value)}
+              placeholder="구장명 입력"
+              className="grow"
+            />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 16 16"
+                fill="currentColor"
+                className="w-4 h-4 opacity-70"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
+                  clipRule="evenodd"
+                />
+              </svg>
+          </label>
+        </div>
         {serverData.dtoList.length === 0 ? (
           <div className="text-xl font-bold text-gray-600 mt-4">
             등록된 구장이 없습니다.
@@ -70,7 +116,8 @@ const GroundListPage = ({ groundList }) => {
           </div>
         ) : (
           <>
-            <div className="text-3xl font-extrabold">
+            <div className="">
+              <div className="flex-grow"></div>
               {serverData.dtoList.map((ground) => (
                 <div
                   key={ground.gno}
@@ -78,19 +125,21 @@ const GroundListPage = ({ groundList }) => {
                   onClick={() => moveToRead(ground.gno)}
                 >
                   <div className="flex flex-col flex-1 min-w-0 whitespace-nowrap ">
-                    <div className="text-md text-ellipsis overflow-hidden">
+                    <div className="text-base font-semibold text-ellipsis overflow-hidden">
                       {ground.name}
                     </div>
-                    <div className="text-sm text-gray-500">
-                      {ground.addr}
-                      </div>
+                    <div className="text-sm text-gray-500">{ground.addr}</div>
                     <div className="text-sm text-gray-500">
                       {ground.recommdMan}
                     </div>
                   </div>
                   <di className="flex justify-between w-1/5 min-w-36 items-center text-sm">
-                    <div className="">{ground.fare}</div>
-                    <div className={"text-nowrap " + stateColorMapping[ground.state]}>
+                    <div className="">{formatRevenue(ground.fare)}</div>
+                    <div
+                      className={
+                        "text-nowrap " + stateColorMapping[ground.state]
+                      }
+                    >
                       {stateMapping[ground.state] || "상태 정보 없음"}
                     </div>
                     <div className="">{ground.width}</div>
@@ -116,7 +165,7 @@ const GroundListPage = ({ groundList }) => {
         )}
       </div>
     </div>
-  )
+  );
 };
 
 export default GroundListPage;
