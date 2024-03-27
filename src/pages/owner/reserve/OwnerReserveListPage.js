@@ -121,7 +121,7 @@ const OwnerReserveListPage = () => {
                             <div className="whitespace-nowrap text-center" style={{ flex: "1" }}>
                                 {reserve.userName}
                                 <span className="ml-2">[{reserve.tel}]</span>
-                                <p>{reserve.email}</p>
+                                <p className="text-sm text-gray-500">{reserve.email}</p>
                             </div>
 
                             <div className="whitespace-nowrap text-right" style={{ flex: "1" }}>

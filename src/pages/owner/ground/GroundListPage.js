@@ -22,15 +22,15 @@ const GroundListPage = ({ groundList }) => {
   const { page, size, moveToPage, moveToRead, moveToRegister } =
     useCustomMove();
   const [serverData, setServerData] = useState(initState);
-  const {loginState} = useCustomLogin()
+  const { loginState } = useCustomLogin()
 
   // 구장리스트 값 호출
   useEffect(() => {
     // 패이지 네이션
     getGroundList({ page, size }).then((data) => {
-    getOwnerGroundList({ page, size },loginState.uNo).then((data) => {
+      getOwnerGroundList({ page, size }, loginState.uNo).then((data) => {
         setServerData(data);
-        })
+      })
     });
   }, [page, size]);
 
@@ -83,7 +83,7 @@ const GroundListPage = ({ groundList }) => {
                     </div>
                     <div className="text-sm text-gray-500">
                       {ground.addr}
-                      </div>
+                    </div>
                     <div className="text-sm text-gray-500">
                       {ground.recommdMan}
                     </div>
