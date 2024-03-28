@@ -59,7 +59,7 @@ export const fetchReservationsForUser = async (userName) => {
 
 export const fetchUserReservationsWithUserInfo = async (uNo, pageRequest = { page: 1, size: 10 }) => {
   try {
-    const response = await axios.get(`${process.env.REACT_APP_SERVER}/api/reserve/user-reservations/${uNo}`, { params: pageRequest });
+    const response = await jwtAxios.get(`${process.env.REACT_APP_SERVER}/api/reserve/user-reservations/${uNo}`, { params: pageRequest });
     return response.data;
   } catch (error) {
     console.error("Fetching user reservations with user info failed:", error);
