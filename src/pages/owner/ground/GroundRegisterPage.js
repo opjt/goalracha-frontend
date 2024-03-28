@@ -17,7 +17,7 @@ const initState = {
   openTime: "",
   closeTime: "",
   fare: "",
-  userGuide: "[ 주차 상세 ]\n- 사업자회원 작성 \n [ 구장 출입문 안내 ]\n -사업자회원 작성 \n[ 구장이용 안내 ]\n -사업자회원 작성) \n[ 대여 상세 ]\n -사업자회원 작성 \n[ 물, 음료 ]\n -사업자회원 작성",
+  userGuide: "[ 주차 상세 ]\n- 사업자회원 작성 \n[ 구장 출입문 안내 ]\n-사업자회원 작성 \n[ 구장이용 안내 ]\n -사업자회원 작성) \n[ 대여 상세 ]\n -사업자회원 작성 \n[ 물, 음료 ]\n -사업자회원 작성",
   userRules: "- 풋살장 예약시간 준수\n- 풋살장 내 취사, 흡연 및 음주행위, 지나친 소음행위 금지(적발 시 이용불가)\n- 시설 사용 후 정리정돈 ( 쓰레기 반드시 처리 )\n- 고의 및 과실로 인한 시설물 훼손 및 파손시 사용자가 배상하며 경기중 부상은 본인이 책임집니다.\n- 잔디보호와 부상방지를 위하여 스터드가 있는 축구화(SG, FG, HG, AG)는 착용이 금지되며 풋살화(TF)만 착용 가능 합니다.\n- 위 내용이 지켜지지 않을 경우 무환불 퇴장조치 될 수 있으니 예약시 꼭 참고부탁드립니다.\n- 위 내용을 지키지 않아 발생하는 문제는 예약자 본인에게 있습니다. ",
   refundRules: "- 이용3일 전까지 : 100% 환불\n- 2일 전 ~ 대관 당일 : 환불 불가\n- 다음과 같은 경우에는 상단 규정대로 처리\n- 고객의 사정으로 예약된 날짜에 구장 이용을 못하는 경우\n- 구장, 날짜, 시간 등을 실수로 잘못 선택했을 경우\n- 단순 변심으로 인해 환불이나 변경을 요청하는 경우",
   vestIsYn: false,
@@ -51,22 +51,25 @@ const GroundRegisterPage = () => {
   const handleChange = (e) => {
     ground[e.target.name] = e.target.value;
 
-    // checkbox타입이 checkbox일 경우 check속성을 값으로 입력받음
+    // checkbox타입이 checkbox일 경우 checked속성을 값으로 입력받음
     if (e.target.type == "checkbox") {
       ground[e.target.name] = e.target.checked;
     }
     setGround({ ...ground });
   };
 
+  // 등록 버튼 함수
   const handleClickAdd = (e) => {
     const files = uploadRef.current.files;
 
     const formData = new FormData();
-
+    
+    // 입력된 이미지를 폼데이터로 변경
     for (let i = 0; i < files.length; i++) {
       formData.append("files", files[i]);
     }
 
+    // 입력된 구장정보를 폼데이터로 변경
     formData.append("name", ground.name);
     formData.append("addr", ground.addr);
     formData.append("inAndOut", ground.inAndOut);
@@ -90,13 +93,7 @@ const GroundRegisterPage = () => {
     formData.append("state", ground.state);
     formData.append("uNo", uNo);
 
-    console.log(ground.inAndOut);
-    console.log(ground.openTime);
-    console.log(ground.closeTime);
-    console.log(uNo);
-    console.log(ground.uNo);
-    console.log(files.length);
-
+    // 값이 없거나 0일경우 경고창
     if (!uNo) {
       alert("사업자회원으로 로그인하셔야 등록가능합니다.")
     }
@@ -120,7 +117,7 @@ const GroundRegisterPage = () => {
       alert("추천인원을 입력해주세요.");
       return;
     }
-    if (!ground.usageTime) {
+    if (!ground.usageTime || ground.usageTime==0) {
       alert("기본이용시간을 입력해주세요.");
       return;
     }
@@ -132,8 +129,8 @@ const GroundRegisterPage = () => {
       alert("마감 시간을 선택해주세요.");
       return;
     }
-    if (!ground.fare) {
-      alert("요금 입력해주세요.");
+    if (!ground.fare || ground.fare==0) { 
+      alert("요금을 입력해주세요.");
       return;
     }
     if (files.length == 0) {
@@ -154,6 +151,8 @@ const GroundRegisterPage = () => {
     }
 
     setFetching(true);
+
+    // 구장 등록 api호출, 폼데이터로 전송
     postGroundRegister(formData)
       .then((data) => {
         setFetching(false);
@@ -162,12 +161,13 @@ const GroundRegisterPage = () => {
       .catch((error) => console.error(error));
   };
 
+  // 모달 닫은 후 리스트로 이동
   const closeModal = () => {
     setResult(null);
     moveToGroundList({ page: 1 });
   };
 
-  // 이미지 업로드 input의 onChange
+  // 이미지 업로드 input의 onChange 함수
   const saveImgFile = () => {
     const files = uploadRef.current.files;
     const fileArray = [];
@@ -181,6 +181,7 @@ const GroundRegisterPage = () => {
     setImgFile(fileArray);
   };
 
+  // 다음 주소 api
   function DaumPostcode() {
     new window.daum.Postcode({
       oncomplete: function (data) {
@@ -201,6 +202,7 @@ const GroundRegisterPage = () => {
       },
     }).open();
   }
+
   // 셀렉트 라이브러리를 사용한 ground 속성의 값 변경
   const handleSelectChange = (result, name) => {
     if (name == "inAndOut") {
@@ -210,15 +212,18 @@ const GroundRegisterPage = () => {
     } else if (name == "closeTime") {
       ground.closeTime = result.value;
     }
-
+    
+    // ground 상태 업데이트
     setGround({ ...ground });
   };
 
+  // 실내외 셀렉트 매핑
   const inAndOutSelect = [
     { value: "실내", label: "실내" },
     { value: "실외", label: "실외" },
   ];
 
+  // 오픈시간, 마감시간 셀렉트 매핑
   const timeSelect = [
     { value: "1", label: "01시" },
     { value: "2", label: "02시" },
@@ -246,6 +251,7 @@ const GroundRegisterPage = () => {
     { value: "24", label: "24시" },
   ];
 
+  // 슬라이더 세팅
   const sliderSettings = {
     dots: true,
     infinite: imgFile && imgFile.length  > 1 ? true : false, // 마지막 이미지 이후 첫 이미지로 자동 루프 여부
@@ -265,6 +271,10 @@ const GroundRegisterPage = () => {
       </div>
     ),
   };
+
+    const formatRevenue = (value) => {
+    return new Intl.NumberFormat('ko-KR', { style: 'currency', currency: 'KRW' }).format(value);
+};
 
   return (
     <div className=" flex-wrap flex-direction justify-center">

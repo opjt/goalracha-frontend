@@ -78,7 +78,7 @@ const GroundListPage = ({ groundList }) => {
 
   return (
     <div className="flex w-full h-full">
-      <div className="p-4 w-full">
+      <div className="w-full">
         <div className="flex items-center">
           <label className="input input-bordered flex items-center gap-2 w-full h-10 flex-grow">
             <input

@@ -73,8 +73,8 @@ const OwnerReserveListPage = () => {
 
   return (
     <>
-      <div className="w-full p-2">
-        <div className="w-full text-base mt-3 flex items-center justify-between">
+      <div className="w-full">
+        <div className="w-full text-base flex items-center justify-between">
           <div className="w-full flex items-center">
             <label className="input input-bordered flex items-center gap-2 w-60 h-10 flex-grow">
               <input
