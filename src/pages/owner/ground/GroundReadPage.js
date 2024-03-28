@@ -45,9 +45,12 @@ const GroundReadPage = () => {
 
   const host = API_SERVER_HOST;
   
+  // 구장 정보 읽어오기
   useEffect(() => {
     getGround(gno).then((data) => {
       console.log(data.uno);
+      
+      // 로그인한 사용자의 고유번호 확인
       if (loginState.uNo !== parseInt(data.uno)) { // 유저값이 다를경우 뒤로가기
         alert("잘못된 접근입니다.");
         navigate(-1);
@@ -56,6 +59,7 @@ const GroundReadPage = () => {
     });
   }, [gno,navigate]);
 
+  // 구장 상태 매핑
   const stateMapping = {
     0: "삭제된 구장입니다",
     1: "등록신청",
@@ -64,6 +68,7 @@ const GroundReadPage = () => {
     4: "폐업",
   };
 
+  // 슬라이더 세팅
   const sliderSettings = {
     dots: true,
     infinite: ground.uploadFileNames && ground.uploadFileNames.length  > 1 ? true : false, // 마지막 이미지 이후 첫 이미지로 자동 루프 여부
@@ -83,6 +88,10 @@ const GroundReadPage = () => {
       </div>
     ),
   };
+
+  const formatRevenue = (value) => {
+    return new Intl.NumberFormat('ko-KR', { style: 'currency', currency: 'KRW' }).format(value);
+};
 
   return (
     <div className="flex-direction justify-center w-full h-100% ">
@@ -206,7 +215,7 @@ const GroundReadPage = () => {
               요금:
             </label>
             <div className="collapse bg-base-200 collapse-title text-xl font-medium w-full max-w-1/2">
-              {ground.fare}
+              {formatRevenue(ground.fare)}
             </div>
           </div>
         </div>

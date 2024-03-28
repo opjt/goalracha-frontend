@@ -591,7 +591,7 @@ const deleteOldImages = (imageName) => {
               type={"number"}
               name="fare"
               placeholder="35,000 (원단위로 숫자만 입력)"
-              value={formatRevenue(ground.fare)}
+              value={ground.fare}
               onChange={handleChangeModify}
               className="input input-bordered w-full max-w-xs"
             />

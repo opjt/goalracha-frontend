@@ -1,8 +1,7 @@
-import axios from "axios"
 import jwtAxios from "util/jwtUtil";
 
-
 const prefix = `${process.env.REACT_APP_SERVER}/api/ground`
+
 export const API_SERVER_HOST = `${process.env.REACT_APP_SERVER}`
 
 // 상세정보 불러오기
