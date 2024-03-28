@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { fetchOwners, fetchUserReservationsWithUserInfo } from "../../../api/adminAPI";
+import { fetchOwners, fetchUserReservationsWithUserInfo } from "../../api/adminAPI";
 
 const OwnerManagePage = () => {
   const [owners, setOwners] = useState([]);

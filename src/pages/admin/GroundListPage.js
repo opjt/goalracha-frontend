@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { fetchGrounds, changeGroundState, fetchImagesByGno } from '../../../api/adminAPI';
+import { fetchGrounds, changeGroundState, fetchImagesByGno } from '../../api/adminAPI';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';

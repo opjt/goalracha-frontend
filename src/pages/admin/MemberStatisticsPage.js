@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import AdminMemberStatistics from './MemberStatistics';
 import axios from 'axios';
-import { fetchMembers } from "../../../api/adminAPI";
-import { fetchOwners } from "../../../api/adminAPI";
+import { fetchMembers } from "../../api/adminAPI";
+import { fetchOwners } from "../../api/adminAPI";
 
 
 const MemberStatisticsPage = () => {

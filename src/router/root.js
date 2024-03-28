@@ -12,12 +12,6 @@ import GuestIndex from "pages/GuestIndex.js"
 import AdminLogin from "../components/member/admin/AdminLoginComponent"; //admin 로그인 페이지
 import NotFound from "pages/404page.js";
 const Main = lazy(() => import("../pages/MainPage"));
-const Test = lazy(() => import("../pages/test"));
-const Login = lazy(() => import("../pages/member/LoginPage.js"));
-const Logout = lazy(() => import("../pages/member/Logout.js"));
-const GroundInfoPage = lazy(() => import("pages/reserve/user/GroundInfoPage.js"))
-const LoadingPage = lazy(() => import("pages/loading"))
-
 
 
 

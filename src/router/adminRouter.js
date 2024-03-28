@@ -6,15 +6,15 @@ import useCustomLogin from "../hooks/useCustomLogin";
 import MainHeader from "../components/layouts/mainHeader";
 import TopNavAdmin from "../components/layouts/topnavadmin";
 
-import GroundListPage from "../pages/member/admin/GroundListPage.js";
-import ReserveListPage from "../pages/member/admin/ReserveListPage.js";
-import OwnerManagePage from "../pages/member/admin/OwnerManagePage.js";
-import UserManagePage from "../pages/member/admin/UserManagePage.js";
-import ReserveStatisticsPage from "pages/member/admin/ReserveStatisticsPage.js";
-import MemberStatisticsPage from "pages/member/admin/MemberStatisticsPage.js";
-import SalesStatisticsPage from "pages/member/admin/SalesStatisticsPage.js";
+import GroundListPage from "../pages/admin/GroundListPage.js";
+import ReserveListPage from "../pages/admin/ReserveListPage.js";
+import OwnerManagePage from "../pages/admin/OwnerManagePage.js";
+import UserManagePage from "../pages/admin/UserManagePage.js";
+import ReserveStatisticsPage from "pages/admin/ReserveStatisticsPage.js";
+import MemberStatisticsPage from "pages/admin/MemberStatisticsPage.js";
+import SalesStatisticsPage from "pages/admin/SalesStatisticsPage.js";
 
-const AdminPage = lazy(() => import("../pages/member/admin/AdminPage"));
+const AdminPage = lazy(() => import("../pages/admin/AdminPage"));
 
 const BoardList = lazy(() => import("../pages/board/AdminListPage"));
 const BoardRead = lazy(() => import("../pages/board/ReadPage"));

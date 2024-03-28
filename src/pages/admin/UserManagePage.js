@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { fetchMembers, fetchReservationsForUser } from "../../../api/adminAPI";
+import { fetchMembers, fetchReservationsForUser } from "../../api/adminAPI";
 
 const UserManagePage = () => {
   const [members, setMembers] = useState([]);

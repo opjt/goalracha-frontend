@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { getOwnerStatistics } from "api/reserveApi";
 import { useSelector } from "react-redux";
 import BasicLayout from "layouts/OwnerLayout";
-import { AreaChart, XAxis, YAxis, CartesianGrid, Tooltip, Area, ResponsiveContainer } from 'recharts';
+import { AreaChart, XAxis, YAxis, CartesianGrid, Tooltip, Area, ResponsiveContainer,BarChart,Bar,Legend } from 'recharts';
 import { DateRange } from "react-date-range";
 import ko from 'date-fns/locale/ko';	     // 날짜 포맷 라이브러리 (한국어 기능을 임포트)
 import 'react-date-range/dist/styles.css'; // main style file
@@ -44,7 +44,7 @@ const OwnerStatisticsPage = () => {
             const reserveData = await getOwnerStatistics(loginState.uNo);
             setReserveList(reserveData);
             const uniqueGrounds = [...new Set(reserveData.map(reserve => reserve.groundName))];
-            setGrounds(["전체 구장", ...uniqueGrounds]);
+            setGrounds([ ...uniqueGrounds]);
         } catch (error) {
             console.error("예약 목록을 가져오는 중 오류 발생:", error);
         }
@@ -271,6 +271,7 @@ const OwnerStatisticsPage = () => {
                 <div className="flex items-center mb-4">
                     <label className="mr-2">구장 이름:</label>
                     <select className="border border-gray-300 px-2 py-1 rounded-md" onChange={handleGroundSelect}>
+                        <option value="전체 구장">전체 구장</option>
                         {grounds.map((ground, index) => (
                             <option key={index} value={ground}>{ground}</option>
                         ))}
@@ -372,27 +373,47 @@ const OwnerStatisticsPage = () => {
                                 </AreaChart>
                             ) : (
                                 selectedGround === "전체 구장" ? (
-                                    <AreaChart data={prepareChartData()}>
-                                        <XAxis dataKey="groundName" tick={{ fontSize: 12 }} />
-                                        <YAxis dataKey="totalRevenue" tickFormatter={formatRevenue}
-                                            tick={{ fontSize: 12 }} /*domain={[0, maxRevenue * 1.2] }*/ />
-                                        <CartesianGrid strokeDasharray="0" />
+                                    <BarChart
+                                    
+                                        data={prepareChartData()}
+                                        margin={{
+                                            top: 20,
+                                            right: 30,
+                                            left: 20,
+                                            bottom: 5,
+                                        }}
+                                        >
+                                        <CartesianGrid strokeDasharray="3 3" />
+                                        <XAxis dataKey="groundName" />
+                                        <YAxis dataKey="totalRevenue" tickFormatter={formatRevenue} domain={[0, maxRevenue * 1.2]}/>
                                         <Tooltip
                                             formatter={(value, name, props) => {
                                                 return [`매출액: ${formatRevenue(value)}`];
                                             }}
                                         />
-                                        <Area
-                                            type="monotone"
-                                            dataKey="totalRevenue"
-                                            stroke="#3aafa9"
-                                            fillOpacity={0.6}
-                                            fill="url(#colorReservations)"
-                                            isAnimationActive={true}
-                                            strokeWidth={3}
-                                            dot={{ fill: '#3aafa9', strokeWidth: 2, radius: 5 }} // 점의 스타일 설정
-                                        />
-                                    </AreaChart>
+                                        <Bar dataKey="totalRevenue" fill="#82ca9d" barSize={300} />
+                                        </BarChart>
+                                    // <AreaChart data={prepareChartData()}>
+                                    //     <XAxis dataKey="groundName" tick={{ fontSize: 12 }} />
+                                    //     <YAxis dataKey="totalRevenue" tickFormatter={formatRevenue}
+                                    //         tick={{ fontSize: 12 }} /*domain={[0, maxRevenue * 1.2] }*/ />
+                                    //     <CartesianGrid strokeDasharray="0" />
+                                    //     <Tooltip
+                                    //         formatter={(value, name, props) => {
+                                    //             return [`매출액: ${formatRevenue(value)}`];
+                                    //         }}
+                                    //     />
+                                    //     <Area
+                                    //         type="monotone"
+                                    //         dataKey="totalRevenue"
+                                    //         stroke="#3aafa9"
+                                    //         fillOpacity={0.6}
+                                    //         fill="url(#colorReservations)"
+                                    //         isAnimationActive={true}
+                                    //         strokeWidth={3}
+                                    //         dot={{ fill: '#3aafa9', strokeWidth: 2, radius: 5 }} // 점의 스타일 설정
+                                    //     />
+                                    // </AreaChart>
                                 ) : (
                                     <AreaChart data={prepareChartData()}>
                                         <XAxis dataKey="date" tick={{ fontSize: 12 }} />
