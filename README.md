@@ -29,7 +29,7 @@
 ## 👪 팀원
 
 <div >
-<table align="left">
+<table align="center">
   
   <tr>
     <td align="center" class="wook">
@@ -56,7 +56,7 @@
 
 </table>
 </div> 
-<br>
+
 
 ## 📝 ERD  
 [👉 ERD Cloud에서 직접 보기](https://www.erdcloud.com/d/wcMQAFkk2i4yxuMzb)
@@ -174,7 +174,7 @@
 ||/api/member/g/checknickname|GET|닉네임 중복검사|
 ||/api/member/g/checkid|GET|아이디 중복검사|
 |Reserve|/api/reserve|POST|예약 등록|
-||/api/reserve|DELETE|예약 취소|
+||/api/reserve/cancel|POST|예약 취소|
 ||/api/reserve/info|POST|예약 상세정보|
 ||/api/reserve/g/list|POST|예약가능 구장목록 조회|
 ||/api/reserve/g/ground|POST|예약페이지 구장상세정보|
