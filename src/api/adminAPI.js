@@ -7,7 +7,7 @@ const host = `${process.env.REACT_APP_SERVER}/api/member`;
 
 // 구장 목록을 불러오는 함수
 export const fetchGrounds = async () => {
-  return await jwtAxios.get(`${API_BASE_URL}/list`);
+  return await jwtAxios.get(`${API_BASE_URL}/list`, { params: {page:1,size:99999} });
 };
 
 // 구장 상태를 변경하는 함수

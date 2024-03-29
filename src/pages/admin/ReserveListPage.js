@@ -104,8 +104,8 @@ const ReserveListPage = () => {
           <tr>
             <th className="p-2 border border-gray-300">구장명</th>
             <th className="p-2 border border-gray-300">구장 위치</th>
-            <th className="p-2 border border-gray-300">사업자명</th>
             <th className="p-2 border border-gray-300">사업자 등록 번호</th>
+            <th className="p-2 border border-gray-300">사업자명</th>
             <th className="p-2 border border-gray-300">예약 날짜</th>
             <th className="p-2 border border-gray-300">예약 시간</th>
             <th className="p-2 border border-gray-300">예약된 날짜</th>

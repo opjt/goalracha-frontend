@@ -17,8 +17,8 @@ const UserReservationStatusPage = () => {
   const { loginState } = useCustomLogin();
   const [datePicker, setDatePicker] = useState([
     {
-      startDate: moment().subtract(7,'d').toDate(),
-      endDate: moment().add(7,'d').toDate(),
+      startDate: moment().subtract(14,'d').toDate(),
+      endDate: moment().add(14,'d').toDate(),
       key: 'selection'
     }
   ]);
