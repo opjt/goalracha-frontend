@@ -45,6 +45,7 @@ const GroundInfoPage = () => {
 
     const handleClickDate = (e) => { //날짜버튼 클릭 핸들러
         reservInfo.date = moment(calDate).format("YYYY-MM-DD");
+        reservInfo.value = 0;
         setReservInfo({...reservInfo})
         
     }

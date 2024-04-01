@@ -43,7 +43,6 @@ const GroundListPage = () => {
     const dispatch = useDispatch()
 
     useEffect(() => {
-        console.log(3)
         showFilter.search = searchState;
         setShowFilter({...showFilter})
     }, [searchState])
@@ -139,7 +138,7 @@ const GroundListPage = () => {
             showFilter.date = ""
         }
         if(e.target.name === "time") {
-            option.time = new Array(12).fill(false); setOption({...option});
+            option.time = new Array(12).fill(false); 
             showFilter.time = ""
         }
         if(e.target.name === "inout") {
@@ -197,7 +196,6 @@ const GroundListPage = () => {
                 </svg>
                 </button>
             )}
-
         </div>
 
         <div className="mt-5">
@@ -227,7 +225,7 @@ const GroundListPage = () => {
                 months={1}  	// 1달치 달력만 디스플레이
                 minDate={moment().toDate()}
                 maxDate={moment().add(14, 'd').toDate()} //최대날짜
-                date={option.date}		// 날짜값
+                date={option.date}		// 초기 날짜값
                 onChange={onChangeDate} 	     // onChange 함수
                 dateDisplayFormat="yyyy-mm.dd" // 날짜 포맷값
             />

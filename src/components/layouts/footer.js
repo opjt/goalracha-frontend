@@ -16,7 +16,7 @@ const Footer = () => {
           <p>
             Copyright 2024, goal-racha Co.,Ltd
           </p>
-          <span onClick={() => handleClick('/admin/login')}>admin login</span> 
+          
         </aside>
 
         <nav>
