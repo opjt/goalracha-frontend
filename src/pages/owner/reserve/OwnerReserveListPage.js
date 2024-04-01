@@ -29,17 +29,24 @@ const OwnerReserveListPage = () => {
     }
   };
 
+  // 데이터 가져오는 함수
   const fetchData = async () => {
     try {
+      // 로그인 상태에서 uNo 존재하는지 확인
       if (loginState.uNo) {
+        // 변수 선언
         let reserveData;
+        // 검색어 있을경우
         if (searchName) {
+          // 검색 API로 데이터 가져옴
           reserveData = await getOwnerReserveListSearch(
             { page, size, searchName },
             loginState.uNo,
             searchName
           );
+        // 검색어 없을 경우
         } else {
+          // 예약 목록 api로 데이터 가져옴
           reserveData = await getOwnerReserveList(
             { page, size },
             loginState.uNo

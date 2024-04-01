@@ -1,8 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { getOwnerStatistics } from "api/reserveApi";
 import { useSelector } from "react-redux";
-import BasicLayout from "layouts/OwnerLayout";
-import { AreaChart, XAxis, YAxis, CartesianGrid, Tooltip, Area, ResponsiveContainer,BarChart,Bar,Legend } from 'recharts';
+import { AreaChart, XAxis, YAxis, CartesianGrid, Tooltip, Area, ResponsiveContainer, BarChart, Bar } from 'recharts';
 import { DateRange } from "react-date-range";
 import ko from 'date-fns/locale/ko';	     // 날짜 포맷 라이브러리 (한국어 기능을 임포트)
 import 'react-date-range/dist/styles.css'; // main style file
@@ -10,6 +9,7 @@ import 'react-date-range/dist/theme/default.css'; // theme css file
 
 
 const OwnerStatisticsPage = () => {
+
     const [reserveList, setReserveList] = useState([]);
     const loginState = useSelector((state) => state.loginSlice);
     const [grounds, setGrounds] = useState([]);
@@ -18,6 +18,18 @@ const OwnerStatisticsPage = () => {
     const [showDateRangeModal, setShowDateRangeModal] = useState(false);
     const modalRef = useRef(null);
 
+    // 연도 선택 모달의 상태를 관리하는 변수 추가
+    const [showYearModal, setShowYearModal] = useState(false);
+
+    // 연도 선택 모달을 열거나 닫는 함수
+    const toggleYearModal = () => {
+        setShowYearModal(!showYearModal);
+    };
+
+    // 연매출 버튼을 클릭했을 때 실행되는 함수
+    const handleYearlyRevenue = () => {
+        toggleYearModal(); // 연도 선택 모달 열기
+    };
 
     const getDates = (startDate, endDate) => {
         const dates = [];
@@ -44,7 +56,7 @@ const OwnerStatisticsPage = () => {
             const reserveData = await getOwnerStatistics(loginState.uNo);
             setReserveList(reserveData);
             const uniqueGrounds = [...new Set(reserveData.map(reserve => reserve.groundName))];
-            setGrounds([ ...uniqueGrounds]);
+            setGrounds([...uniqueGrounds]);
         } catch (error) {
             console.error("예약 목록을 가져오는 중 오류 발생:", error);
         }
@@ -158,7 +170,16 @@ const OwnerStatisticsPage = () => {
     };
 
     const handleTimeSlotRevenue = () => {
+        const year = new Date().getFullYear(); // 현재 연도 가져오기
+        setSelectedDateRange([
+            {
+                startDate: new Date(year, 0, 1), // 해당 연도의 1월 1일
+                endDate: new Date(year, 11, 31), // 해당 연도의 12월 31일
+                key: 'selection',
+            }
+        ]);
         setViewMode("timeSlot"); // 시간대별 모드로 변경
+        fetchData(); // 월매출 클릭 시 데이터 다시 가져오기
     };
 
     const prepareTimeSlotChartData = () => {
@@ -208,40 +229,45 @@ const OwnerStatisticsPage = () => {
     const prepareMonthlyChartData = () => {
         const monthlyData = {};
 
-        // 필터링된 예약목록 가져오기
+        // 필터링된 예약 목록 가져오기
         const filteredReserves = reserveList.filter(reserve => {
             const reserveDate = new Date(reserve.reserveDate);
             return reserveDate >= selectedDateRange[0].startDate && reserveDate <= selectedDateRange[0].endDate;
         });
 
-        // 선택된 구장인 경우 해당 구장의 데이터만 고려
-        const filteredGroundReserves = selectedGround === "전체 구장" ? filteredReserves : filteredReserves.filter(reserve => reserve.groundName === selectedGround);
-
         // 모든 월을 초기화하여 0으로 설정
-        const allMonths = Array.from({ length: 12 }, (_, index) => {
-            const monthYear = new Date(selectedDateRange[0].startDate.getFullYear(), index).toLocaleString('default', { month: 'long', year: 'numeric' });
-            return { month: monthYear, totalRevenue: 0 };
-        });
+        const year = selectedDateRange[0].startDate.getFullYear(); // 선택된 기간의 연도 가져오기
+        for (let month = 0; month < 12; month++) {
+            const monthYear = new Date(year, month).toLocaleString('default', { month: 'long', year: 'numeric' });
+            monthlyData[monthYear] = 0; // 모든 월을 0으로 초기화
+        }
 
-        // 예약 데이터가 있는 월의 매출을 계산하여 저장
-        filteredGroundReserves.forEach(reserve => {
-            const reserveDate = new Date(reserve.reserveDate);
-            const monthYear = reserveDate.toLocaleString('default', { month: 'long', year: 'numeric' });
-            if (!monthlyData[monthYear]) {
-                monthlyData[monthYear] = 0;
-            }
-            monthlyData[monthYear] += reserve.price;
-        });
+        // 선택된 구장이 "전체 구장"인 경우
+        if (selectedGround === "전체 구장") {
+            // 예약된 모든 구장의 데이터를 고려하여 매출 합산
+            filteredReserves.forEach(reserve => {
+                const reserveDate = new Date(reserve.reserveDate);
+                const monthYear = reserveDate.toLocaleString('default', { month: 'long', year: 'numeric' });
+                monthlyData[monthYear] += reserve.price;
+            });
+        } else {
+            // 특정 구장인 경우 해당 구장의 데이터만 고려하여 매출 합산
+            const filteredGroundReserves = filteredReserves.filter(reserve => reserve.groundName === selectedGround);
+            filteredGroundReserves.forEach(reserve => {
+                const reserveDate = new Date(reserve.reserveDate);
+                const monthYear = reserveDate.toLocaleString('default', { month: 'long', year: 'numeric' });
+                monthlyData[monthYear] += reserve.price;
+            });
+        }
 
-        // 모든 월의 데이터를 반환하되, 해당 범위 내에 데이터가 없는 경우 0으로 설정
-        const data = allMonths.map(monthData => ({
-            ...monthData,
-            totalRevenue: monthlyData[monthData.month] || 0 // 해당 월의 매출이 없으면 0으로 설정
+        // 객체를 배열로 변환하여 반환
+        const data = Object.keys(monthlyData).map(monthYear => ({
+            month: monthYear,
+            totalRevenue: monthlyData[monthYear]
         }));
 
         return data;
     };
-
 
 
     const handleDailyRevenue = () => {
@@ -280,10 +306,10 @@ const OwnerStatisticsPage = () => {
                     {selectedGround !== "전체 구장" && (
                         <>
                             <button className={`border border-gray-300 px-2 py-1 ml-4 rounded-md ${viewMode === 'daily' && 'bg-gray-300'}`} onClick={handleDailyRevenue}>
-                                일매출
-                            </button>
-                            <button className={`border border-gray-300 px-2 py-1 ml-4 rounded-md ${viewMode === 'monthly' && 'bg-gray-300'}`} onClick={handleMonthlyRevenue}>
                                 월매출
+                            </button>
+                            <button className={`border border-gray-300 px-2 py-1 ml-4 rounded-md ${viewMode === 'monthly' && 'bg-gray-300'}`} onClick={handleYearlyRevenue}>
+                                연매출
                             </button>
                             <button className={`border border-gray-300 px-2 py-1 ml-4 rounded-md ${viewMode === 'timeSlot' && 'bg-gray-300'}`} onClick={handleTimeSlotRevenue}>
                                 시간대별
@@ -296,7 +322,7 @@ const OwnerStatisticsPage = () => {
                                 구장별매출
                             </button>
                             <button className={`border border-gray-300 px-2 py-1 ml-4 rounded-md ${viewMode === 'monthly' && 'bg-gray-300'}`} onClick={handleMonthlyRevenue}>
-                                구장총매출
+                                구장연매출
                             </button>
                             <button className={`border border-gray-300 px-2 py-1 ml-4 rounded-md ${viewMode === 'timeSlot' && 'bg-gray-300'}`} onClick={handleTimeSlotRevenue}>
                                 시간대별
@@ -374,7 +400,7 @@ const OwnerStatisticsPage = () => {
                             ) : (
                                 selectedGround === "전체 구장" ? (
                                     <BarChart
-                                    
+
                                         data={prepareChartData()}
                                         margin={{
                                             top: 20,
@@ -382,17 +408,17 @@ const OwnerStatisticsPage = () => {
                                             left: 20,
                                             bottom: 5,
                                         }}
-                                        >
+                                    >
                                         <CartesianGrid strokeDasharray="3 3" />
                                         <XAxis dataKey="groundName" />
-                                        <YAxis dataKey="totalRevenue" tickFormatter={formatRevenue} domain={[0, maxRevenue * 1.2]}/>
+                                        <YAxis dataKey="totalRevenue" tickFormatter={formatRevenue} domain={[0, maxRevenue * 1.2]} />
                                         <Tooltip
                                             formatter={(value, name, props) => {
                                                 return [`매출액: ${formatRevenue(value)}`];
                                             }}
                                         />
                                         <Bar dataKey="totalRevenue" fill="#82ca9d" barSize={300} />
-                                        </BarChart>
+                                    </BarChart>
                                     // <AreaChart data={prepareChartData()}>
                                     //     <XAxis dataKey="groundName" tick={{ fontSize: 12 }} />
                                     //     <YAxis dataKey="totalRevenue" tickFormatter={formatRevenue}
@@ -443,6 +469,35 @@ const OwnerStatisticsPage = () => {
                     </ResponsiveContainer>
                 </div>
             </div>
+
+
+            {/* 연도 선택 모달 */}
+            {showYearModal && (
+                <div className="fixed inset-0 flex items-center justify-center z-50">
+                    <h2 className="font-bold text-lg mb-4">연도 선택</h2>
+                    <div className="bg-white p-4 rounded-lg shadow-lg">
+                        {/* 연도 선택 버튼들 */}
+                        {[2024, 2025, 2026, 2027, 2028].map((year) => (
+                            <button
+                                key={year}
+                                className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg mr-2 mb-2"
+                                onClick={() => {
+                                    // 선택한 연도에 따라 연도 범위 설정
+                                    const startDate = new Date(year, 0, 1);
+                                    const endDate = new Date(year, 11, 31);
+                                    setSelectedDateRange([{ startDate, endDate, key: 'selection' }]);
+                                    toggleYearModal(); // 모달 닫기
+                                    fetchData(); // 데이터 다시 가져오기
+                                }}
+                            >
+                                {year}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+            )}
+
+
         </>
     );
 };
