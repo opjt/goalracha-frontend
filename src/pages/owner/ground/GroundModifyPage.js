@@ -745,7 +745,7 @@ const deleteOldImages = (imageName) => {
                 required
                 className=" w-full max-w-xs"
                 type={"select"}
-                onChange={(option) => handleSelectChange(option, "closeTime")}
+                onChange={(option) => handleSelectChange(option, "state")}
                 options={stateSelect}
                 placeholder={stateMapping[ground.state]}
                 isDisabled={!(ground.state === 2 || ground.state === 3)}
