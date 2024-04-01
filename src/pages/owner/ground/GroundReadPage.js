@@ -70,7 +70,7 @@ const GroundReadPage = () => {
 
   // 슬라이더 세팅
   const sliderSettings = {
-    dots: true,
+    dots: true, // 이미지 전환 표시
     infinite: ground.uploadFileNames && ground.uploadFileNames.length  > 1 ? true : false, // 마지막 이미지 이후 첫 이미지로 자동 루프 여부
     slidesToShow: 1, // 한번에 보여지는 슬라이드 수
     slidesToScroll: 1, // 한번에 넘어가는 슬라이드 수
