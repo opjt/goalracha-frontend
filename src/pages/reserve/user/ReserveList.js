@@ -13,7 +13,6 @@ import 'react-date-range/dist/theme/default.css'; // theme css file
 const UserReservationStatusPage = () => {
   const [reserveList, setReserveList] = useState([]);
   const [stateFilter, setStateFilter] = useState("전체");
-  const [pageData, setPageData] = useState({});
   const { loginState } = useCustomLogin();
   const [datePicker, setDatePicker] = useState([
     {
@@ -49,11 +48,9 @@ const UserReservationStatusPage = () => {
           var resDTOlist = reserveData.dtoList
           for(var key in resDTOlist) {
             resDTOlist[key].showState = "결제완료"
-
             if(moment(resDTOlist[key].reserveDate).isBefore(moment().subtract(1, "days"))) {
               resDTOlist[key].showState = "이용완료";
             }
-            
             if(resDTOlist[key].state === 0) {
               resDTOlist[key].showState = "예약취소";
             } 
@@ -61,7 +58,6 @@ const UserReservationStatusPage = () => {
           
           var filteredData = resDTOlist.filter(item => {
             var reserveDate = moment(item.reserveDate);
-            
             return reserveDate.isBetween(datePicker[0].startDate, datePicker[0].endDate, 'day', '[]');
           });
           
@@ -78,7 +74,6 @@ const UserReservationStatusPage = () => {
           })
           
           setReserveList(filteredData);
-          setPageData(reserveData);
         }
       } catch (error) {
         console.error("Error fetching reservation list:", error);
@@ -176,27 +171,3 @@ const UserReservationStatusPage = () => {
 
 export default UserReservationStatusPage;
 
-{
-  /* <div className="btn btn-wide" onClick={() => handleTest()}>
-                dd
-            </div>
-            <Link to={{ pathname: '/user/reserve', state: { payKey:"tviva20240320163049noTx9" } }} >워승스</Link> */
-}
-
-{
-  /* 페이지네이션 컴포넌트 추가 */
-}
-{
-  /* {pageData && pageData.pageNumList && pageData.pageNumList.length > 0 && (
-                    <PageComponent serverData={pageData} movePage={movePage} />
-                )} 
-            
-              const handleTest = () => {
-    var payKey = "tviva20240321102837q8ho0";
-    navigate(`/user/reserve`, { state: { payKey: payKey } });
-  };
-            
-            
-            
-            */
-}

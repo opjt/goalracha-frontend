@@ -1,7 +1,6 @@
 import { useEffect,useState } from "react";
 const { kakao } = window;
 
-
 const KakaoMap = (state) => {
     const [maploc,setMapLoc] = useState(null);
     var mapOption = {
@@ -30,8 +29,6 @@ const KakaoMap = (state) => {
               });
         } 
       });    
-      
-      
   },[])
 
     return(

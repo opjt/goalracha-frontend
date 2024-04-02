@@ -75,7 +75,7 @@ const ReserveModal = ({ reservInfo ,groundInfo, callbackFn}) => {
       
             paymentWidgetRef.current = paymentWidget;
             paymentMethodsWidgetRef.current = paymentMethodsWidget;
-          })();
+        })();
     },[])
     const handleCloseModal = (e) => {
         // 모달 내부 요소를 클릭한 경우 무시
@@ -88,29 +88,23 @@ const ReserveModal = ({ reservInfo ,groundInfo, callbackFn}) => {
         }
     };
     const handleClickReserve = async () => {
-        console.log(boxcheck)
         const paymentWidget = paymentWidgetRef.current;
-
         try {
             var falseValues = Object.entries(reservInfo.time).filter(([key, value]) => value === false).map(([key, value]) => parseInt(key));
             var timeArray = falseValues.join(",")
-            console.log(timeArray)
-
-          await paymentWidget?.requestPayment({
-            orderId: nanoid(),
-            // orderId: `${loginState.uNo}_${reservInfo.date}`,
-            // orderName: `${groundInfo.gno} ${loginState.uNo} ${reservInfo.date} ${timeArray}`,
-            orderName: `${groundInfo.name}`,
-            successUrl: `${window.location.origin}/reserve/success?gno=${groundInfo.gno}&uno=${loginState.uNo}&date=${reservInfo.date}&time=${timeArray}`,
-            failUrl: `${window.location.origin}/reserve/fail`
-          });
+            await paymentWidget?.requestPayment({
+                orderId: nanoid(),
+                orderName: `${groundInfo.name}`,
+                successUrl: `${window.location.origin}/reserve/success?gno=${groundInfo.gno}&uno=${loginState.uNo}&date=${reservInfo.date}&time=${timeArray}`,
+                failUrl: `${window.location.origin}/reserve/fail`
+            });
         } catch (error) {
-          // handle error
+            alert(error)
         }
     }
     return (
         <dialog id="payment" className="modal modal-open"onClick={handleCloseModal} >
-            <div className="modal-box pointer-events-auto w-11/12 max-w-5xl">
+            <div className="modal-box pointer-events-auto w-11/12 max-w-5xl max-h-max">
                 <h3 className="font-bold text-lg">풋살장 예약하기 | {groundInfo.name} <span className="text-gray-60000 text-sm font-normal">({groundInfo.addr})</span></h3>
                 <div className="mt-3 flex justify-around">
                     <div className="w-5/12">

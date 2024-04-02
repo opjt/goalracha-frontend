@@ -37,18 +37,7 @@ const ReservFail = () => {
       
 
     </BasicLayout>
-  //   <div className="result wrapper">
-  //   <div className="box_section">  
-  //     <h2 style={{padding: "20px 0px 10px 0px"}}>
 
-  //         결제 실패
-  //         <p>{`code = ${searchParams.get("code")}`}</p>
-  //         <p>{`message = ${searchParams.get("message")}`}</p>
-  //     </h2>
-      
-
-  //   </div>
-  // </div>
   );
 }
 export default ReservFail;

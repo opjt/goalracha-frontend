@@ -14,7 +14,7 @@ const UserReserveListComponent = () => {
 
 
 	useEffect(() => {
-		const fetchData = async () => {
+		(async () => {
 			try {
 				// 로그인 상태에 따라 API 요청을 보내거나 보내지 않음
 				if (loginState.uNo) {
@@ -43,9 +43,7 @@ const UserReserveListComponent = () => {
 			} catch (error) {
 				console.error("Error fetching reservation list:", error);
 			}
-		};
-		fetchData();
-
+		})();
 
 	}, [loginState.uNo]);
 
@@ -100,20 +98,14 @@ const UserReserveListComponent = () => {
 							{moment(reserve.reserveDate).format("YYYY-MM-DD")}
 						</div>
 						<div className="text-nowrap ">
-							{reserve.state === 0 ? (
-								<p className="text-red-500">예약취소</p>
-							) :
-								moment(reserve.reserveDate).isBefore(moment().subtract(1, 'days')) == true ? (
-									<p className="">이용완료</p>
-								)
+							{reserve.state === 0 ? 
+								(<p className="text-red-500">예약취소</p>) 
+								:
+								moment(reserve.reserveDate).isBefore(moment().subtract(1, 'days')) == true ? 
+									(<p className="">이용완료</p>)
 									:
-									(
-										<p className="text-green-500">결제완료</p>
-									)
+									(<p className="text-green-500">결제완료</p>)
 							}
-
-
-
 						</div>
 					</div>
 				</div>
