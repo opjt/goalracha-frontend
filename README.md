@@ -231,3 +231,22 @@ REACT_APP_RESTAPIKEY = "카카오톡APIKEY"
 REACT_APP_TOSS_SK = "토스페이먼츠 시크릿키"
 REACT_APP_TOSS_CK = "토스페이먼츠 클라이언트키"
 ```
+
+> application.properties 추가
+
+```yaml
+#goalracha-backend/src/main/resources/application.properties
+spring.datasource.driver-class-name=oracle.jdbc.driver.OracleDriver
+spring.datasource.url=jdbc:oracle:thin:@localhost:1521:xe
+spring.datasource.username=goalracha
+spring.datasource.password=goalracha
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+
+spring.servlet.multipart.max-request-size=30MB
+spring.servlet.multipart.max-file-size=10MB
+
+com.goalracha.upload.path=upload
+
+jwt.secret=key
+```

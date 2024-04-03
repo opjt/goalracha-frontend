@@ -23,8 +23,8 @@ const OwnerManagePage = () => {
 
   const filteredOwners = owners.filter(
     (owner) =>
-      owner.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      owner.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      owner.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      owner.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       (owner.businessName &&
         owner.businessName.toLowerCase().includes(searchTerm.toLowerCase())) // businessName이 정의된 경우에만 검색에 포함
   );
