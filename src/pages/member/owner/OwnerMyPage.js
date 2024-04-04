@@ -151,13 +151,7 @@ const OwnerMyPage = () => {
         </div>
         <div className="flex justify-end ml-auto mt-8 mb-2">
           {" "}
-          {/* 회원탈퇴 버튼과 로그아웃 버튼 사이의 간격 조절 */}
-          <div
-            className="btn hover:bg-inherit bg-inherit border-gray-200 font-light text-gray-500 mr-2"
-            onClick={handleClickModify}
-          >
-            회원탈퇴
-          </div>
+
           <Link to={"/logout"}>
             <div className="btn hover:bg-inherit bg-inherit border-gray-200 font-light text-gray-500 mr-5">
               로그아웃

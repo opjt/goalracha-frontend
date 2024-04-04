@@ -18,19 +18,6 @@ const OwnerStatisticsPage = () => {
     const [showDateRangeModal, setShowDateRangeModal] = useState(false);
     const modalRef = useRef(null);
 
-    // 연도 선택 모달의 상태를 관리하는 변수 추가
-    const [showYearModal, setShowYearModal] = useState(false);
-
-    // 연도 선택 모달을 열거나 닫는 함수
-    const toggleYearModal = () => {
-        setShowYearModal(!showYearModal);
-    };
-
-    // 연매출 버튼을 클릭했을 때 실행되는 함수
-    const handleYearlyRevenue = () => {
-        toggleYearModal(); // 연도 선택 모달 열기
-    };
-
     const getDates = (startDate, endDate) => {
         const dates = [];
         let currentDate = new Date(startDate); // 시작일 복제
@@ -308,7 +295,7 @@ const OwnerStatisticsPage = () => {
                             <button className={`border border-gray-300 px-2 py-1 ml-4 rounded-md ${viewMode === 'daily' && 'bg-gray-300'}`} onClick={handleDailyRevenue}>
                                 월매출
                             </button>
-                            <button className={`border border-gray-300 px-2 py-1 ml-4 rounded-md ${viewMode === 'monthly' && 'bg-gray-300'}`} onClick={handleYearlyRevenue}>
+                            <button className={`border border-gray-300 px-2 py-1 ml-4 rounded-md ${viewMode === 'monthly' && 'bg-gray-300'}`} onClick={handleMonthlyRevenue}>
                                 연매출
                             </button>
                             <button className={`border border-gray-300 px-2 py-1 ml-4 rounded-md ${viewMode === 'timeSlot' && 'bg-gray-300'}`} onClick={handleTimeSlotRevenue}>
@@ -419,27 +406,7 @@ const OwnerStatisticsPage = () => {
                                         />
                                         <Bar dataKey="totalRevenue" fill="#82ca9d" barSize={300} />
                                     </BarChart>
-                                    // <AreaChart data={prepareChartData()}>
-                                    //     <XAxis dataKey="groundName" tick={{ fontSize: 12 }} />
-                                    //     <YAxis dataKey="totalRevenue" tickFormatter={formatRevenue}
-                                    //         tick={{ fontSize: 12 }} /*domain={[0, maxRevenue * 1.2] }*/ />
-                                    //     <CartesianGrid strokeDasharray="0" />
-                                    //     <Tooltip
-                                    //         formatter={(value, name, props) => {
-                                    //             return [`매출액: ${formatRevenue(value)}`];
-                                    //         }}
-                                    //     />
-                                    //     <Area
-                                    //         type="monotone"
-                                    //         dataKey="totalRevenue"
-                                    //         stroke="#3aafa9"
-                                    //         fillOpacity={0.6}
-                                    //         fill="url(#colorReservations)"
-                                    //         isAnimationActive={true}
-                                    //         strokeWidth={3}
-                                    //         dot={{ fill: '#3aafa9', strokeWidth: 2, radius: 5 }} // 점의 스타일 설정
-                                    //     />
-                                    // </AreaChart>
+                                    
                                 ) : (
                                     <AreaChart data={prepareChartData()}>
                                         <XAxis dataKey="date" tick={{ fontSize: 12 }} />
@@ -469,35 +436,6 @@ const OwnerStatisticsPage = () => {
                     </ResponsiveContainer>
                 </div>
             </div>
-
-
-            {/* 연도 선택 모달 */}
-            {showYearModal && (
-                <div className="fixed inset-0 flex items-center justify-center z-50">
-                    <h2 className="font-bold text-lg mb-4">연도 선택</h2>
-                    <div className="bg-white p-4 rounded-lg shadow-lg">
-                        {/* 연도 선택 버튼들 */}
-                        {[2024, 2025, 2026, 2027, 2028].map((year) => (
-                            <button
-                                key={year}
-                                className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg mr-2 mb-2"
-                                onClick={() => {
-                                    // 선택한 연도에 따라 연도 범위 설정
-                                    const startDate = new Date(year, 0, 1);
-                                    const endDate = new Date(year, 11, 31);
-                                    setSelectedDateRange([{ startDate, endDate, key: 'selection' }]);
-                                    toggleYearModal(); // 모달 닫기
-                                    fetchData(); // 데이터 다시 가져오기
-                                }}
-                            >
-                                {year}
-                            </button>
-                        ))}
-                    </div>
-                </div>
-            )}
-
-
         </>
     );
 };
